@@ -1,0 +1,55 @@
+<odoo>
+    <record id="installment_template_list_view" model="ir.ui.view">
+        <field name="name">installment.template.list</field>
+        <field name="model">installment.template</field>
+        <field name="arch" type="xml">
+            <list string="installment template">
+                <field name="name"/>
+                <field name="month"/>
+                <field name="duration_year"/>
+                <field name="annual_raise" invisible="1"/>
+                <field name="repetition_rate"/>
+                <field name="advance_payment"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="installment_template_form_view" model="ir.ui.view">
+        <field name="name">installment.template.form</field>
+        <field name="model">installment.template</field>
+        <field name="arch" type="xml">
+            <form string="installment template">
+                <sheet>
+                    <h1>
+                        <field name="name" default_focus="1" placeholder="Name"/>
+                    </h1>
+                    <group>
+                        <field name="month" readonly="'duration_year','>', '0'"/>
+                        <field name="duration_year" readonly="'month','>', '0'"/>
+                        <field name="annual_raise" invisible="1"/>
+                        <field name="repetition_rate"/>
+                    </group>
+                    <group>
+                        <field name="advance_payment"/>
+                        <field name="deducted_amount"/>
+                        <field name="note"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="installment_template_form_action" model="ir.actions.act_window">
+        <field name="name">Installment Template</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">installment.template</field>
+        <field name="view_id" ref="installment_template_list_view"/>
+    </record>
+
+    <menuitem id="menu_installment_template_form_action"
+            action="installment_template_form_action"
+            active = "False"
+            parent="menu_settings"/>
+</odoo>

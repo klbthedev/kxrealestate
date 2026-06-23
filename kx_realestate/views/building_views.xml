@@ -1,0 +1,303 @@
+<odoo>
+    <record id="building_form" model="ir.ui.view">
+        <field name="name">building.form</field>
+        <field name="model">building.building</field>
+        <field name="priority">1</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Real Estate">
+                <header>
+                    <field name="active" widget="boolean_toggle"/>
+                    <field name="building_type_id" invisible="1"/>
+                    <!-- <field name="stage_id" widget="statusbar" clickable="1" options="{'clickable': 1}"/> -->
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_property_units" type="object" class="oe_stat_button" icon="fa-building">
+                            <field name="unit_count" widget="statinfo" string="Units"/>
+                        </button>
+                        <button name="action_view_floors" type="object" class="oe_stat_button" icon="fa-bars">
+                            <field name="floor_count" widget="statinfo" string="Floors"/>
+                        </button>
+                        <!-- <button name="action_view_reservations" type="object" class="oe_stat_button" icon="fa-book">
+                            <field name="reservation_count" widget="statinfo" string="Reservations"/>
+                        </button> -->
+                        <button name="action_view_ownership_contracts" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                            <field name="ownership_contract_count" widget="statinfo" string="Sales"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code" required="0"/>
+                            <field name="site_id" options="{'no_create': True,}" />
+                            <field name="block_id" options="{'no_create': True,}"  domain="[('site_id', '=', site_id)]"/>
+                            <field name="name" string="Building Name"/>
+
+                        </group>
+                        <group>
+                            <field name="launch_date"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Basic Information">
+                            <group>
+                                <group>
+                                    <field name="building_type_id" string="Property Usage Type"/>
+                                    <field name="building_status_id"/>
+                                    <field name="building_unit_area"/>
+                                    <field name="gross_area"/>
+                                    <field name="construction_date"/>
+                                    
+                                    <!-- <field name="passenger_lift"/>
+                                    <field name="freight_lift"/> -->
+                                    <!-- <field name="selling_price"/> -->
+                                </group>
+                                <group>
+                                    <field name="amenity_ids" string="Amenities" widget="many2many_tags"/>
+                                    <field name="no_of_floors" invisible="1"/>
+                                    <field name="props_per_floors" invisible="1"/>
+                                    <field name="surface" invisible="1"/>
+                                    <field name="north"/>
+                                    <field name="south"/>
+                                    <field name="east"/>
+                                    <field name="west"/>
+                                </group>
+                                <group string="Address">
+                                    <field name="country_id"/>
+                                    <field name="state_id"/>
+                                    <field name="city"/>
+                                    <field name="zone"/>
+                                    <field name="sub_city"/>
+                                    <field name="woreda"/>
+                                    <field name="kebele"/>
+                                    <field name="title_deed_no"/>
+                                    <field name="title_deed_date"/>
+                                </group>
+                                <group></group>
+                            </group>
+                        </page>
+                        <!-- <page string="Properties">
+                            <field name="unit_ids"
+                                    context="{'default_is_property':True,'form_view_ref':'building_unit_form',
+                                    'tree_view_ref':'building_unit_list'}"/>
+                        </page> -->
+                        <page string="Building Status">
+                            <field name="building_stage_ids">
+                                <list>
+                                    <field name="building_status_id"/>
+                                    <field name="building_status_id_date"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Floors">
+                            <!-- <field name="floor_ids" context="{'default_building_id': id}"> -->
+                            <field name="floor_ids" context="{'default_building_id': id, 'building_type_id': building_type_id}">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="level_number"/>
+                                    <field name="name"/>
+                                    <!-- <field name="progress_stage" widget="badge"/> -->
+                                    <field name="stage_id" widget="badge"/>
+                                    <field name="progress_percent" widget="progressbar"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="3D Renders">
+                            <form string="Property">
+                                <header>
+                                    <button name="action_open_matterport"
+                                        type="object"
+                                        string="View 3D Tour"
+                                        class="btn-primary"
+                                        invisible="not matterport_embed_url"/>
+                                </header>
+                                <sheet>
+                                    <group>
+                                        <!-- <field name="name"/> -->
+                                        <field name="matterport_model_id"/>
+                                    </group>
+                                    <separator string="Unit" colspan="4"/>
+                                    <group>
+                                        <field name="matterport_iframe" widget="html"/>
+                                    </group>
+                                </sheet>
+                            </form>
+                        </page>
+                        <page string="Images">
+                            <group name="building_template_images" string="Building Images">
+                                <field name="building_image_ids" class="o_website_sale_image_list"
+                                    context="{'default_name': name}" mode="kanban"
+                                    options="{'create_text':'Add a Media'}" nolabel="1"/>
+                            </group>
+                        </page>
+                        <page string="Floor Plans">
+                            <group name="floor_plan_template_images" string="Floor Plans">
+                                <field name="property_floor_plan_image_ids" class="o_website_sale_image_list"
+                                    context="{'default_name': name}" mode="kanban"
+                                    options="{'create_text':'Add a Media'}" nolabel="1"/>
+                            </group>
+                        </page>
+                        <page string="Documents">
+                            <field name="building_attachment_line_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="file"/>
+                                    <button name="download_file" type="object" string="Download" class="oe-highlight"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes">
+                            <field name="note" colspan="4" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="building_list" model="ir.ui.view">
+        <field name="name">building.list</field>
+        <field name="model">building.building</field>
+        <field name="priority">1</field>
+        <field name="type">list</field>
+        <field name="arch" type="xml">
+            <list string="Building" default_group_by="site_id" sample="1">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="site_id" optional="show"/>
+                <field name="block_id" optional="show"/>
+                <field name="city" optional="hide"/>
+                <field name="state_id" optional="hide"/>
+                <field name="partner_id" widget="many2one_avatar"/>
+                <field name="gross_area"/>
+                <field name="building_unit_area"/>
+                <field name="construction_date"/>
+                <field name="passenger_lift"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="building_filter" model="ir.ui.view">
+        <field name="name">building.list.filter</field>
+        <field name="model">building.building</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Top Search">
+                <group>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="city"/>
+                    <field name="state_id"/>
+                </group>
+                <newline/>
+                <group expand="0" string="Group By...">
+                    <filter name="partner" string="Partner" domain="[]"  context="{'group_by':'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="building_act1">
+        <field name="name">Building</field>
+        <field name="res_model">building.building</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="building_list"/>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="building_act1_view2">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="building_list"/>
+        <field name="act_window_id" ref="building_act1"/>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="building_act1_view1">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="building_form"/>
+        <field name="act_window_id" ref="building_act1"/>
+    </record>
+
+    <record model="ir.ui.view" id="building_list_web">
+        <field name="name">building.list_web</field>
+        <field name="model">building.building</field>
+        <field name="priority">1</field>
+        <field name="type">list</field>
+        <field name="arch" type="xml">
+            <list string="Real Estate" >
+                <field name="sequence"/>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="usage"/>
+                <field name="surface" sum="Total Surface"/>
+                <field name="target_lease"/>
+                <field name="staircase"/>
+                <field name="floor"/>
+                <field name="passenger_lift"/>
+                <field name="category"/>
+                <field name="old_property"/>
+                <field name="handicap_accessible"/>
+                <field name="parking_place_rentable"/>
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="building_act1_web">
+        <field name="name">Top (Test)</field>
+        <field name="res_model">building.building</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="building_list_web"/>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="building_act1_view2_web">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="building_list_web"/>
+        <field name="act_window_id" ref="building_act1_web"/>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="building_act1_view1_web">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="building_form"/>
+        <field name="act_window_id" ref="building_act1_web"/>
+    </record>
+
+    <menuitem id="menu_kx_real_estate"
+            name="Real Estate"
+            web_icon="kx_realestate,static/description/abro_realnet.png"
+            sequence="1"/>
+
+    <menuitem id="menu_building_list"
+            name="Property structure"
+            parent="menu_kx_real_estate"
+            sequence="1"/>
+
+    <menuitem id="menu_building_list_sub"
+            sequence="3"
+            action="building_act1"
+            parent="menu_building_list"/>
+
+    <menuitem id="real_estate_report_menu"
+            name="Reports"
+            parent="menu_kx_real_estate"
+            groups="group_real_estate_reports"
+            sequence="400"/>
+
+    <menuitem id="real_estate_report_sell"
+            name="Ownerships"
+            parent="real_estate_report_menu"
+            groups="group_real_estate_reports"
+            sequence="400"/>
+
+
+    <menuitem
+            id="menu_settings"
+            name="Settings"
+            parent="menu_kx_real_estate"
+            sequence="2000"/>
+
+</odoo>

@@ -1,0 +1,317 @@
+<odoo>
+    <record id="ownership_contract_tree_view" model="ir.ui.view">
+        <field name="name">ownership.contract.list</field>
+        <field name="model">ownership.contract</field>
+        <field name="arch" type="xml">
+            <list default_order="date desc" decoration-info="state == 'draft'" decoration-danger="state =='cancel'"
+                decoration-success="state == 'confirmed'" decoration-primary="state == 'resell'" sample="1">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="partner_id" widget="many2one_avatar"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="selling_price"/>
+                <field name="building_id"/>
+                <field name="building_code"/>
+                <field name="building_unit_id"/>
+                <field name="unit_code"/>
+                <field name="floor"/>
+                <field name="address"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-danger="state =='cancel'"
+                    decoration-success="state == 'confirmed'" decoration-primary="state == 'resell'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="ownership_contract_form_view" model="ir.ui.view">
+        <field name="name">ownership.contract.form</field>
+        <field name="model">ownership.contract</field>
+        <field name="arch" type="xml">
+            <form class="o_form_view">
+                <header>
+                    <button name="action_confirm" type="object" invisible="state in ('cancel','confirmed','closed')" string="Confirm" class="oe_highlight" data-hotkey="q"/>
+                    <button name="action_cancel" type="object" invisible="state in ('cancel','draft')" string="Cancel" class="oe_highlight" data-hotkey="x"/>
+                    <button name="action_set_closed" type="object" string="Set to Closed" class="oe_highlight" invisible="state in ('closed','draft')"/>
+                    <button name="action_reset_to_draft" type="object" string="Reset to Draft" class="oe_highlight" invisible="state in ('draft')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,cancel,closed"/>
+                </header>
+                <sheet>
+                    <group string="Customer Details">
+                        <group>
+                            <field name="origin" string="Contract Reference No." readonly="state != 'draft'"/>
+                            <field name="active" readonly="state != 'draft'"/>
+                            <field name="name" readonly="state != 'draft'"/>
+                            <field name="user_id" widget="many2one_avatar_user" readonly="state != 'draft'"/>
+                            <field name="partner_id" widget="many2one_avatar" readonly="state != 'draft'"/>
+                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="agreement_type" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+                    
+                    <field name="state" invisible="1"/>
+                
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_invoices" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                            <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                        </button>
+                    </div>
+
+                    <group string="Communication">
+                        <group>
+                            <field name="payment_initiator" readonly="state != 'draft'"/>
+                            <field name="phone" readonly="state != 'draft'"/>
+                            <field name="email" readonly="state != 'draft'"/>
+                            <field name="first_payment_date" readonly="state != 'draft'"/>
+                            <field name="contract_sign_date" readonly="state != 'draft'" required="1"/>
+                        </group>
+                        <group>
+                            <field name="preferred_communication_method_ids" widget="many2many_tags" readonly="state != 'draft'"/>
+                            <field name="legal_communication_method_ids" widget="many2many_tags" readonly="state != 'draft'"/>
+                            <field name="signed_by" readonly="state != 'draft'"/>
+                            <field name="signed_by_other" readonly="state != 'draft'" invisible="signed_by != 'other'"/>
+                            <field name="signed_by_other_phone" readonly="state != 'draft'" invisible="signed_by != 'other'"/>
+                            <field name="signed_by_other_document" filename="signed_by_other_document_name" readonly="state != 'draft'" invisible="signed_by != 'other'"/>
+                            <field name="signed_by_other_document_name" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <group string="Seller / Builder">
+                        <group>
+                            <field name="seller_company_name" readonly="1"/>
+                            <field name="seller_company_phone" readonly="1"/>
+                            <field name="seller_company_vat" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="seller_company_street" readonly="1"/>
+                            <field name="seller_company_street2" readonly="1"/>
+                            <field name="seller_company_city" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <separator string="Unit" colspan="4"/>
+                    
+                    <group name="building_unit_id">
+                        <group>
+                            <field name="site_id" domain="[]" options="{'no_create': True}" readonly="state != 'draft'"/>
+                            <field name="block_id" domain="[('site_id', '=', site_id)]" options="{'no_create': True}" readonly="state != 'draft'"/>
+                            <field name="building_id" domain="[('block_id', '=', block_id)]" options="{'no_create': True}" readonly="state != 'draft'"/>
+                            <field name="floor_id" domain="[('building_id', '=', building_id)]" options="{'no_create': True}" readonly="state != 'draft'"/>
+                            <field name="building_unit_id" options="{'no_create': True}" domain="[('is_property', '=', True), ('state','=','free'), ('floor_id', '=', floor_id), ('building_id', '=', building_id), ('block_id', '=', block_id), ('site_id', '=', site_id)]" readonly="state != 'draft'"/>
+                            <field name="selling_price" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+
+                    <group string="Addresses">
+                        <group string="Customer Address">
+                            <field name="primary_address" readonly="state != 'draft'"/>
+                            <field name="secondary_address" readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Building Address">
+                            <field name="building_state_id" readonly="1"/>
+                            <field name="building_city" readonly="1"/>
+                            <field name="building_woreda" readonly="1"/>
+                            <field name="building_kebele" readonly="1"/>
+                            <field name="building_title_deed_no" readonly="1"/>
+                            <field name="building_title_deed_date" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <notebook colspan="2">
+                        <page string="Installments">
+                            <field name="loan_line_rs_own_ids" readonly="state != 'draft'">
+                                <list string="Installments" editable="bottom">
+                                    <field name="number"/>
+                                    <field name="finance_means" optional="show"/>
+                                    <field name="trigger_type"/>
+                                    <field name="date" readonly="trigger_type == 'construction'"/>                                    
+                                    <field name="trigger_level" optional="show" readonly="trigger_type == 'date'"/>
+                                    <field name="trigger_building_type_id" column_invisible="True" readonly="trigger_type == 'date'"/>
+                                    <field name="progress_building_stage_id" optional="show" string="Building Stage" invisible="trigger_level != 'building'" readonly="trigger_type == 'date'"/>
+                                    <field name="progress_floor_stage_id" optional="show" string="Floor Stage" invisible="trigger_level != 'floor'" readonly="trigger_type == 'date'"/>
+                                    <field name="selected_floor_id" string="Floor #" readonly="trigger_type == 'date'"/>
+                                    <field name="progress_unit_stage_id" optional="show" string="Unit Stage" invisible="trigger_level != 'unit'" readonly="trigger_type == 'date'"/>
+                                    <field name="status_complete_date" readonly="1"/>
+                                    <field name="payment_term_date"/>
+                                    <field name="payment_request_letter"/>
+                                    <field name="contract_partner_id" required="1" style="font-weight: bold;"/>
+                                    <field name="discount_percent" optional="show"/>
+                                    <field name="amount" required="1"/>
+                                    <field name="amount_residual"/>
+                                    <!-- <field name="total_paid_amount"/> -->
+                                    <field name="invoice_id" readonly="1"/>
+                                    <field name="invoice_state" widget="badge" decoration-success="invoice_state == 'posted'"
+                                            decoration-info="invoice_state == 'draft'" optional="show"/>
+                                    <field name="payment_state" widget="badge"
+                                            decoration-danger="payment_state == 'not_paid'" decoration-warning="payment_state in ('partial', 'in_payment')"
+                                            decoration-success="payment_state in ('paid', 'reversed')" invisible="payment_state in 'invoicing_legacy'"/>
+                                    <button string="Refresh" name="action_refresh_eligibility" type="object" icon="fa-refresh"/>
+                                    <button string="Release" name="action_mark_eligible" type="object" icon="fa-unlock" invisible="trigger_type != 'manual'"/>
+                                    <button string="Create Invoice" name="make_invoice" type="object" icon="fa-file-text-o" invisible="invoice_id or eligibility_state != 'eligible'"/>
+                                    <button string="View Invoice" name="view_invoice" type="object" style="background-color:rgba(0, 160, 74, 0.5);color: #333;" invisible="payment_state in 'False'" groups="kx_realestate.group_payments"/>
+                                    
+                                    <button name="action_send_installment_notification" type="object" string="Notify User" icon="fa-bell" class="btn-primary"/>
+                                    <button name="action_send_installment_sms" type="object" string="Send SMS" icon="fa-comment" class="btn-success"/>
+                                </list>
+                            </field>
+                            <group col="12" class="custom_totals_wrapper">
+                                <group colspan="8"/>
+                                <group colspan="4">
+                                    <group class="oe_subtotal_footer custom_totals_block">
+                                        <field name="amount_total" class="custom_line" colspan="2"/>
+                                        <field name="paid" class="custom_line" colspan="2"/>
+                                        <field name="balance" class="custom_line total" colspan="2"/>
+                                    </group>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Documents">
+                            <field name="building_attachment_line_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="file"/>
+                                    <button name="download_file" type="object" string="Download" class="oe-highlight"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Warning Letter">
+                            <field name="warning_letter_ids">
+                                <list editable="bottom">
+                                    <!-- <field name="warning_letter_level"/> -->
+                                    <field name="letter_level_id"/>                                    
+                                    <field name="warning_letter_date"/>
+                                    <field name="warning_letter_remark"/>
+                                    <field name="warning_letter_file"/>
+                                    <!-- <button name="warning_letter_download_file" type="object" string="Download" class="oe-highlight"/> -->
+                                    <!-- <field name="warning_letter_download_file" filename="warning_letter_filename"/> -->
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Buyer Responsibility">
+                            <field name="buyer_responsibility_ids" readonly="state != 'draft'">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="done"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Seller/Builder Responsibility">
+                            <field name="seller_responsibility_ids" readonly="state != 'draft'">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="done"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Handover List">   
+                            <field name="handover_checklist_ids" readonly="state != 'draft'">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="checklist_type"/>
+                                    <field name="done" readonly="not is_fully_paid"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Terms and Penalty Rules">
+                            <!-- <field name="term_penalty_rule_ids" domain="[('rule_scope', '=', 'custom')]" context="{'default_rule_scope': 'custom', 'form_view_ref': 'kx_realestate.ownership_term_penalty_rule_form_view'}"> -->
+                            <field name="term_penalty_rule_ids" domain="[('rule_scope', '=', 'custom')]" context="{'default_rule_scope': 'custom', 'form_view_ref': 'kx_realestate.ownership_term_penalty_rule_form_view'}">
+                                <list>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="clause_ref"/>
+                                    <field name="rule_text"/>
+                                    <field name="applies_to"/>
+                                    <field name="action_type"/>
+                                    <field name="model_id"/>
+                                    <!-- <field name="condition_domain" widget="domain" options="{'model_field':'model_id'}"/> -->
+                                    <field name="condition_domain" widget="domain" options="{'model': 'ownership.contract'}"/>
+                                    <field name="rule_met"/>
+                                    <button name="action_evaluate_rule" type="object" string="Evaluate" icon="fa-check"/>
+                                    <button name="action_notify_user" type="object" string="Notify User" icon="fa-bell"/>
+                                    <button name="action_send_sms" type="object" string="Send SMS" icon="fa-comment"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="ownership_term_penalty_rule_form_view" model="ir.ui.view">
+        <field name="name">ownership.term.penalty.rule.form</field>
+        <field name="model">ownership.term.penalty.rule</field>
+        <field name="arch" type="xml">
+            <form string="Term / Penalty Rule">
+                <sheet>
+                    <group>
+                        <field name="clause_ref" readonly="0"/>
+                        <field name="rule_text" readonly="0"/>
+                        <field name="applies_to" readonly="0"/>
+                        <field name="action_type" readonly="0"/>
+                        <field name="model_id" readonly="1"/>
+                        <!-- <field name="condition_domain" widget="domain" options="{'model_field':'model_id'}"/> -->
+                        <field name="condition_domain" widget="domain" options="{'model': 'ownership.contract'}"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="ownership_contract_filter" model="ir.ui.view">
+        <field name="name">ownership.contract.list.filter</field>
+        <field name="model">ownership.contract</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Top Search">
+                <group>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="building_id"/>
+                    <field name="building_code"/>
+                    <field name="building_unit_id" domain="" options="{'no_create': True, 'no_open': True}"/>
+                    <field name="unit_code"/>
+                </group>
+                <newline/>
+                <group expand="0" string="Group By">
+                    <filter name="user_id" string="Responsible" domain="[]"  context="{'group_by':'user_id'}"/>
+                    <filter name="partner_id" string="Partner" domain="[]"  context="{'group_by':'partner_id'}"/>
+                    <filter name="building_id" string="Building" domain="[]"  context="{'group_by':'building_id'}"/>
+                    <filter name="state" string="State" domain="[]"  context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_own_contract_graph" model="ir.ui.view">
+        <field name="name">ownership.contract.graph</field>
+        <field name="model">ownership.contract</field>
+        <field name="arch" type="xml">
+            <graph string="Contracts" type="bar">
+                <field name="user_id" type="row"/>
+                <field name="amount_total"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="ownership_contract_form_action" model="ir.actions.act_window">
+        <field name="name">Ownership Contract</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ownership.contract</field>
+        <field name="view_mode">list,form,graph</field>
+        <field name="view_id" ref="ownership_contract_tree_view"/>
+    </record>
+
+    <menuitem
+            id="menu_contracts_main"
+            name="Contracts"
+            parent="menu_kx_real_estate"
+            sequence="23"/>
+    <menuitem id="menu_ownership_contract_form_action"
+            action="ownership_contract_form_action"
+            parent="menu_contracts_main"
+            sequence="30" />
+</odoo>

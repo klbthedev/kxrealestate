@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="kx_realestate.Dashboard">
+        <div class="container-fluid p-4 dashboard_container">
+            <!-- Filters ##########################################################################-->
+            <div class="row mb-4 pb-1 pe-3 border-bottom">
+                <div class="col-md-5">
+                    <h3 class="mb-4">Dashboard</h3>
+                </div>
+                <div class="col-md-3">
+                    <div class="row align-items-center">
+                        <div class="col-auto"><label class="mb-0 text-nowrap">From Date</label></div>
+                        <div class="col"><input type="date" class="form-control form-control-sm" t-model="state.date_from"/></div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="row align-items-center">
+                        <div class="col-auto"><label class="mb-0 text-nowrap">To Date</label></div>
+                        <div class="col"><input type="date" class="form-control form-control-sm" t-model="state.date_to"/></div>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="row align-items-right"><button class="btn btn-primary btn-sm" t-on-click="applyFilter">Filter</button></div>
+                </div>
+            </div>
+            <!-- Table #############################################################################-->
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center px-0 py-0">
+                            <table class="table table-hover table-striped table-sm mx-0 my-0">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="text-center col-fit">Title</th>
+                                        <th scope="col" class="text-center">Sep</th>
+                                        <th scope="col" class="text-center">Oct</th>
+                                        <th scope="col" class="text-center">Nov</th>
+                                        <th scope="col" class="text-center">Dec</th>
+                                        <th scope="col" class="text-center">Jan</th>
+                                        <th scope="col" class="text-center">Feb</th>
+                                        <th scope="col" class="text-center">Mar</th>
+                                        <th scope="col" class="text-center">Apr</th>
+                                        <th scope="col" class="text-center">May</th>
+                                        <th scope="col" class="text-center">Jun</th>
+                                        <th scope="col" class="text-center">Jul</th>
+                                        <th scope="col" class="text-center">Aug</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-start col-fit">Customers Requested to Pay</td>
+                                        <td><t t-esc="state.payment_request_item1_sep"/></td><td>2,000,000</td><td>3,000,000</td><td>4,000,000</td><td>5,000,000</td><td>6,000,000</td>
+                                        <td>7,000,000</td><td>8,000,000</td><td>9,000,000</td><td>10,000,000</td><td>11,000,000</td><td>12,000,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start col-fit">Customers Paid (count)</td>
+                                        <td><t t-esc="state.paid_customers_count_item_2_sep"/></td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start col-fit">Customers Paid (%)</td>
+                                        <td><t t-esc="state.paid_customers_percent_item_3_sep"/></td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start col-fit">Total Requested Amount</td>
+                                        <td><t t-esc="state.total_requested_amount_item_3_sep"/></td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start col-fit">Total Collected Amount</td>
+                                        <td><t t-esc="state.total_collected_amount_item_4_sep"/></td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start col-fit">Remaining Amount to be Collected</td>
+                                        <td><t t-esc="state.remaining_amount_tobe_collected_item_5_sep"/></td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start col-fit">Customers Ready to be requested payment</td>
+                                        <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start col-fit">Customers Not yet ready to request Payment</td>
+                                        <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start col-fit">Customers Ready to be requested payment</td>
+                                        <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start col-fit">Customers Not yet ready to request Payment</td>
+                                        <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start col-fit">Cancelled Contracts</td>
+                                        <td><t t-esc="state.cancelled_contract_item11_sep"/></td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start col-fit">Customers 1st Warning Issued</td>
+                                        <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start col-fit">Customers 2nd Warning Issued</td>
+                                        <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start col-fit">Customers 3rd Warning Issued</td>
+                                        <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start col-fit">Customers Final Warning Issued</td>
+                                        <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start col-fit">Customer ready for Handover</td>
+                                        <td><t t-esc="state.handover_ready_unit_item16_sep"/></td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start col-fit">Customer Handovered</td>
+                                        <td><t t-esc="state.handed_over_unit_item17_sep"/></td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+            
+            <!-- KPI Cards #########################################################################-->
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center">
+                            <h5>Total Payment Requests</h5>
+                            <h1><t t-esc="state.requested_payment_count"/></h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center">
+                            <h5>Construction Trigger</h5>
+                            <h1><t t-esc="state.construction_count"/></h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center">
+                            <h5>Date Trigger</h5>
+                            <h1><t t-esc="state.date_count"/></h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Placeholder for future charts #####################################################-->
+            
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            Future Chart Area
+                        </div>
+                        <div class="card-body">
+                            Chart.js or ApexCharts can be rendered here.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Placeholder for future items #####################################################-->
+
+        </div>
+    </t>
+</templates>

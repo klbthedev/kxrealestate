@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Dashboard View -->
+    <record id="view_my_dashboard" model="ir.ui.view">
+        <field name="name">my.dashboard</field>
+        <field name="model">my.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="KPI Dashboard" create="false" edit="true">
+                <sheet>
+                    <div class="row mb-4 align-items-end">
+                        <div class="col-md-4">
+                            <span class="o_form_label">From Date</span>
+                            <field name="date_from"/>
+                        </div>
+
+                        <div class="col-md-4">
+                            <span class="o_form_label">To Date</span>
+                            <field name="date_to"/>
+                        </div>
+
+                        <!-- <div class="col-md-2">
+                            <button name="action_refresh_dashboard"
+                                    string="Apply Filter"
+                                    type="object"
+                                    class="btn btn-primary w-50"/>
+                        </div> -->
+                        <div class="col-md-2"></div>
+                    </div>
+                    
+                    
+                    
+                    <separator string="Dashboard"/>
+                    <!-- Filters -->
+                    <!-- <div class="row mb-4 align-items-end">
+                        <div class="col-md-4">
+                            <div class="o_form_label">From Date</div>
+                            <field name="date_from"/>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="o_form_label">To Date</div>
+                            <field name="date_to"/>
+                        </div>
+                    </div>                   
+                    <separator/> -->
+                    <!-- KPI Cards -->
+                    <div class="container-fluid">
+                        <div class="row mb-4 p-3">
+                            <div class="col-md-4">
+                                <div class="card text-center p-2">
+                                    <h6>Total Payment Requests</h6>
+                                    <h3>
+                                        <field name="requested_payment_count"/>
+                                    </h3>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="card text-center p-2">
+                                    <h6>Construction Trigger</h6>
+                                    <h3>
+                                        <field name="trigger_type_construction_count"/>
+                                    </h3>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="card text-center p-2">
+                                    <h6>Date Trigger</h6>
+                                    <h3>
+                                        <field name="trigger_type_date_count"/>
+                                    </h3>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_my_dashboard" model="ir.actions.act_window">
+        <field name="name">Dashboard</field>
+        <field name="res_model">my.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_my_dashboard"/>
+        <field name="target">current</field>
+        <field name="context">{'form_view_initial_mode': 'view'}</field>
+    </record>
+
+    <!-- Menu -->
+    <!-- <menuitem
+        id="menu_my_dashboard"
+        name="Dashboard"
+        parent="menu_kx_real_estate"
+        action="action_my_dashboard"
+        sequence="0"
+    /> -->
+</odoo>

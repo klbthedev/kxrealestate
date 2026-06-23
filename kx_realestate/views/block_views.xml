@@ -1,0 +1,84 @@
+<odoo>
+    <record id="re_block_view_list" model="ir.ui.view">
+        <field name="name">re.block.list</field>
+        <field name="model">re.block</field>
+        <field name="arch" type="xml">
+                    <list default_group_by="site_id" decoration-muted="not active" sample="1">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="site_id"/>
+                <field name="company_id" optional="show"/>
+                <field name="active" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="re_block_view_form" model="ir.ui.view">
+        <field name="name">re.block.form</field>
+        <field name="model">re.block</field>
+        <field name="arch" type="xml">
+            <form string="Block">
+                <header>
+                    <field name="active" widget="boolean_toggle"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_buildings" type="object" class="oe_stat_button" icon="fa-building">
+                            <field name="building_count" widget="statinfo" string="Buildings"/>
+                        </button>
+                        <button name="action_view_units" type="object" class="oe_stat_button" icon="fa-home">
+                            <field name="unit_count" widget="statinfo" string="Units"/>
+                        </button>
+                        <button name="action_view_reservations" type="object" class="oe_stat_button" icon="fa-book">
+                            <field name="reservation_count" widget="statinfo" string="Reservations"/>
+                        </button>
+                        <button name="action_view_ownership_contracts" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                            <field name="ownership_contract_count" widget="statinfo" string="Sales"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Block Name"/>
+                        </h1>
+                        <div class="text-muted">
+                            <field name="code" placeholder="Code"/>
+                        </div>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="site_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Notes">
+                            <field name="note" nolabel="1"/>
+                        </page>
+                        <page string="Buildings">
+                            <field name="building_ids" context="{'default_block_id': id, 'default_site_id': site_id}">
+                                <list sample="1">
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="re_block_action" model="ir.actions.act_window">
+        <field name="name">Blocks</field>
+        <field name="res_model">re.block</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_re_block" name="Blocks" parent="menu_building_list" action="re_block_action" sequence="2"/>
+</odoo>

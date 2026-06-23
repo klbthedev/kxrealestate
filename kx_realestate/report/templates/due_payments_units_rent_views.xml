@@ -1,0 +1,51 @@
+<odoo>
+    <template id="report_due_payments_units_rent">
+        <t t-call="web.html_container">
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <link rel="stylesheet" href="/kx_realestate/static/src/css/report-style.css"/>
+                    <h2>Units Due Payments</h2>
+                    <table class="gridtable">
+                        <tr>
+                            <th align="center">Date From:</th>
+                            <th align="center">Date To:</th>
+                        </tr>
+                        <tr>
+                            <td align="center"><span t-out="date_start"/></td>
+                            <td align="center"><span t-out="date_end"/></td>
+                        </tr>
+                    </table>
+                    <br/>
+                    <table class="report_table">
+                        <tr>
+                            <th>Customer</th>
+                            <th>Installment</th>
+                            <th>Due Date</th>
+                            <th>Contract Ref</th>
+                            <th>Country</th>
+                            <th>City</th>
+                            <th>Region</th>
+                            <th>Building</th>
+                            <th>Unit</th>
+                        </tr>
+                        <tr t-foreach="get_lines" t-as="line">
+                            <td><span t-out="line['loan_id'].partner_id.name"/></td>
+                            <td><span t-out="line['amount']"/></td>
+                            <td><span t-out="line['date']"/></td>
+                            <td><span t-out="line['loan_id'].name"/></td>
+                            <td><span t-out="line['loan_id'].country.name"/></td>
+                            <td><span t-out="line['loan_id'].city.name"/></td>
+                            <td><span t-out="line['loan_id'].building_id.code"/></td>
+                            <td><span t-out="line['loan_id'].building_unit_id.code"/></td>
+                            <td><span t-out="line['loan_id'].building_unit_id.floor"/></td>
+                        </tr>
+                        <tr>
+                            <th colspan="6" style="text-align:right">Total</th>
+                            <th colspan="3"><t t-out="round(get_total,2)" /></th>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,128 @@
+{
+    'name':'Real Estate',
+    'version':'18.0.1.0.2',
+    'summary':'This module helps you manage real estate projects, sell and rent property contracts, and handle invoicing. It also generates reports to analyze seller and rental contracts.',
+    'description':""" Real Estate Management
+      - Properties Hierarchy
+      - Units Reservation
+      - Ownership Contracts Managament
+      - Easy Tenant Management
+      - Invoicing Management & Accounting Integration
+      - Property Refund
+      - Email Notifications
+      - Integration with Odoo Website
+      - Comprehensive Reporting
+      """,
+    'author':'KoderXpert Technologies LLP',
+    'company': 'KoderXpert Technologies LLP',
+    'maintainer': 'KoderXpert Technologies LLP',
+    'website': 'https://koderxpert.com',
+    'depends':['base','account','analytic'],
+    'data':[
+        'security/real_estate_security.xml',
+        'security/ir.model.access.csv',
+        'security/ir_rules.xml',
+        'data/mail_template_data_views.xml',
+        'data/communication_method_data.xml',
+        'data/floor_stage_data.xml',
+        'data/building_stage_data.xml',
+        'data/unit_stage_data.xml',
+        'data/ir_sequence_views.xml',
+        'data/ir_cron.xml',
+        'wizard/installment_pay_views.xml',
+        'wizard/customer_payment_check_views.xml',
+        # 'wizard/realestate_rental_pay_views.xml',
+        'wizard/customer_payment_refund_views.xml',
+        # 'wizard/rental_contract_renewal_views.xml',
+        'wizard/due_payment_views.xml',
+        'wizard/salesperson_sales_views.xml',
+        'wizard/due_payment_unit_views.xml',
+        'wizard/late_payment_views.xml',
+        'wizard/late_payment_unit_views.xml',
+        'wizard/occupancy_views.xml',
+        'views/account_move_views.xml',
+        'views/property_image_views.xml',
+        'views/floor_plans_views.xml',
+        'views/building_images_views.xml',
+        'views/building_views.xml',
+        'views/site_views.xml',
+        'views/block_views.xml',
+        'views/floor_views.xml',
+        'views/floor_stage_views.xml',
+        'views/building_stage_views.xml',
+        'views/unit_stage_views.xml',
+        'views/amenity_views.xml',
+        # 'views/regions_views.xml',
+        'views/building_description_views.xml',
+        'views/building_status_views.xml',
+        'views/building_type_views.xml',
+        'views/building_unit_views.xml',
+        'views/installment_template_views.xml',
+        'views/res_partner_views.xml',
+        'views/res_users_views.xml',
+        'views/unit_reservation_views.xml',
+        # 'views/rental_contract_views.xml',
+        'views/ownership_contract_views.xml',
+        'views/configuration_views.xml',
+        'views/installments_views.xml',
+        'views/realestate_ui_enhancements.xml',
+        # 'views/my_dashboard_views.xml',
+        'views/dashboard_action.xml',
+        'views/warning_letter_level_views.xml',
+        
+        # for report
+        'views/wizard_views.xml',
+
+        
+
+        # 'views/component_views.xml',
+        'wizard/owner_account_views.xml',
+        'report/report_action_views.xml',
+        'report/templates/report_reservation_views.xml',
+        'report/templates/report_ownership_contract_views.xml',
+        # 'report/templates/rental_contract_views.xml',
+        'report/templates/report_quittance_letter_views.xml',
+        'report/ownership_contract_bi_report_views.xml',
+        'report/templates/occupany_views.xml',
+        'report/templates/due_payments_customers_views.xml',
+        # 'report/templates/due_payments_customers_rent_views.xml',
+        'report/templates/due_payments_units_views.xml',
+        # 'report/templates/due_payments_units_rent_views.xml',
+        'report/templates/late_payments_customers_views.xml',
+        # 'report/templates/late_payments_customers_rent_views.xml',
+        'report/templates/late_payments_units_views.xml',
+        # 'report/templates/late_payments_units_rent_views.xml',
+        # 'report/rental_contract_bi_report_views.xml',
+        'report/units_report_views.xml',
+
+        # for report
+        'report/report_action.xml',
+        'report/report_template.xml',
+    ],
+    'demo': [
+        'data/real_estate_demo_views.xml',
+    ],
+    "assets": {
+        "web.assets_backend": [
+            "kx_realestate/static/src/xml/matterport_templates.xml",
+            "kx_realestate/static/src/js/matterport_viewer.js",
+            "kx_realestate/static/src/css/style.css",
+            "kx_realestate/static/src/css/report-style.css",
+            "kx_realestate/static/src/css/chatter_bottom.css",
+            "kx_realestate/static/src/dashboard/dashboard.js",
+            "kx_realestate/static/src/dashboard/dashboard.xml",
+            "kx_realestate/static/src/scss/dashboard.scss",
+        ],
+    },
+    'price': 299.99,
+    'currency': 'USD',
+    'post_init_hook': 'post_init_hook',
+    'installable': True,
+    'application': False,
+    'auto_install': False,
+    'license': "AGPL-3",
+    # 'external_dependencies': {
+    #     'python': ['phonenumbers'],
+    # },
+    'images': ['static/description/real_estate.gif'],
+}

@@ -1,0 +1,58 @@
+<odoo>
+    <record id="ownership_trigger_sync" model="ir.cron">
+        <field name="name">Process Ownership Installment Triggers</field>
+        <field name="model_id" ref="model_ownership_contract"/>
+        <field name="state">code</field>
+        <field name="code">model.process_installment_triggers()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+    </record>
+
+    <record id="ownership_reminder_sync" model="ir.cron">
+        <field name="name">Send Ownership Installment Reminders</field>
+        <field name="model_id" ref="model_loan_line_rs_own"/>
+        <field name="state">code</field>
+        <field name="code">model.process_installment_reminders()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+    </record>
+
+    <record id="ir_cron_evaluate_rules" model="ir.cron">
+        <field name="name">Evaluate Term Penalty Rules</field>
+        <field name="model_id" ref="model_ownership_term_penalty_rule"/>
+        <field name="state">code</field>
+        <field name="code">model.action_evaluate_all_rules()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">hours</field>
+        <!-- <field name="numbercall">-1</field> -->
+        <field name="active" eval="True"/>
+    </record>
+    <!-- <record id="ir_cron_due_stage_notifications" model="ir.cron">
+        <field name="name">Due and Stage Notifications</field>
+        <field name="model_id" ref="model_loan_line_rs_own"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_send_due_and_stage_notifications()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active">True</field>
+    </record> -->
+
+    <!-- <record id="auto_rental_invoice_sync" model="ir.cron">
+        <field name="name">Auto Generate Rental Invoices</field>
+        <field name="model_id" ref="model_rental_contract"/>
+        <field name="state">code</field>
+        <field name="code">model.auto_rental_invoice()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+    </record> -->
+
+    <record id="auto_cancel_reservation_sync" model="ir.cron">
+        <field name="name">Auto Cancel Unit Reservation</field>
+        <field name="model_id" ref="model_unit_reservation"/>
+        <field name="state">code</field>
+        <field name="code">model.auto_cancel_reservation()</field>
+        <field name="active" eval="False"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">hours</field>
+    </record>
+</odoo>

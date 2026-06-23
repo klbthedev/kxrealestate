@@ -1,0 +1,11 @@
+<odoo>
+    <record id="action_property_status_pdf_report" model="ir.actions.report">
+        <field name="name">Property Status PDF Report</field>
+        <field name="model">property.status.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">kx_realestate.property_status_pdf_template</field>
+        <field name="report_file">kx_realestate.property_status_pdf_template</field>
+        <field name="binding_model_id" ref="model_property_status_report_wizard"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

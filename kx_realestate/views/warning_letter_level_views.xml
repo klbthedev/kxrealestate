@@ -1,0 +1,35 @@
+<odoo>
+    <record id="warning_letter_level_view_list" model="ir.ui.view">
+        <field name="name">warning.letter.level.list</field>
+        <field name="model">warning.letter.level</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" sample="1">
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="warning_letter_level_form" model="ir.ui.view">
+        <field name="name">warning.letter.level.form</field>
+        <field name="model">warning.letter.level</field>
+        <field name="arch" type="xml">
+            <form string="Progress Stage">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="warning_letter_level_action" model="ir.actions.act_window">
+        <field name="name">Warning Letter Level</field>
+        <field name="res_model">warning.letter.level</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_warning_letter_level"
+        name="Warning Letter Level"
+        parent="menu_settings"
+        action="warning_letter_level_action"
+        sequence="40"/>
+</odoo>

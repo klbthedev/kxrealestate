@@ -1,0 +1,80 @@
+<odoo>
+    <record id="view_report_units_graph" model="ir.ui.view">
+        <field name="name">units.report.graph</field>
+        <field name="model">units.report</field>
+        <field name="arch" type="xml">
+            <graph string="Units Analysis" type="bar">
+                <field name="building_id" type="row"/>
+                <field name="units" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_report_units_pivot" model="ir.ui.view">
+        <field name="name">units.report.pivot</field>
+        <field name="model">units.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Units Analysis" disable_linking="True">
+                <field name="site_id" type="row"/>
+                <field name="block_id" type="row"/>
+                <field name="building_id" type="row"/>
+                <field name="floor_id" type="row"/>
+                <field name="units" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_report_units_search" model="ir.ui.view">
+        <field name="name">units.report.search</field>
+        <field name="model">units.report</field>
+        <field name="arch" type="xml">
+            <search string="Units Analysis">
+                <field name="site_id"/>
+                <field name="block_id"/>
+                <field name="building_id"/>
+                <field name="floor_id"/>
+                <field name="partner_id"/>
+                <field name="building_description_id"/>
+                <field name="building_type_id"/>
+                <field name="building_status_id"/>
+                <field name="stock_state"/>
+                <field name="rooms"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_site" string="Site" domain="[]" context="{'group_by':'site_id'}"/>
+                    <filter name="group_block" string="Block" domain="[]" context="{'group_by':'block_id'}"/>
+                    <filter name="group_building" string="Building" domain="[]" context="{'group_by':'building_id'}"/>
+                    <filter name="group_floor" string="Floor" domain="[]" context="{'group_by':'floor_id'}"/>
+                    <filter name="group_owner" string="Owner" domain="[]" context="{'group_by':'partner_id'}"/>
+                    <filter name="group_specification" string="Specification" domain="[]" context="{'group_by':'building_description_id'}"/>
+                    <filter name="group_rooms" string="Rooms" domain="[]" context="{'group_by':'rooms'}"/>
+                    <filter name="group_type" string="Type" domain="[]" context="{'group_by':'building_type_id'}"/>
+                    <filter name="group_status" string="Status" domain="[]" context="{'group_by':'building_status_id'}"/>
+                    <filter name="group_stock_state" string="Stock State" domain="[]" context="{'group_by':'stock_state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_report_units_all" model="ir.actions.act_window">
+        <field name="name">units Analysis</field>
+        <field name="res_model">units.report</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="search_view_id" ref="view_report_units_search"/>
+        <field name="context">{'group_by_no_leaf':1,'group_by':[]}</field>
+    </record>
+
+    <menuitem
+        id="menu_report_units"
+        name="Real Estate"
+        parent="real_estate_report_menu"
+        groups="group_real_estate_reports"
+        sequence="3"/>
+
+    <menuitem
+        id="menu_report_units_all"
+        name="Units Analysis"
+        action="action_report_units_all"
+        parent="menu_report_units"
+        groups="group_real_estate_reports"
+        sequence="3"/>
+</odoo>

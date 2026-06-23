@@ -1,0 +1,55 @@
+.o_matterport_iframe {
+    width: 100%;
+    height: 500px;
+    border-radius: 12px;
+    border: none;
+}
+
+.o_matterport_modal {
+    width: 100%;
+    height: 100%;
+    background: #000;
+}
+
+.o_matterport_fullscreen {
+    width: 100%;
+    height: 90vh;
+    border: none;
+}
+
+.o_matterport_header {
+    color: white;
+    padding: 10px;
+}
+
+
+/* Align like invoice totals */
+.custom_totals_block {
+    padding-top: 10px;
+}
+
+/* Each line (label + value) */
+.custom_totals_block .o_field_widget {
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+    padding: 4px 0;
+}
+
+/* Labels */
+.custom_totals_block .o_field_widget .o_field_label {
+    color: #555;
+}
+
+/* Values */
+.custom_totals_block .o_field_widget .o_field_value {
+    font-weight: 500;
+}
+
+/* Final total (balance) */
+.custom_totals_block .o_field_widget.total .o_field_value {
+    font-size: 18px;
+    font-weight: 700;
+    border-top: 1px solid #ddd;
+    padding-top: 6px;
+}

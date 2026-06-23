@@ -1,0 +1,133 @@
+<odoo>
+    <record id="re_floor_view_list" model="ir.ui.view">
+        <field name="name">re.floor.list</field>
+        <field name="model">re.floor</field>
+        <field name="arch" type="xml">
+            <!-- <list default_group_by="site_id" decoration-success="stage_id.code == 'handed_over'" decoration-info="stage_id.code == 'finishing'" sample="1"> -->
+            <list default_group_by="site_id" >
+                <field name="sequence" widget="handle"/>
+                <field name="site_id" optional="show"/>
+                <field name="block_id" optional="show"/>
+                <field name="building_id"/>
+                <field name="level_number"/>
+                <field name="name"/>
+                <!-- <field name="progress_stage" widget="badge"/> -->
+                <!-- <field name="stage_id" widget="badge"/> -->
+                <field name="progress_percent" widget="progressbar"/>
+                <field name="unit_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="re_floor_view_form" model="ir.ui.view">
+        <field name="name">re.floor.form</field>
+        <field name="model">re.floor</field>
+        <field name="arch" type="xml">
+            <!-- <form string="Floor"> -->
+            <form string="Floor">
+                <header>
+                    <!-- <field name="active" widget="boolean_toggle"/> -->
+                    <!-- <field name="progress_stage" widget="statusbar" clickable="1" options="{'clickable': 1}"/> -->
+                    <!-- <field name="stage_id" widget="statusbar" clickable="1" options="{'clickable': 1}"/> -->
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object" name="action_view_building" class="oe_stat_button" icon="fa-building" invisible="not building_id">
+                            <span class="o_stat_text">Building</span>
+                        </button>
+                        <button type="object" name="action_view_units" class="oe_stat_button" icon="fa-building-o">
+                            <field name="unit_count" widget="statinfo" string="Units"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Floor Name"/>
+                        </h1>
+                        <div class="text-muted">
+                            <field name="code" placeholder="Code"/>
+                        </div>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="site_id" readonly="1"/>
+                            <field name="block_id" readonly="1"/>
+                            <field name="building_id"/>
+                            <field name="building_type_id" readonly="1"/>
+                            <field name="level_number"/>
+                        </group>
+                        <group>
+                            <field name="sequence"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active"/>
+                            <field name="progress_percent" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <!-- <page string="Progress Updates">
+                            <field name="progress_line_ids" context="{'default_floor_id': id, 'default_building_type_id': building_type_id}">
+                                <list editable="bottom" default_order="progress_date desc">
+                                    <field name="progress_date"/>
+                                    <field name="stage" widget="badge"/>
+                                    <field name="percent_complete"/>
+                                    <field name="user_id" widget="many2one_avatar_user"/>
+                                    <field name="approved_by_id" widget="many2one_avatar_user" optional="show"/>
+                                </list>
+                            </field>
+                        </page> -->
+                        <page string="Units">
+                            <field name="unit_ids" context="{'default_floor_id': id, 'default_building_id': building_id, 'default_is_property': True, 'form_view_ref': 'kx_realestate.building_unit_form', 'tree_view_ref': 'kx_realestate.building_unit_list'}" domain="[('is_property', '=', True)]">
+                                <list>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="state" widget="badge"/>
+                                    <field name="stock_state" widget="badge"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Floor Status">
+                            <field name="floor_stage_ids">
+                                <list>
+                                    <field name="floor_status_id"/>
+                                    <field name="floor_status_id_date"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="3D Renders">
+                            <form string="Property">
+                                <header>
+                                    <button name="action_open_matterport"
+                                            type="object"
+                                            string="View 3D Tour"
+                                            class="btn-primary"
+                                            invisible="not matterport_embed_url"/>
+                                </header>
+                                <sheet>
+                                    <group>
+                                        <!-- <field name="name"/> -->
+                                        <field name="matterport_model_id"/>
+                                    </group>
+                                    <separator string="Unit" colspan="4"/>
+                                    <group>
+                                        <field name="matterport_iframe" widget="html"/>
+                                    </group>
+                                </sheet>
+                            </form>
+                        </page>
+                        <page string="Notes">
+                            <field name="note" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="re_floor_action" model="ir.actions.act_window">
+        <field name="name">Floors</field>
+        <field name="res_model">re.floor</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_re_floor" name="Floors" parent="menu_building_list" action="re_floor_action" sequence="3"/>
+</odoo>

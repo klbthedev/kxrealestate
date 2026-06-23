@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Kanban: hierarchy & contracts -->
+    <record id="re_site_view_kanban" model="ir.ui.view">
+        <field name="name">re.site.kanban</field>
+        <field name="model">re.site</field>
+        <field name="arch" type="xml">
+            <kanban sample="1">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="owner_id"/>
+                <field name="building_count"/>
+                <field name="unit_count"/>
+                <templates> 
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="d-flex">
+                                <field name="owner_id" widget="many2one_avatar" class="me-2"/>
+                                <div class="flex-grow-1">
+                                    <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                    <div t-if="record.code.raw_value" class="text-muted small"><field name="code"/></div>
+                                    <div t-if="record.owner_id.raw_value" class="small"><field name="owner_id"/></div>
+                                </div>
+                            </div>
+                            <div class="mt-5">
+                                <span class="badge text-bg-secondary me-1">
+                                    <i class="fa fa-building-o"/> 
+                                    <field name="building_count"/>
+                                </span>
+                                <span class="badge text-bg-light border">
+                                    <i class="fa fa-home"/> 
+                                    <field name="unit_count"/>
+                                </span>
+                                <span class="badge text-bg-light border">
+                                    <i class="fa fa-home"/> 
+                                    <field name="available_units_count"/>
+                                </span>
+
+                                <span
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="top"
+                                    title="Sold Units"
+                                    class="badge text-bg-light border">
+                                    <i class="fa fa-home"/>  
+                                    <field name="sold_units_count"/>
+                                </span>
+
+
+
+                                <!-- <span class="badge text-bg-light border">
+                                    <i class="fa fa-home"/> 
+                                    <field name="sold_units_count"/>
+                                </span> -->
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="re_block_view_kanban" model="ir.ui.view">
+        <field name="name">re.block.kanban</field>
+        <field name="model">re.block</field>
+        <field name="arch" type="xml">
+            <kanban sample="1" default_group_by="site_id">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="site_id"/>
+                <field name="building_count"/>
+                <field name="unit_count"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <strong class="o_kanban_record_title"><field name="name"/></strong>
+                            <div class="text-muted small"><field name="code"/></div>
+                            <div class="small"><i class="fa fa-map-marker"/> <field name="site_id"/></div>
+                            <div class="mt-2">
+                                <span class="badge text-bg-secondary me-1"><field name="building_count"/> <span>bld</span></span>
+                                <span class="badge text-bg-light border"><field name="unit_count"/> <span>units</span></span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="building_kanban_view" model="ir.ui.view">
+        <field name="name">building.building.kanban</field>
+        <field name="model">building.building</field>
+        <field name="arch" type="xml">
+            <kanban sample="1" default_group_by="site_id">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="site_id"/>
+                <field name="block_id"/>
+                <field name="city"/>
+                <field name="state_id"/>
+                <field name="partner_id"/>
+                <field name="unit_count"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                            <div class="o_kanban_image_fill_left d-flex align-items-center justify-content-center bg-200">
+                                <i class="fa fa-building fa-2x text-muted" title="Building"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                <div class="text-muted small"><field name="code"/></div>
+                                <div class="small"><field name="site_id"/> / <field name="block_id"/></div>
+                                <div class="small" t-if="record.city.raw_value or record.state_id.raw_value">
+                                    <field name="city"/> <field name="state_id"/>
+                                </div>
+                                <div class="small"><i class="fa fa-user"/> <field name="partner_id"/></div>
+                                <span class="badge text-bg-secondary mt-1"><field name="unit_count"/> units</span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="re_floor_view_kanban" model="ir.ui.view">
+        <field name="name">re.floor.kanban</field>
+        <field name="model">re.floor</field>
+        <field name="arch" type="xml">
+            <kanban sample="1" default_group_by="building_id">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="building_id"/>
+                <field name="level_number"/>
+                <field name="stage_id"/>
+                <field name="progress_percent"/>
+                <field name="unit_count"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <strong><field name="name"/></strong>
+                            <div class="small text-muted"><field name="building_id"/></div>
+                            <div class="small">Level <field name="level_number"/></div>
+                            <field name="progress_percent" widget="progressbar"/>
+                            <span class="badge text-bg-info mt-1"><field name="unit_count"/> units</span>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="ownership_contract_kanban_view" model="ir.ui.view">
+        <field name="name">ownership.contract.kanban</field>
+        <field name="model">ownership.contract</field>
+        <field name="arch" type="xml">
+            <kanban sample="1" default_group_by="state">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="user_id"/>
+                <field name="building_unit_id"/>
+                <field name="selling_price"/>
+                <field name="state"/>
+                <field name="date"/>
+                <progressbar field="state" colors='{"draft": "warning", "confirmed": "success", "cancel": "danger", "resell": "info"}'/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                            <div class="o_kanban_image_fill_left d-flex align-items-center justify-content-center bg-200">
+                                <field name="partner_id" widget="many2one_avatar"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                <div class="small text-muted"><field name="building_unit_id"/></div>
+                                <div class="small"><field name="user_id" widget="many2one_avatar_user"/></div>
+                                <div class="mt-1 fw-bold"><field name="selling_price"/></div>
+                                <field name="state" widget="badge"
+                                    decoration-info="state == 'draft'"
+                                    decoration-success="state == 'confirmed'"
+                                    decoration-danger="state == 'cancel'"
+                                    decoration-primary="state == 'resell'"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="unit_reservation_kanban_view" model="ir.ui.view">
+        <field name="name">unit.reservation.kanban</field>
+        <field name="model">unit.reservation</field>
+        <field name="arch" type="xml">
+            <kanban sample="1" default_group_by="state">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="user_id"/>
+                <field name="building_unit_id"/>
+                <field name="selling_price"/>
+                <field name="state"/>
+                <field name="date"/>
+                <progressbar field="state" colors='{"draft": "muted", "confirmed": "success", "canceled": "danger", "contracted": "info"}'/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                            <div class="o_kanban_image_fill_left d-flex align-items-center justify-content-center bg-200">
+                                <field name="partner_id" widget="many2one_avatar"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <strong><field name="name"/></strong>
+                                <div class="small text-muted"><field name="building_unit_id"/></div>
+                                <div class="small"><field name="user_id" widget="many2one_avatar_user"/></div>
+                                <div class="fw-bold"><field name="selling_price"/></div>
+                                <field name="state" widget="badge"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="re_floor_search_view" model="ir.ui.view">
+        <field name="name">re.floor.search</field>
+        <field name="model">re.floor</field>
+        <field name="arch" type="xml">
+            <search string="Floors">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="building_id"/>
+                <field name="site_id"/>
+                <field name="block_id"/>
+                <field name="level_number"/>
+                <separator/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter name="stage_handover" string="Completed" domain="[('progress_percent', '&gt;=', 100)]"/>
+                <filter name="stage_progress" string="In progress" domain="[('progress_percent', '&gt;', 0), ('progress_percent', '&lt;', 100)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="grp_building" string="Building" context="{'group_by': 'building_id'}"/>
+                    <filter name="grp_site" string="Site" context="{'group_by': 'site_id'}"/>
+                    <filter name="grp_stage" string="Stage" context="{'group_by': 'stage_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="unit_reservation_search_view" model="ir.ui.view">
+        <field name="name">unit.reservation.search</field>
+        <field name="model">unit.reservation</field>
+        <field name="arch" type="xml">
+            <search string="Reservations">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="user_id"/>
+                <field name="building_id"/>
+                <field name="building_unit_id"/>
+                <field name="unit_code"/>
+                <separator/>
+                <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="confirmed" string="Confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <filter name="contracted" string="Contracted" domain="[('state', '=', 'contracted')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="grp_partner" string="Customer" context="{'group_by': 'partner_id'}"/>
+                    <filter name="grp_user" string="Responsible" context="{'group_by': 'user_id'}"/>
+                    <filter name="grp_building" string="Building" context="{'group_by': 'building_id'}"/>
+                    <filter name="grp_state" string="State" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="re_site_search_view" model="ir.ui.view">
+        <field name="name">re.site.search</field>
+        <field name="model">re.site</field>
+        <field name="arch" type="xml">
+            <search string="Sites">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="owner_id"/>
+                <separator/>
+                <filter name="active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="grp_owner" string="Owner" context="{'group_by': 'owner_id'}"/>
+                    <filter name="grp_company" string="Company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="re_block_search_view" model="ir.ui.view">
+        <field name="name">re.block.search</field>
+        <field name="model">re.block</field>
+        <field name="arch" type="xml">
+            <search string="Blocks">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="site_id"/>
+                <separator/>
+                <filter name="active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="grp_site" string="Site" context="{'group_by': 'site_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="building_filter_enhance" model="ir.ui.view">
+        <field name="name">building.search.enhance</field>
+        <field name="model">building.building</field>
+        <field name="inherit_id" ref="kx_realestate.building_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="site_id"/>
+                <field name="block_id"/>
+                <field name="code"/>
+                <separator/>
+                <filter name="flt_active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="flt_inactive" string="Archived" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter name="grp_site" string="Site" context="{'group_by': 'site_id'}"/>
+                <filter name="grp_block" string="Block" context="{'group_by': 'block_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="ownership_contract_filter_enhance" model="ir.ui.view">
+        <field name="name">ownership.contract.search.enhance</field>
+        <field name="model">ownership.contract</field>
+        <field name="inherit_id" ref="kx_realestate.ownership_contract_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="site_id"/>
+                <field name="block_id"/>
+                <!-- <field name="region_id"/> -->
+                <separator/>
+                <filter name="flt_draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="flt_confirmed" string="Confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <filter name="flt_resell" string="Resell" domain="[('state', '=', 'resell')]"/>
+                <filter name="flt_cancel" string="Canceled" domain="[('state', '=', 'cancel')]"/>
+                <separator/>
+                <filter name="grp_site" string="Site" context="{'group_by': 'site_id'}"/>
+                <filter name="grp_block" string="Block" context="{'group_by': 'block_id'}"/>
+                <filter name="grp_date" string="Contract date" context="{'group_by': 'date'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="building_unit_filter_enhance" model="ir.ui.view">
+        <field name="name">property.template.search.enhance</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="kx_realestate.building_unit_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="code"/>
+                <field name="building_id"/>
+                <field name="site_id"/>
+                <field name="block_id"/>
+                <field name="floor_id"/>
+                <separator/>
+                <filter name="flt_free" string="Available" domain="[('state', '=', 'free')]"/>
+                <filter name="flt_reserved" string="Booked" domain="[('state', '=', 'reserved')]"/>
+                <filter name="flt_sold" string="Sold" domain="[('state', '=', 'sold')]"/>
+                <filter name="flt_lease" string="On lease" domain="[('state', '=', 'on_lease')]"/>
+                <separator/>
+                <filter name="grp_floor" string="Floor" context="{'group_by': 'floor_id'}"/>
+                <filter name="grp_block" string="Block" context="{'group_by': 'block_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="re_site_action" model="ir.actions.act_window">
+        <field name="view_mode">kanban,list,form</field>
+        <field name="view_id" ref="re_site_view_kanban"/>
+        <field name="search_view_id" ref="re_site_search_view"/>
+    </record>
+    <record id="re_site_action_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="0"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="re_site_view_kanban"/>
+        <field name="act_window_id" ref="re_site_action"/>
+    </record>
+    <record id="re_site_action_view_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="re_site_view_list"/>
+        <field name="act_window_id" ref="re_site_action"/>
+    </record>
+    <record id="re_site_action_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="re_site_view_form"/>
+        <field name="act_window_id" ref="re_site_action"/>
+    </record>
+
+    <record id="re_block_action" model="ir.actions.act_window">
+        <field name="view_mode">kanban,list,form</field>
+        <field name="view_id" ref="re_block_view_kanban"/>
+        <field name="search_view_id" ref="re_block_search_view"/>
+        <field name="context">{'group_by': ['site_id']}</field>
+    </record>
+    <record id="re_block_action_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="0"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="re_block_view_kanban"/>
+        <field name="act_window_id" ref="re_block_action"/>
+    </record>
+    <record id="re_block_action_view_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="re_block_view_list"/>
+        <field name="act_window_id" ref="re_block_action"/>
+    </record>
+    <record id="re_block_action_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="re_block_view_form"/>
+        <field name="act_window_id" ref="re_block_action"/>
+    </record>
+
+    <record id="building_act1" model="ir.actions.act_window">
+        <field name="view_mode">kanban,list,form</field>
+        <field name="view_id" ref="building_kanban_view"/>
+        <field name="search_view_id" ref="building_filter"/>
+        <field name="context">{'group_by': ['site_id', 'block_id']}</field>
+    </record>
+    <record id="building_act1_kanban_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="0"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="building_kanban_view"/>
+        <field name="act_window_id" ref="building_act1"/>
+    </record>
+
+    <record id="re_floor_action" model="ir.actions.act_window">
+        <field name="view_mode">kanban,list,form</field>
+        <field name="view_id" ref="re_floor_view_kanban"/>
+        <field name="search_view_id" ref="re_floor_search_view"/>
+        <field name="context">{'group_by': ['site_id', 'block_id', 'building_id']}</field>
+    </record>
+    <record id="re_floor_action_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="0"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="re_floor_view_kanban"/>
+        <field name="act_window_id" ref="re_floor_action"/>
+    </record>
+    <record id="re_floor_action_view_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="re_floor_view_list"/>
+        <field name="act_window_id" ref="re_floor_action"/>
+    </record>
+    <record id="re_floor_action_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="re_floor_view_form"/>
+        <field name="act_window_id" ref="re_floor_action"/>
+    </record>
+
+    <record id="ownership_contract_form_action" model="ir.actions.act_window">
+        <field name="view_mode">kanban,list,form,graph</field>
+        <field name="view_id" ref="ownership_contract_kanban_view"/>
+        <field name="search_view_id" ref="ownership_contract_filter"/>
+    </record>
+    <record id="ownership_contract_action_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="0"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="ownership_contract_kanban_view"/>
+        <field name="act_window_id" ref="ownership_contract_form_action"/>
+    </record>
+    <record id="ownership_contract_action_view_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="ownership_contract_tree_view"/>
+        <field name="act_window_id" ref="ownership_contract_form_action"/>
+    </record>
+    <record id="ownership_contract_action_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="ownership_contract_form_view"/>
+        <field name="act_window_id" ref="ownership_contract_form_action"/>
+    </record>
+    <record id="ownership_contract_action_view_graph" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="kx_realestate.view_own_contract_graph"/>
+        <field name="act_window_id" ref="ownership_contract_form_action"/>
+    </record>
+
+
+    <record id="unit_reservation_form_action" model="ir.actions.act_window">
+        <field name="view_mode">kanban,list,form</field>
+        <field name="view_id" ref="unit_reservation_kanban_view"/>
+        <field name="search_view_id" ref="unit_reservation_search_view"/>
+    </record>
+    <record id="unit_reservation_action_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="0"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="unit_reservation_kanban_view"/>
+        <field name="act_window_id" ref="unit_reservation_form_action"/>
+    </record>
+    <record id="unit_reservation_action_view_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="unit_reservation_tree_view"/>
+        <field name="act_window_id" ref="unit_reservation_form_action"/>
+    </record>
+    <record id="unit_reservation_action_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="unit_reservation_form_view"/>
+        <field name="act_window_id" ref="unit_reservation_form_action"/>
+    </record>
+
+    <record id="owner_installments_tree_enhance" model="ir.ui.view">
+        <field name="name">loan.line.rs.own.list.enhance</field>
+        <field name="model">loan.line.rs.own</field>
+        <field name="inherit_id" ref="kx_realestate.owner_installments_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="sample">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='loan_id']" position="after">
+                <button name="action_open_ownership_contract" type="object" string="Open contract" icon="fa-external-link" title="Open ownership contract"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,45 @@
+<odoo>
+    <record id="component_list_view" model="ir.ui.view">
+        <field name="name">component.list</field>
+        <field name="model">component.component</field>
+        <field name="arch" type="xml">
+            <list string="component">
+                <field name="name"/>
+                <field name="qty"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="component_form_view" model="ir.ui.view">
+        <field name="name">component.form</field>
+        <field name="model">component.component</field>
+        <field name="arch" type="xml">
+            <form string="Component">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="furniture_details_ids" string="Furniture List" >
+                            <list string="Furniture List" editable="bottom">
+                                <field name="product_id" context="{'search_default_furniture':1,'default_furniture': 1}" domain="[('furniture', '=', True)]"/>
+                                <field name="qty"/>
+                            </list>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="component_form_action" model="ir.actions.act_window">
+        <field name="name">Building Unit Component</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">component.component</field>
+        <field name="view_id" ref="component_list_view"/>
+    </record>
+
+    <menuitem id="menu_component_form_action"
+            action="component_form_action"
+            parent="menu_settings"
+            active="False"
+            sequence="90"/>
+</odoo>

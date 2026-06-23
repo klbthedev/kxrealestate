@@ -1,0 +1,289 @@
+<odoo>
+    <record id="building_unit_form" model="ir.ui.view">
+        <field name="name">property.form</field>
+        <field name="priority" eval="10"/>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <form string="Real Estate">
+                <header>
+                    <!-- <button name="make_reservation"
+                        invisible="state in('reserved','on_lease','sold','blocked')"
+                        string="Reservation" type="object" class="btn-primary"/> -->
+                    <field name="building_type_id" invisible="1"/>
+                    <!-- <field name="stage_id" widget="statusbar" clickable="1" options="{'clickable': 1}"/> -->
+                    <field name="state"
+                            widget="statusbar"
+                            clickable="true"
+                            statusbar_visible="free,reserved,sold,on_lease"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <!-- <button type="object" name="view_reservations" class="oe_stat_button" icon="fa-book">
+                            <field name="reservation_count" widget="statinfo" string="Reservations"/>
+                        </button> -->
+                        <button type="object" name="view_ownership_contracts" class="oe_stat_button" icon="fa-file-text-o">
+                            <field name="ownership_contract_count" widget="statinfo" string="Sales"/>
+                        </button>
+                    </div>
+                    <!-- <field name="image_1024" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/> -->
+                    <div class="oe_title">
+                        <h2>
+                            <field name="code" placeholder="Property Code"/>
+                            <field name="name" placeholder="Property Name"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" widget="many2one_avatar"/>
+                            <field name="video_url" invisible="1"/>
+                            <field name="active"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group >
+                            <field name="site_id"/>
+                            <field name="block_id"/>
+                            <field name="building_id"/>
+                            <field name="floor_id" domain="[('building_id', '=', building_id)]" invisible="0"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Basic Information">
+                            <group>
+                                <group>
+                                    <!-- <field name="building_type_id"/> -->
+                                    <!-- <field name="deposit"/> -->
+                                    <!-- <field name="insurance_fee" invisible="1"/> -->
+                                    <field name="building_status_id"/>
+                                    <!-- <field name="building_unit_area"/> -->
+                                    <field name="building_net_area"/>
+                                    <field name="gross_area"/>
+                                    <field name="construction_date"/>
+                                    <field name="rooms"/>
+                                    <field name="bathrooms"/>
+                                    <field name="selling_price" required="1"/>
+                                    <field name="floor" invisible="1"/>
+                                </group>
+                                <group>
+                                    <!-- <field name="amenity_ids" string="Amenities" widget="many2many_tags"/> -->
+                                    <field name="surface" invisible="1"/>
+                                    <field name="balcony"/>
+                                    <field name="solar_electric" invisible="1"/>
+                                    <field name="heating_source" invisible="1"/>
+                                    <field name="building_description_id" invisible="1"/>
+                                    <field name="electricity_meter" invisible="1"/>
+                                    <field name="water_meter" invisible="1"/>
+                                    <field name="installment_template_id" invisible="1"/>
+                                    <!-- <field name="stock_state" widget="badge"/> -->
+                                    <field name="north"/>
+                                    <field name="south"/>
+                                    <field name="east"/>
+                                    <field name="west"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Unit Status">
+                            <field name="unit_status_ids">
+                                <list>
+                                    <field name="unit_status_id"/>
+                                    <field name="unit_status_id_date"/>
+                                </list>
+                            </field>
+                        </page>
+                        <!-- <page string="Components List">
+                            <field name="components_line_ids" >
+                                <list editable="bottom">
+                                    <field name="component" />
+                                </list>
+                            </field>
+                        </page> -->
+                        <!-- <page string="Additional Information">
+                            <group>
+                                <group>
+                                    <field name="license_code"/>
+                                    <field name="license_date"/>
+                                    <field name="date_added"/>
+                                    <field name="license_location"/>
+                                </group>
+                            </group>
+                        </page> -->
+                        <!-- <page string="Geolocation">
+                            <group>
+                                <group>
+                                    <field name="address" widget="place_autocomplete" class="oe_inline"/>
+                                    <field name="parent_building_address" readonly="1"/>
+                                    <field name="parent_title_deed_no" readonly="1"/>
+                                    <field name="parent_title_deed_date" readonly="1"/>
+                                </group>
+                            </group>
+                        </page> -->
+                        <page string="3D Renders">
+                            <form string="Property">
+                                <header>
+                                    <button name="action_open_matterport"
+                                            type="object"
+                                            string="View 3D Tour"
+                                            class="btn-primary"
+                                            invisible="not matterport_embed_url"/>
+                                </header>
+                                <sheet>
+                                    <group>
+                                        <!-- <field name="name"/> -->
+                                        <field name="matterport_model_id"/>
+                                    </group>
+                                    <separator string="Unit" colspan="4"/>
+                                    <group>
+                                        <field name="matterport_iframe" widget="html"/>
+                                    </group>
+                                </sheet>
+                            </form>
+                        </page>
+                        <page string="Images">
+                            <group name="product_template_images" string="Extra Property Media">
+                                <field name="property_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban"
+                                    options="{'create_text':'Add a Media'}" nolabel="1"/>
+                            </group>
+                        </page>
+                        <page string="Documents">
+                            <field name="building_attachment_line_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="file" filename="name"/>
+                                    <button name="download_file" type="object" string="Download" class="oe-highlight"/>
+                                </list>
+                            </field>
+                        </page>
+                        <!-- <page string="Contacts">
+                            <field name="partner_ids"/>
+                        </page> -->
+                        <page string="Notes">
+                            <field name="note"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="building_unit_list" model="ir.ui.view">
+        <field name="name">property.template.list</field>
+        <field name="model">product.template</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <list string="Building" default_group_by="site_id" sample="1">
+                <!-- <field name="image_128" widget="image" optional="show" options="{'size': [40, 40], 'preview_image': 'image_128'}"/> -->
+                <field name="code"/>
+                <field name="name"/>
+                <field name="site_id" optional="show"/>
+                <field name="block_id" optional="show"/>
+                <field name="building_id"/>
+                <field name="floor_id" optional="show"/>
+                <field name="building_description_id"/>
+                <field name="building_type_id" />
+                <field name="building_status_id" />
+                <field name="rooms" />
+                <field name="state"/>
+                <!-- <field name="stock_state" optional="show"/> -->
+            </list>
+        </field>
+    </record>
+
+    <record id="building_unit_kanban" model="ir.ui.view">
+        <field name="name">property.template.kanban</field>
+        <field name="model">product.template</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <kanban class="o_hr_employee_kanban" sample="1" default_group_by="site_id">
+                <field name="id"/>
+                <progressbar field="state" colors='{"free": "success", "reserved": "warning", "sold": "danger", "on_lease":"info"}'/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
+                            <!-- <field name="image_1920" widget="image" class="o_kanban_image_fill_left" options="{'zoom': true, 'zoom_delay': 1000, 'background': true, 'preventClicks': false}"/> -->
+                            <div class="oe_kanban_details">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <b><span t-if="record.name.raw_value" class="o_kanban_record_subtitle"><field name="name"/></span></b>
+                                    </div>
+                                </div>
+                                <ul>
+                                    <li t-if="record.building_status_id.raw_value" class="o_text_overflow"><b>Status : </b><field name="building_status_id"/></li>
+                                    <li t-if="record.floor.raw_value" class="o_force_ltr"><b>Floor : </b> <field name="floor"/></li>
+                                    <li t-if="record.building_type_id.raw_value" class="o_force_ltr"><b>Type : </b> <field name="building_type_id"/></li>
+                                    <li t-if="record.selling_price.raw_value" class="o_force_ltr"><b>Home Price : </b> <field name="selling_price"/></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="building_unit_filter" model="ir.ui.view">
+        <field name="name">property.template.search</field>
+        <field name="model">product.template</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Top Search">
+                <group>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                </group>
+                <newline/>
+                <group expand="0" string="Group By">
+                    <filter name="building_status_id" string="Unit Status" domain="[]"  context="{'group_by':'state'}"/>
+                    <filter name="building" string="Building" domain="[]"  context="{'group_by':'building_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="building_unit_act1" model="ir.actions.act_window">
+        <field name="name">Unit</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,list,form,graph</field>
+        <field name="domain">[('is_property','=',True)]</field>
+        <field name="context">{'group_by': ['site_id', 'block_id', 'building_id', 'floor_id'], 'search_default_status': 1,'default_is_property':True,'default_sale_ok':False, 'default_purchase_ok':False}</field>
+        <field name="view_id" ref="building_unit_list"/>
+        <field name="search_view_id" ref="building_unit_filter"/>
+    </record>
+
+    <record id="building_unit_act_kanban_view2" model="ir.actions.act_window.view">
+        <field name="sequence" eval="0"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="building_unit_kanban"/>
+        <field name="act_window_id" ref="building_unit_act1"/>
+    </record>
+
+    <record id="building_unit_act1_view2" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="building_unit_list"/>
+        <field name="act_window_id" ref="building_unit_act1"/>
+    </record>
+
+    <record id="building_unit_act1_view1" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="building_unit_form"/>
+        <field name="act_window_id" ref="building_unit_act1"/>
+    </record>
+
+    <record id="view_unit_graph" model="ir.ui.view">
+        <field name="name">product.template.graph</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <graph string="Invoices" type="pie">
+                <field name="state" type="row"/>
+                <field name="count"  type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+
+    <menuitem id="menu_building_list_sub_unit"
+            action="building_unit_act1"
+            parent="menu_building_list"
+            sequence="4"/>
+</odoo>

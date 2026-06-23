@@ -1,0 +1,18 @@
+.o_FormRenderer_chatterContainer {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.o_FormRenderer_chatterContainer.o-aside {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+}
+
+.o_form_view {
+    flex-flow: column nowrap !important;
+}
+
+.o_FormRenderer_chatterContainer {
+    order: 99 !important;
+}

@@ -1,0 +1,40 @@
+from . import account_move
+from . import account_payment
+from . import amenity
+from . import block
+from . import building_attachment_line
+from . import building_description
+from . import building_images
+from . import building_status
+from . import building_type
+from . import building_unit
+from . import building
+from . import floor
+from . import building_stage
+from . import floor_stage
+from . import unit_stage
+from . import floor_progress
+from . import floor_plans
+from . import installment_template
+from . import late_payment_penalties
+from . import latlng_line
+from . import loan_line_rs
+from . import loan_line_rs_own
+from . import own_attachment_line
+from . import ownership_contract
+from . import ownership_contract_lines
+from . import property_image
+from . import res_users
+from . import site
+# from . import res_partner
+from . import res_config_settings
+from . import salesperson_commission
+from . import unit_attachment_line
+from . import unit_reservation
+# for report
+from . import report_wizard
+# from . import my_dashboard
+from . import dashboard_service
+from . import warning_letter
+from . import warning_letter_level
+

@@ -1,0 +1,208 @@
+<odoo>
+    <record id="view_report_ownership_contract_graph" model="ir.ui.view">
+        <field name="name">report.ownership.contract.bi.graph</field>
+        <field name="model">report.ownership.contract.bi</field>
+        <field name="arch" type="xml">
+            <graph string="Ownership Contracts Analysis" type="pie">
+                <field name="partner_id" type="row"/>
+                <field name="site_id" type="row"/>
+                <field name="block_id" type="row"/>
+                <field name="contract_building_id" type="row"/>
+                <field name="floor_id" type="row"/>
+                <field name="product_template_id" type="row"/>
+                <field name="loan_line_count" type="measure"/>
+                <field name="installment_paid_count" type="measure"/>
+                <field name="installment_unpaid_count" type="measure"/>
+                <field name="installment_total_amount" type="measure"/>
+                <field name="installment_paid_amount" type="measure"/>
+                <field name="installment_balance_amount" type="measure"/>
+                <field name="installment_paid_sum" type="measure"/>
+                <field name="installment_unpaid_sum" type="measure"/>
+                <field name="discount_total" type="measure"/>
+                <field name="contract_date" interval="month" type="col"/>
+                <field name="amount" type="measure"/>
+                <field name="paid" type="measure"/>
+                <field name="unpaid" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_report_ownership_contract_pivot">
+        <field name="name">report.ownership.contract.bi.pivot</field>
+        <field name="model">report.ownership.contract.bi</field>
+        <field name="arch" type="xml">
+            <pivot string="Ownership Contracts Statistics" disable_linking="True">
+                <field name="partner_id" type="row"/>
+                <field name="site_id" type="row"/>
+                <field name="block_id" type="row"/>
+                <field name="contract_building_id" type="row"/>
+                <field name="floor_id" type="row"/>
+                <field name="product_template_id" type="row"/>
+                <field name="installment_number" type="row"/>
+                <field name="loan_line_count" type="measure"/>
+                <field name="installment_name" type="row"/>
+                <field name="installment_paid_count" type="measure"/>
+                <field name="installment_unpaid_count" type="measure"/>
+                <field name="installment_total_amount" type="measure"/>
+                <field name="installment_paid_amount" type="measure"/>
+                <field name="installment_balance_amount" type="measure"/>
+                <field name="installment_paid_sum" type="measure"/>
+                <field name="installment_unpaid_sum" type="measure"/>
+                <field name="discount_total" type="measure"/>
+                <field name="contract_date" interval="month" type="col"/>
+                <field name="amount" type="measure"/>
+                <field name="paid" type="measure"/>
+                <field name="unpaid" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_report_ownership_contract_search" model="ir.ui.view">
+        <field name="name">report.ownership.contract.bi.filter</field>
+        <field name="model">report.ownership.contract.bi</field>
+        <field name="arch" type="xml">
+            <search string="Ownership Contracts Analysis">
+                <separator/>
+                <field name="partner_id"/>
+                <field name="user_id"/>
+                <field name="site_id"/>
+                <field name="block_id"/>
+                <field name="contract_building_id"/>
+                <field name="floor_id"/>
+                <field name="product_template_id"/>
+                <field name="loan_line_count"/>
+                <field name="installment_paid_count"/>
+                <field name="installment_unpaid_count"/>
+                <field name="installment_total_amount"/>
+                <field name="installment_paid_amount"/>
+                <field name="installment_balance_amount"/>
+                <group expand="1" string="Group By">
+                    <filter string="Salesperson" name="user"
+                            context="{'group_by':'user_id'}"/>
+                    <filter string="Partner" name="partner"
+                            context="{'group_by':'partner_id'}"/>
+                    <filter string="Site" name="site"
+                            context="{'group_by':'site_id'}"/>
+                    <filter string="Block" name="block"
+                            context="{'group_by':'block_id'}"/>
+                    <filter string="Building" name="building"
+                            context="{'group_by':'contract_building_id'}"/>
+                    <filter string="Floor" name="floor"
+                            context="{'group_by':'floor_id'}"/>
+                    <filter string="Unit" name="unit"
+                            context="{'group_by':'product_template_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="view_pivot_loan_line_rs_own" model="ir.ui.view">
+        <field name="name">loan.line.rs.own.pivot</field>
+        <field name="model">loan.line.rs.own</field>
+        <field name="arch" type="xml">
+            <pivot string="Loan Installments Pivot">
+                <!-- Rows -->
+                <field name="contract_partner_id" type="row"/>
+                <field name="loan_id" type="row"/>
+                <field name="number" type="col"/>
+                
+                <!-- Measures -->
+                <field name="amount" type="measure" string="Installment Amount"/>
+                <!-- <field name="total_paid_amount" type="measure" string="Collected Amount"/> -->
+                <field name="amount_residual" type="measure" string="Remaining Amount"/>                
+                
+            </pivot>
+        </field>
+    </record>
+    <!-- <record id="view_pivot_loan_line_rs_own" model="ir.ui.view">
+        <field name="name">report.loan.line.rs.own.pivot</field>
+        <field name="model">report.loan.line.rs.own</field>
+        <field name="arch" type="xml">
+            <pivot string="Loan Installments Pivot">
+                <field name="partner_id" type="row"/>
+                <field name="loan_id" type="row"/>
+                
+                <field name="amount" type="measure" string="Installment Amount"/>
+                <field name="amount_paid" type="measure" string="Collected Amount"/>
+                <field name="amount_remaining" type="measure" string="Remaining Amount"/>
+            </pivot>
+        </field>
+    </record> -->
+    <record id="view_loan_line_rs_own_tree" model="ir.ui.view">
+        <field name="name">loan.line.rs.own.tree</field>
+        <field name="model">loan.line.rs.own</field>
+        <field name="arch" type="xml">
+            <list string="Installments">
+                <field name="name"/>
+                <field name="loan_id"/>
+                <field name="contract_partner_id"/>
+                <field name="amount"/>
+                <!-- <field name="total_paid_amount"/> -->
+                <field name="total_remaining_amount"/>
+                <field name="payment_state"/>
+                <field name="eligibility_state"/>
+                <field name="date"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_loan_line_rs_own_graph" model="ir.ui.view">
+        <field name="name">loan.line.rs.own.graph</field>
+        <field name="model">loan.line.rs.own</field>
+        <field name="arch" type="xml">
+            <graph string="Installments Analysis" type="bar">
+                <!-- Group by -->
+                <field name="payment_state" type="col"/>
+                
+                <!-- Measures -->
+                <field name="amount" type="measure" string="Installment Amount"/>
+                <!-- <field name="total_paid_amount" type="measure" string="Collected Amount"/> -->
+                <field name="amount_residual" type="measure" string="Remaining Amount"/>
+                
+            </graph>
+        </field>
+    </record>
+    <!-- <record id="view_loan_line_rs_own_graph" model="ir.ui.view">
+        <field name="name">loan.line.rs.own.graph</field>
+        <field name="model">report.loan.line.rs.own</field>
+        <field name="arch" type="xml">
+            <graph string="Installments Analysis" type="bar">
+                <field name="payment_state"/>
+                <field name="installment_total_amount" type="measure"/>
+                <field name="installment_paid_amount" type="measure"/>
+                <field name="installment_balance_amount" type="measure"/>
+            </graph>
+        </field>
+    </record> -->
+
+    <record id="action_report_ownership_contract_all" model="ir.actions.act_window">
+        <field name="name">Ownership Contract Analysis</field>
+        <field name="res_model">report.ownership.contract.bi</field>
+        <field name="view_mode">pivot,graph</field>
+    </record>
+    
+
+    <record id="action_report_loan_line_rs_own" model="ir.actions.act_window">
+        <field name="name">Installments Analysis</field>
+        <field name="res_model">loan.line.rs.own</field>
+        <field name="view_mode">pivot,list,graph,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Installments Reporting
+            </p>
+        </field>
+    </record>
+    
+    <menuitem id="menu_report_loan_line_rs_own"
+          name="Installments Analysis"
+          action="action_report_loan_line_rs_own"
+          groups="group_real_estate_reports"
+          parent="real_estate_report_sell"
+          sequence="81"/>
+
+    <menuitem id="menu_report_report_ownership_all"
+              action="action_report_ownership_contract_all"
+              groups="group_real_estate_reports"
+              parent="real_estate_report_sell"
+              sequence="80"/>
+
+</odoo>

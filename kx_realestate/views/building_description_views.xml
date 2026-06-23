@@ -1,0 +1,38 @@
+<odoo>
+    <record id="building_description_list_view" model="ir.ui.view">
+        <field name="name">building.description.list</field>
+        <field name="model">building.description</field>
+        <field name="arch" type="xml">
+            <list string="Building desc">
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="building_description_form_view" model="ir.ui.view">
+        <field name="name">building.description.form</field>
+        <field name="model">building.description</field>
+        <field name="arch" type="xml">
+            <form string="Building desc">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="building_desc_form_action" model="ir.actions.act_window">
+        <field name="name">Property Description</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">building.description</field>
+        <field name="view_id" ref="building_description_list_view"/>
+    </record>
+
+    <menuitem id="menu_building_desc_form_action"
+            action="building_desc_form_action"
+            parent="menu_settings"
+            sequence="30" />
+</odoo>

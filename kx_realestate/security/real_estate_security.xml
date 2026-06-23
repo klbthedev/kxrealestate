@@ -1,0 +1,72 @@
+<odoo>
+    <data>
+        <record id="module_real_estate_category" model="ir.module.category">
+            <field name="name">Real Estate</field>
+            <field name="sequence">0</field>
+            <field name="visible" eval="0" />
+        </record>
+
+        <record id="group_reservation" model="res.groups">
+            <field name="name">Manage Reservations</field>
+            <field name="category_id" ref="module_real_estate_category"/>
+        </record>
+
+        <record id="group_ownership_rental_contracts" model="res.groups">
+            <field name="name">Manage Ownership/Rental Contracts</field>
+            <field name="category_id" ref="module_real_estate_category"/>
+        </record>
+
+        <record id="group_units_structure" model="res.groups">
+            <field name="name">Manage Property Structure</field>
+            <field name="category_id" ref="module_real_estate_category"/>
+        </record>
+
+        <record id="kx_realestate.group_payments" model="res.groups">
+            <field name="name">Manage Payments</field>
+            <field name="category_id" ref="module_real_estate_category"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <record id="group_real_estate_reports" model="res.groups">
+            <field name="name">Real Estate Reports</field>
+            <field name="category_id" ref="module_real_estate_category"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <record id="group_real_estate_admin" model="res.groups">
+            <field name="name">Real Estate Admin</field>
+            <field name="category_id" ref="module_real_estate_category"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <record id="group_contract_edit" model="res.groups">
+            <field name="name">Contract Edit</field>
+            <field name="category_id" ref="module_real_estate_category"/>
+        </record>
+
+        <record id="group_contract_supervisor" model="res.groups">
+            <field name="name">Contract Supervisor</field>
+            <field name="category_id" ref="module_real_estate_category"/>
+        </record>
+
+        <record id="contract_edit_rule" model="ir.model.access">
+            <field name="name">Contract Edit Access</field>
+            <field name="model_id" ref="model_ownership_contract"/>
+            <field name="group_id" ref="group_contract_edit"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="contract_supervisor_rule" model="ir.model.access">
+            <field name="name">Contract Supervisor Access</field>
+            <field name="model_id" ref="model_ownership_contract"/>
+            <field name="group_id" ref="group_contract_supervisor"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+    </data>
+</odoo>

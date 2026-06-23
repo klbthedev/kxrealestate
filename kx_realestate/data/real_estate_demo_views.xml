@@ -1,0 +1,378 @@
+<odoo>
+    <data noupdate="0">
+
+        <record model="building.type" id="building_type_1">
+            <field name="name">Apartment</field>
+        </record>
+
+        <record model="building.type" id="building_type_2">
+            <field name="name">Land</field>
+        </record>
+
+        <record model="building.type" id="building_type_3">
+            <field name="name">Villa</field>
+        </record>
+
+        <record model="building.type" id="building_type_4">
+            <field name="name">Building</field>
+        </record>
+
+        <record model="building.status" id="building_status_1">
+            <field name="name">New</field>
+        </record>
+
+        <record model="building.status" id="building_status_2">
+            <field name="name">In Progress</field>
+        </record>
+
+        <record model="building.status" id="building_status_3">
+            <field name="name">Completed</field>
+        </record>
+
+        <record model="building.description" id="building_desc_1">
+            <field name="name">Single-family Home</field>
+        </record>
+
+        <record model="building.description" id="building_desc_2">
+            <field name="name">Modern Condo</field>
+        </record>
+
+        <record model="building.description" id="building_desc_3">
+            <field name="name">Urban Townhouse</field>
+        </record>
+
+        <record model="component.component" id="component_1">
+            <field name="name">Internal Area</field>
+        </record>
+
+        <record model="component.component" id="component_2">
+            <field name="name">Walls</field>
+        </record>
+
+        <record model="component.component" id="component_3">
+            <field name="name">Balconies and Terraces</field>
+        </record>
+
+        <record model="regions.regions" id="regions_1">
+            <field name="name">Gujarat</field>
+            <field name="street">India Colony</field>
+            <field name="street2">Sector 1</field>
+            <field name="city">Gandhinagar</field>
+            <field name="state_id" ref="base.state_in_gj"/>
+            <field name="zip">283245</field>
+            <field name="country_id" ref="base.in"/>
+        </record>
+
+        <record model="regions.regions" id="regions_2">
+            <field name="name">Maharashtra</field>
+        </record>
+
+        <record model="regions.regions" id="regions_3">
+            <field name="name">Karnataka</field>
+        </record>
+
+        <record model="regions.regions" id="regions_4">
+            <field name="name">Adalaj</field>
+            <!-- <field name="region_id" ref="kx_realestate.regions_1"/> -->
+            <field name="street">17/3</field>
+            <field name="street2">Near Ring Road</field>
+            <field name="city">Gandhinagar</field>
+            <field name="state_id" ref="base.state_in_gj"/>
+            <field name="zip">283231</field>
+            <field name="country_id" ref="base.in"/>
+        </record>
+
+        <record model="res.partner" id="res_partner_1">
+            <!-- <field name="is_owner" eval="True"/> -->
+            <field name="name">Amit</field>
+            <field name="street">Plot no 27</field>
+            <field name="street2">Andheri West</field>
+            <field name="city">Mumbai</field>
+            <field name="state_id" ref="base.state_in_mh"/>
+            <field name="zip">382630</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="mobile">+91 12345 67890</field>
+            <field name="email">amit@gmail.com</field>
+        </record>
+
+        <record model="res.partner" id="res_partner_3">
+            <!-- <field name="is_owner" eval="True"/> -->
+            <field name="name">Ramesh</field>
+            <field name="street">Plot no 27</field>
+            <field name="street2">Andheri West</field>
+            <field name="city">Mumbai</field>
+            <field name="state_id" ref="base.state_in_mh"/>
+            <field name="zip">382630</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="mobile">+91 12345 67890</field>
+            <field name="email">ramesh@gmail.com</field>
+        </record>
+
+        <record model="res.partner" id="res_partner_2">
+            <!-- <field name="is_tenant" eval="True"/> -->
+            <field name="name">Suresh</field>
+            <field name="street">Shyam kutir</field>
+            <field name="street2">road no 2</field>
+            <field name="city">Mumbai</field>
+            <field name="state_id" ref="base.state_in_mh"/>
+            <field name="zip">382617</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="mobile">+91 12345 67890</field>
+            <field name="email">suresh@gmail.com</field>
+        </record>
+
+        <record id="building_1" model="building.building">
+            <field name="name">Skyline Solutions</field>
+            <field name="code">MP/0001</field>
+            <!-- <field name="region_id" ref="kx_realestate.regions_4"/> -->
+            <field name="partner_id" ref="kx_realestate.res_partner_1"/>
+            <field name="purchase_date" eval="datetime.now()"/>
+            <field name="launch_date" eval="datetime.now() + relativedelta(days=15)"/>
+            <field name="building_type_id" ref="kx_realestate.building_type_1"/>
+            <field name="building_status_id" ref="kx_realestate.building_status_1"/>
+            <field name="building_unit_area">500</field>
+            <field name="gross_area">300</field>
+            <field name="construction_date" eval="datetime.now() + relativedelta(days=5)"/>
+            <field name="passenger_lift">2</field>
+            <field name="freight_lift">1</field>
+            <field name="selling_price">1200000</field>
+            <field name="no_of_floors">2</field>
+            <field name="props_per_floors">3</field>
+            <field name="surface">400</field>
+            <field name="garage_included">100</field>
+            <field name="garden">50</field>
+        </record>
+
+        <record id="building_2" model="building.building">
+            <field name="name">Skyline</field>
+            <field name="code">MP/0002</field>
+            <!-- <field name="region_id" ref="kx_realestate.regions_4"/> -->
+            <field name="partner_id" ref="kx_realestate.res_partner_3"/>
+            <field name="purchase_date" eval="datetime.now()"/>
+            <field name="launch_date" eval="datetime.now() + relativedelta(days=15)"/>
+            <field name="building_type_id" ref="kx_realestate.building_type_4"/>
+            <field name="building_status_id" ref="kx_realestate.building_status_2"/>
+            <field name="building_unit_area">500</field>
+            <field name="gross_area">300</field>
+            <field name="construction_date" eval="datetime.now() + relativedelta(days=5)"/>
+            <field name="passenger_lift">2</field>
+            <field name="freight_lift">1</field>
+            <field name="selling_price">1500000</field>
+            <field name="no_of_floors">1</field>
+            <field name="props_per_floors">2</field>
+            <field name="surface">400</field>
+            <field name="garage_included">100</field>
+            <field name="garden">80</field>
+        </record>
+
+        <record id="installment_template_1" model="installment.template">
+            <field name="name">PT01</field>
+        </record>
+
+        <!-- QA hierarchy demo -->
+        <record model="re.site" id="re_site_1">
+            <field name="name">Sunrise Township</field>
+            <field name="code">SITE-01</field>
+            <field name="owner_id" ref="kx_realestate.res_partner_1"/>
+            <field name="sequence">1</field>
+        </record>
+
+        <record model="re.block" id="re_block_1">
+            <field name="name">Block A</field>
+            <field name="code">A</field>
+            <field name="site_id" ref="kx_realestate.re_site_1"/>
+            <field name="sequence">1</field>
+        </record>
+
+        <record model="re.amenity" id="re_amenity_pool">
+            <field name="name">Swimming Pool</field>
+            <field name="code">AMN-POOL</field>
+            <field name="level">both</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <record model="re.amenity" id="re_amenity_gym">
+            <field name="name">Gym</field>
+            <field name="code">AMN-GYM</field>
+            <field name="level">both</field>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="product_template_1" model="product.template">
+            <field name="code">MP/0001 - 1 - 1</field>
+            <field name="name">MP/0001 - 1 - 1</field>
+            <field name="building_id" ref="kx_realestate.building_1"/>
+            <!-- <field name="region_id" ref="kx_realestate.regions_1"/> -->
+            <field name="active" eval="True"/>
+            <field name="is_property" eval="True"/>
+            <field name="building_type_id" ref="kx_realestate.building_type_1"/>
+            <field name="deposit">1200</field>
+            <field name="insurance_fee">500</field>
+            <field name="building_status_id" ref="kx_realestate.building_status_1" />
+            <field name="building_unit_area">200</field>
+            <field name="building_net_area">180</field>
+            <field name="gross_area">150</field>
+            <field name="construction_date" eval="datetime.now()" />
+            <field name="air_condition">unknown</field>
+            <field name="rooms">2</field>
+            <field name="bathrooms">2</field>
+            <field name="telephon" eval="True"/>
+            <field name="internet" eval="True"/>
+            <field name="selling_price">1350000</field>
+            <field name="surface">40</field>
+            <field name="garage_included">50</field>
+            <field name="garden">50</field>
+            <field name="balcony">20</field>
+            <field name="solar_electric" eval="True" />
+            <field name="heating_source">electricity</field>
+            <field name="building_description_id" ref="kx_realestate.building_desc_1" />
+            <field name="electricity_meter">Yes</field>
+            <field name="water_meter">Yes</field>
+            <field name="installment_template_id" ref="kx_realestate.installment_template_1" />
+            <field name="north">Yes</field>
+            <field name="south">No</field>
+            <field name="east">Yes</field>
+            <field name="west">Yes</field>
+        </record>
+
+        <record id="product_template_2" model="product.template">
+            <field name="code">MP/0002 - 1 - 1</field>
+            <field name="name">MP/0002 - 1 - 1</field>
+            <field name="building_id" ref="kx_realestate.building_2"/>
+            <!-- <field name="region_id" ref="kx_realestate.regions_4"/> -->
+            <field name="active" eval="True"/>
+            <field name="is_property" eval="True"/>
+            <field name="building_type_id" ref="kx_realestate.building_type_4"/>
+            <field name="deposit">1000</field>
+            <field name="insurance_fee">800</field>
+            <field name="building_status_id" ref="kx_realestate.building_status_2" />
+            <field name="building_unit_area">200</field>
+            <field name="building_net_area">180</field>
+            <field name="gross_area">150</field>
+            <field name="construction_date" eval="datetime.now()" />
+            <field name="air_condition">unknown</field>
+            <field name="rooms">2</field>
+            <field name="bathrooms">2</field>
+            <field name="telephon" eval="True"/>
+            <field name="internet" eval="True"/>
+            <field name="selling_price">1150000</field>
+            <field name="surface">40</field>
+            <field name="garage_included">50</field>
+            <field name="garden">50</field>
+            <field name="balcony">20</field>
+            <field name="solar_electric" eval="True" />
+            <field name="heating_source">electricity</field>
+            <field name="building_description_id" ref="kx_realestate.building_desc_1" />
+            <field name="electricity_meter">Yes</field>
+            <field name="water_meter">Yes</field>
+            <field name="installment_template_id" ref="kx_realestate.installment_template_1" />
+            <field name="north">Yes</field>
+            <field name="south">No</field>
+            <field name="east">Yes</field>
+            <field name="west">Yes</field>
+        </record>
+
+        <record id="product_template_3" model="product.template">
+            <field name="code">MP/0002 - 1 - 2</field>
+            <field name="name">MP/0002 - 1 - 2</field>
+            <field name="building_id" ref="kx_realestate.building_2"/>
+            <!-- <field name="region_id" ref="kx_realestate.regions_4"/> -->
+            <field name="active" eval="True"/>
+            <field name="is_property" eval="True"/>
+            <field name="building_type_id" ref="kx_realestate.building_type_4"/>
+            <field name="deposit">1000</field>
+            <field name="insurance_fee">800</field>
+            <field name="building_status_id" ref="kx_realestate.building_status_2" />
+            <field name="building_unit_area">200</field>
+            <field name="building_net_area">180</field>
+            <field name="gross_area">150</field>
+            <field name="construction_date" eval="datetime.now()" />
+            <field name="air_condition">unknown</field>
+            <field name="rooms">2</field>
+            <field name="bathrooms">2</field>
+            <field name="telephon" eval="True"/>
+            <field name="internet" eval="True"/>
+            <field name="selling_price">1150000</field>
+            <field name="surface">40</field>
+            <field name="garage_included">50</field>
+            <field name="garden">50</field>
+            <field name="balcony">20</field>
+            <field name="solar_electric" eval="True" />
+            <field name="heating_source">electricity</field>
+            <field name="building_description_id" ref="kx_realestate.building_desc_1" />
+            <field name="electricity_meter">Yes</field>
+            <field name="water_meter">Yes</field>
+            <field name="installment_template_id" ref="kx_realestate.installment_template_1" />
+            <field name="north">Yes</field>
+            <field name="south">No</field>
+            <field name="east">Yes</field>
+            <field name="west">Yes</field>
+        </record>
+
+        <record model="re.floor" id="re_floor_1">
+            <field name="name">Floor 1</field>
+            <field name="code">MP/0001-F1</field>
+            <field name="building_id" ref="kx_realestate.building_1"/>
+            <field name="level_number">1</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <record model="re.floor" id="re_floor_2">
+            <field name="name">Floor 2</field>
+            <field name="code">MP/0001-F2</field>
+            <field name="building_id" ref="kx_realestate.building_1"/>
+            <field name="level_number">2</field>
+            <field name="sequence">2</field>
+        </record>
+
+        <record model="re.floor.progress" id="re_floor_1_progress_1">
+            <field name="floor_id" ref="kx_realestate.re_floor_1"/>
+            <field name="stage">structure</field>
+            <field name="percent_complete">45</field>
+            <field name="progress_date" eval="datetime.now().date() - relativedelta(days=10)"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="approved_by_id" ref="base.user_admin"/>
+        </record>
+
+        <record model="re.floor.progress" id="re_floor_2_progress_1">
+            <field name="floor_id" ref="kx_realestate.re_floor_2"/>
+            <field name="stage">mep</field>
+            <field name="percent_complete">70</field>
+            <field name="progress_date" eval="datetime.now().date() - relativedelta(days=2)"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="approved_by_id" ref="base.user_admin"/>
+        </record>
+
+        <record id="building_1" model="building.building">
+            <field name="site_id" ref="kx_realestate.re_site_1"/>
+            <field name="block_id" ref="kx_realestate.re_block_1"/>
+            <field name="amenity_ids" eval="[(6, 0, [ref('kx_realestate.re_amenity_pool'), ref('kx_realestate.re_amenity_gym')])]"/>
+            <field name="unit_ids" eval="[(4, ref('kx_realestate.product_template_1'))]"/>
+        </record>
+
+         <record id="building_2" model="building.building">
+            <field name="site_id" ref="kx_realestate.re_site_1"/>
+            <field name="block_id" ref="kx_realestate.re_block_1"/>
+            <field name="amenity_ids" eval="[(6, 0, [ref('kx_realestate.re_amenity_pool')])]"/>
+            <field name="unit_ids" eval="[(6, 0, [ref('kx_realestate.product_template_2'), ref('kx_realestate.product_template_3')])]"/>
+        </record>
+
+        <record id="product_template_1" model="product.template">
+            <field name="floor_id" ref="kx_realestate.re_floor_1"/>
+            <field name="stock_state">wip</field>
+            <field name="amenity_ids" eval="[(6, 0, [ref('kx_realestate.re_amenity_pool')])]"/>
+        </record>
+
+        <record id="product_template_2" model="product.template">
+            <field name="floor_id" ref="kx_realestate.re_floor_1"/>
+            <field name="stock_state">semi_finished</field>
+            <field name="amenity_ids" eval="[(6, 0, [ref('kx_realestate.re_amenity_gym')])]"/>
+        </record>
+
+        <record id="product_template_3" model="product.template">
+            <field name="floor_id" ref="kx_realestate.re_floor_2"/>
+            <field name="stock_state">finished</field>
+            <field name="amenity_ids" eval="[(6, 0, [ref('kx_realestate.re_amenity_pool'), ref('kx_realestate.re_amenity_gym')])]"/>
+        </record>
+    </data>
+</odoo>

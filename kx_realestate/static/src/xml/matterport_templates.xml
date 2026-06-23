@@ -1,0 +1,14 @@
+<templates>
+    <t t-name="kx_realestate.MatterportViewer">
+        <div class="o_matterport_modal">            
+            <div class="o_matterport_header">
+                <h2><t t-esc="name"/></h2>
+            </div>
+            <iframe t-att-src="url"
+                    class="o_matterport_fullscreen"
+                    allow="xr-spatial-tracking"
+                    allowfullscreen="true">
+            </iframe>
+        </div>
+    </t>
+</templates>

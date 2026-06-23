@@ -1,0 +1,42 @@
+<odoo noupdate="1">
+    <record id="floor_stage_planned" model="re.floor.stage">
+        <field name="name">Planned</field>
+        <field name="code">planned</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="floor_stage_foundation" model="re.floor.stage">
+        <field name="name">Foundation</field>
+        <field name="code">foundation</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="floor_stage_structure" model="re.floor.stage">
+        <field name="name">Structure</field>
+        <field name="code">structure</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="floor_stage_slab_complete" model="re.floor.stage">
+        <field name="name">Slab Complete</field>
+        <field name="code">slab_complete</field>
+        <field name="sequence">40</field>
+    </record>
+    <record id="floor_stage_mep" model="re.floor.stage">
+        <field name="name">MEP</field>
+        <field name="code">mep</field>
+        <field name="sequence">50</field>
+    </record>
+    <record id="floor_stage_finishing" model="re.floor.stage">
+        <field name="name">Finishing</field>
+        <field name="code">finishing</field>
+        <field name="sequence">60</field>
+    </record>
+    <record id="floor_stage_handover_ready" model="re.floor.stage">
+        <field name="name">Handover Ready</field>
+        <field name="code">handover_ready</field>
+        <field name="sequence">70</field>
+    </record>
+    <record id="floor_stage_handed_over" model="re.floor.stage">
+        <field name="name">Handed Over</field>
+        <field name="code">handed_over</field>
+        <field name="sequence">80</field>
+    </record>
+</odoo>

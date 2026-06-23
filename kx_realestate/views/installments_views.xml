@@ -1,0 +1,93 @@
+<odoo>
+
+    <record model="ir.ui.view" id="owner_installments_tree">
+        <field name="name">loan.line.rs.own.list</field>
+        <field name="model">loan.line.rs.own</field>
+        <field name="arch" type="xml">
+            <list string="owner Installments" create="false" edit="false" >
+                <field name="name" />
+                <field name="contract_partner_id" />
+                <field name="date" />
+                <field name="contract_building_id" />
+                <field name="contract_building_unit_id" />
+                <!-- <field name="contract_region_id" /> -->
+                <field name="amount" />
+                <field name="amount_residual"/>
+                <field name="invoice_id" readonly="1"/>
+                <field name="loan_id" string="Contract"/>
+                <field name="invoice_state" widget="badge" decoration-success="invoice_state == 'posted'" decoration-info="invoice_state == 'draft'" optional="show"/>
+                <field name="payment_state" widget="badge" decoration-danger="payment_state == 'not_paid'" decoration-warning="payment_state in ('partial', 'in_payment')"
+                        decoration-success="payment_state in ('paid', 'reversed')" invisible="payment_state in 'invoicing_legacy'"/>
+                <button string="View Invoice" name="view_invoice" type="object"
+                        invisible="invoice_id in False"
+                        groups="kx_realestate.group_payments"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_owner_installments_filter" model="ir.ui.view">
+        <field name="name">loan.line.rs.own.select</field>
+        <field name="model">loan.line.rs.own</field>
+        <field name="arch" type="xml">
+            <search string="Search Invoice">
+                <field name="name"/>
+                <field name="contract_partner_id" operator="child_of"/>
+                <field name="date" string="Period"/>
+                <field name="contract_building_id"/>
+                <field name="contract_building_unit_id"/>
+                <!-- <field name="contract_region_id"/> -->
+                <field name="contract_user_id"/>
+                <separator/>
+                <filter name="open" string="Unpaid" domain="[('invoice_state', '=', 'posted'), ('payment_state', 'in', ('not_paid', 'partial'))]"/>
+                <filter name="closed" string="Paid" domain="[('invoice_state', '=', 'posted'), ('payment_state', 'in', ('in_payment', 'paid'))]"/>
+                <filter name="late" string="Overdue" domain="[
+                    ('date', '&lt;', time.strftime('%%Y-%%m-%%d')),
+                    ('invoice_state', '=', 'posted'),
+                    ('payment_state', 'in', ('not_paid', 'partial'))
+                ]" help="Overdue Installments, maturity date passed"/>
+                <separator/>
+                <filter name="due_7" string="Due in 7 days"
+                        domain="[
+                        ('date', '&lt;=', (context_today() + relativedelta(days=7)).strftime('%%Y-%%m-%%d')),
+                        ('date', '>', context_today().strftime('%%Y-%%m-%%d'))]"/>
+                <filter name="due_15" string="Due in 15 days"
+                        domain="[
+                        ('date', '&lt;=', (context_today() + relativedelta(days=15)).strftime('%%Y-%%m-%%d')),
+                        ('date', '>', context_today().strftime('%%Y-%%m-%%d'))]"/>
+                <filter name="due_30" string="Due in 30 days"
+                        domain="[
+                        ('date', '&lt;=', (context_today() + relativedelta(days=30)).strftime('%%Y-%%m-%%d')),
+                        ('date', '>', context_today().strftime('%%Y-%%m-%%d'))]"/>
+                <separator/>
+                <filter name="date" string="Due Date" date="date"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Salesperson" name="salesperson" context="{'group_by':'contract_user_id'}"/>
+                    <filter name="Customer" string="Customer" context="{'group_by':'contract_partner_id'}"/>
+                    <filter name="Due Date" string="Due Date" context="{'group_by':'date'}"/>
+                    <!-- <filter name="Region" string="Region" context="{'group_by':'contract_region_id'}"/> -->
+                    <filter name="Property" string="Property" context="{'group_by':'contract_building_id'}"/>
+                    <filter name="unit" string="Unit" context="{'group_by':'contract_building_unit_id'}"/>
+                    <separator/>
+                    <filter string="Due Date" name="duedate" context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_owner_installments" model="ir.actions.act_window">
+        <field name="name">Ownership Installments</field>
+        <field name="res_model">loan.line.rs.own</field>
+        <field name="view_id" ref="owner_installments_tree"/>
+        <field name="search_view_id" ref="view_owner_installments_filter"/>
+        <field name="view_mode">list</field>
+    </record>
+
+
+    <menuitem id="owner_installments_menu"
+            name="Installments"
+            active ="False"
+            parent="real_estate_report_sell"
+            groups="group_real_estate_reports"
+            action="action_owner_installments" />
+</odoo>

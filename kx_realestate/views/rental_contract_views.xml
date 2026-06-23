@@ -1,0 +1,202 @@
+<odoo>
+    <record id="rental_contract_tree_view" model="ir.ui.view">
+        <field name="name">rental.contract.list</field>
+        <field name="model">rental.contract</field>
+        <field name="arch" type="xml">
+            <list decoration-info="state == 'draft'" decoration-success="state == 'confirmed'"
+                decoration-danger="state == 'cancel'" decoration-primary="state == 'renew'"
+                decoration-muted="date_to &lt; context_today().strftime('%Y-%m-%d')" sample="1">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="partner_id" widget="many2one_avatar"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="building"/>
+                <field name="building_unit_id"/>
+                <field name="floor"/>
+                <field name="rental_fee"/>
+                <field name="insurance_fee"/>
+                <field name="address"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'"
+                    decoration-success="state == 'confirmed'" decoration-danger="state == 'cancel'"
+                    decoration-primary="state == 'renew'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="rental_contract_form_view" model="ir.ui.view">
+        <field name="name">rental.contract.form</field>
+        <field name="model">rental.contract</field>
+        <field name="arch" type="xml">
+            <form string="rental Contract">
+                <header>
+                    <button name="action_confirm" type="object" invisible="state in ('cancel','confirmed','renew')"
+                        string="Confirm" class="oe_highlight" data-hotkey="q"/>
+                    <button name="action_calculate" type="object" invisible="state in ('cancel','confirmed','renew')"
+                        string="Calculate" class="oe_highlight" data-hotkey="r"/>
+                    <button name="action_cancel" type="object" invisible="state in ('cancel','draft')" string="Cancel"
+                        class="oe_highlight" data-hotkey="x"/>
+                    <button name="%(action_customer_rental_renew_check)d" type="action" invisible="state not in 'confirmed'"
+                        string="Renew Contract" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,cancel" />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="view_entries" type="object" class="oe_stat_button" icon="fa-pencil-square-o">
+                            <field name="entry_count" widget="statinfo" string="Entries"/>
+                        </button>
+                        <button name="view_vouchers" type="object" class="oe_stat_button" icon="fa-money">
+                            <field name="voucher_count" widget="statinfo" string="Payments"/>
+                        </button>
+                    </div>
+                    <group string="Rental Contract Data">
+                        <group>
+                            <field name="name"/>
+                            <field name="ref"/>
+                            <field name="date" readonly="state != 'draft'" required="1"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="partner_id" widget="many2one_avatar" readonly="state != 'draft'"/>
+                            <field name="owner_id" widget="many2one_avatar" readonly="state != 'draft'"/>
+                            <field name="analytic_account_id" readonly="state != 'draft'"/>
+                            <field name="origin" readonly="state != 'draft'"/>
+                            <field name="reservation_id" readonly="state != 'draft'"/>
+                            <field name="apply_tax"/>
+                        </group>
+                        <group>
+                            <field name="date_from" readonly="state != 'draft'"/>
+                            <field name="date_to" readonly="state != 'draft'"/>
+                            <label for="recurring_interval"/>
+                            <div class="o_row">
+                                <span class="mr-1">Every</span>
+                                <field name="recurring_interval" required="1" readonly="state != 'draft'"/>
+                                <field name="periodicity" class="field_rule_type" required="1" readonly="state != 'draft'"/>
+                            </div>
+                            <field name="rental_fee" readonly="state != 'draft'" required="True"/>
+                            <field name="insurance_fee" readonly="state != 'draft'"/>
+                            <field name="account_id" />
+                            <field name="account_security_deposit" readonly="state != 'draft'" />
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group string="Location">
+                        <group>
+                            <field name="site_id" readonly="1"/>
+                            <field name="block_id" readonly="1"/>
+                            <field name="building" readonly="1"/>
+                            <field name="building_code" readonly="1"/>
+                            <field name="no_of_floors" readonly="state != 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="owner_id" widget="many2one_avatar" options="{'no_create_edit': True}" readonly="1"/>
+                            <!-- <field name="region_id" readonly="state != 'draft'" /> -->
+                        </group>
+                    </group>
+                    <separator string="Unit" colspan="4"/>
+                    <group>
+                        <group>
+                            <field name="building_unit_id" options="{'no_create': True, 'no_open': True}"
+                                readonly="state != 'draft'" domain="[('is_property', '=', True),('state', '=', 'free')]"/>
+                            <field name="floor_id" readonly="1"/>
+                            <field name="unit_code" readonly="1"/>
+                            <field name="floor" readonly="state != 'draft'"/>
+                            <field name="address" readonly="state != 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="building_type_id" readonly="state != 'draft'"/>
+                            <field name="building_status_id" readonly="state != 'draft'"/>
+                            <field name="building_unit_area" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+                    <notebook colspan="2">
+                        <page string="Installments">
+                            <field name="loan_line_rs_rent_ids" readonly="state != 'draft'">
+                                <list string="Installments" editable="bottom" default_order="date asc, id asc">
+                                    <field widget="handle" name="serial" required="1" />
+                                    <field name="date" required="1" />
+                                    <field name="name" required="1" />
+                                    <field name="amount" required="1" />
+                                    <field name="amount_residual"/>
+                                    <field name="line_account_id" />
+                                    <field name="invoice_id" readonly="1"/>
+                                    <field name="invoice_state" widget="badge" decoration-success="invoice_state == 'posted'"
+                                            decoration-info="invoice_state == 'draft'" optional="show"/>
+                                    <field name="payment_state" widget="badge"
+                                            decoration-danger="payment_state == 'not_paid'" decoration-warning="payment_state in ('partial', 'in_payment')"
+                                            decoration-success="payment_state in ('paid', 'reversed')"
+                                            invisible="payment_state == ['invoicing_legacy']"/>
+                                    <button string="Make Invoice" name="make_invoice"
+                                            type="object" icon="fa-money"
+                                            invisible="invoice_id or parent.state in ['draft']"/>
+                                    <button string="View Invoice" name="view_invoice" type="object"
+                                            style="background-color:rgba(0, 160, 74, 0.5);color: #333;"
+                                            invisible="not invoice_id or parent.state in ['draft'] "/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Documents">
+                            <field name="building_attachment_line_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="file"/>
+                                    <button name="download_file" type="object" string="Download" class="oe-highlight"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                    <group>
+                        <field name="amount_total"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="rental_contract_filter" model="ir.ui.view">
+        <field name="name">rental.contract.list.filter</field>
+        <field name="model">rental.contract</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Top Search">
+                <group>
+                    <field name="name"/>
+                    <field name="ref"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="building"/>
+                    <field name="building_code"/>
+                    <field name="building_unit_id" options="{'no_create': True, 'no_open': True}"/>
+                    <field name="unit_code"/>
+                </group>
+                <newline/>
+                <group expand="0" string="Group By...">
+                    <filter name="user_id" string="Responsible" domain="[]"  context="{'group_by':'user_id'}"/>
+                    <filter name="partner_id" string="Partner" domain="[]"  context="{'group_by':'partner_id'}"/>
+                    <filter name="building" string="Building" domain="[]"  context="{'group_by':'building'}"/>
+                    <filter name="state" string="State" domain="[]"  context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="rental_contract_form_action" model="ir.actions.act_window">
+        <field name="name">Rental Contract</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">rental.contract</field>
+        <field name="view_id" ref="rental_contract_tree_view"/>
+    </record>
+
+    <menuitem
+            id="menu_contracts_main"
+            name="Contracts"
+            parent="menu_kx_real_estate"
+            sequence="23"/>
+
+    <menuitem id="menu_rental_contract_form_action"
+            action="rental_contract_form_action"
+            parent="menu_contracts_main"
+            groups="base.group_no_one"
+            active="False"
+            sequence="40" />
+</odoo>

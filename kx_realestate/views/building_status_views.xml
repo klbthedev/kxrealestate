@@ -1,0 +1,38 @@
+<odoo>
+    <record id="building_status_list_view" model="ir.ui.view">
+        <field name="name">building.status.list</field>
+        <field name="model">building.status</field>
+        <field name="arch" type="xml">
+            <list string="Property Status">
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="building_status_form_view" model="ir.ui.view">
+        <field name="name">building.status.form</field>
+        <field name="model">building.status</field>
+        <field name="arch" type="xml">
+            <form string="Property Status">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="building_status_form_action" model="ir.actions.act_window">
+        <field name="name">Property Status</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">building.status</field>
+        <field name="view_id" ref="building_status_list_view"/>
+    </record>
+
+    <menuitem id="menu_building_status_form_action"
+            action="building_status_form_action"
+            parent="menu_settings"
+            sequence="30" />
+</odoo>
