@@ -80,7 +80,7 @@
                                     <field name="code"/>
                                     <field name="name"/>
                                     <field name="state" widget="badge"/>
-                                    <field name="stock_state" widget="badge"/>
+                                    <!-- <field name="stock_state" widget="badge"/> -->
                                 </list>
                             </field>
                         </page>

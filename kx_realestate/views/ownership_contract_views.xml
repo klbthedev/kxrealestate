@@ -130,7 +130,7 @@
                                     <field name="selected_floor_id" string="Floor #" readonly="trigger_type == 'date'"/>
                                     <field name="progress_unit_stage_id" optional="show" string="Unit Stage" invisible="trigger_level != 'unit'" readonly="trigger_type == 'date'"/>
                                     <field name="status_complete_date" readonly="1"/>
-                                    <field name="payment_term_date"/>
+                                    <field name="payment_term_date_id"/>
                                     <field name="payment_request_letter"/>
                                     <field name="contract_partner_id" required="1" style="font-weight: bold;"/>
                                     <field name="discount_percent" optional="show"/>
@@ -146,7 +146,7 @@
                                     <button string="Refresh" name="action_refresh_eligibility" type="object" icon="fa-refresh"/>
                                     <button string="Release" name="action_mark_eligible" type="object" icon="fa-unlock" invisible="trigger_type != 'manual'"/>
                                     <button string="Create Invoice" name="make_invoice" type="object" icon="fa-file-text-o" invisible="invoice_id or eligibility_state != 'eligible'"/>
-                                    <button string="View Invoice" name="view_invoice" type="object" style="background-color:rgba(0, 160, 74, 0.5);color: #333;" invisible="payment_state in 'False'" groups="kx_realestate.group_payments"/>
+                                    <button string="View Invoice" name="view_invoice" type="object" style="background-color:rgba(0, 160, 74, 0.5);color: #333;" invisible="payment_state in 'False' or not invoice_id" groups="kx_realestate.group_payments"/>
                                     
                                     <button name="action_send_installment_notification" type="object" string="Notify User" icon="fa-bell" class="btn-primary"/>
                                     <button name="action_send_installment_sms" type="object" string="Send SMS" icon="fa-comment" class="btn-success"/>
@@ -185,7 +185,16 @@
                                 </list>
                             </field>
                         </page>
-                        <page string="Buyer Responsibility">
+                        <page string="Buyer Responsibility" name="buyer_responsibility_page">
+                            <div class="mb-2">
+                                <button name="action_import_child_records" 
+                                        string="Import Buyer Responsibilities" 
+                                        type="object" 
+                                        class="btn-secondary" 
+                                        icon="fa-upload"
+                                        context="{'import_target_model': 'ownership.buyer.responsibility', 'import_context_field': 'ownership_contract_id'}"
+                                        readonly="state != 'draft'"/>
+                            </div>
                             <field name="buyer_responsibility_ids" readonly="state != 'draft'">
                                 <list editable="bottom">
                                     <field name="sequence" widget="handle"/>
@@ -194,7 +203,17 @@
                                 </list>
                             </field>
                         </page>
-                        <page string="Seller/Builder Responsibility">
+
+                        <page string="Seller/Builder Responsibility" name="seller_responsibility_page">
+                            <div class="mb-2">
+                                <button name="action_import_child_records" 
+                                        string="Import Seller Responsibilities" 
+                                        type="object" 
+                                        class="btn-secondary" 
+                                        icon="fa-upload"
+                                        context="{'import_target_model': 'ownership.seller.responsibility', 'import_context_field': 'ownership_contract_id'}"
+                                        readonly="state != 'draft'"/>
+                            </div>
                             <field name="seller_responsibility_ids" readonly="state != 'draft'">
                                 <list editable="bottom">
                                     <field name="sequence" widget="handle"/>
@@ -204,6 +223,15 @@
                             </field>
                         </page>
                         <page string="Handover List">   
+                            <div class="mb-2">
+                                <button name="action_import_child_records" 
+                                        string="Import Seller Responsibilities" 
+                                        type="object" 
+                                        class="btn-secondary" 
+                                        icon="fa-upload"
+                                        context="{'import_target_model': 'ownership.handover.checklist', 'import_context_field': 'ownership_contract_id'}"
+                                        readonly="state != 'draft'"/>
+                            </div>
                             <field name="handover_checklist_ids" readonly="state != 'draft'">
                                 <list editable="bottom">
                                     <field name="sequence" widget="handle"/>
@@ -305,13 +333,13 @@
         <field name="view_id" ref="ownership_contract_tree_view"/>
     </record>
 
-    <menuitem
+    <!-- <menuitem
             id="menu_contracts_main"
             name="Contracts"
             parent="menu_kx_real_estate"
-            sequence="23"/>
+            sequence="23"/> -->
     <menuitem id="menu_ownership_contract_form_action"
             action="ownership_contract_form_action"
-            parent="menu_contracts_main"
+            parent="menu_kx_real_estate"
             sequence="30" />
 </odoo>

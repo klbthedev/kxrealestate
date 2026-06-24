@@ -6,9 +6,9 @@
         <field name="arch" type="xml">
             <form string="Real Estate">
                 <header>
-                    <!-- <button name="make_reservation"
+                    <button name="make_reservation"
                         invisible="state in('reserved','on_lease','sold','blocked')"
-                        string="Reservation" type="object" class="btn-primary"/> -->
+                        string="Reservation" type="object" class="btn-primary"/>
                     <field name="building_type_id" invisible="1"/>
                     <!-- <field name="stage_id" widget="statusbar" clickable="1" options="{'clickable': 1}"/> -->
                     <field name="state"
@@ -18,9 +18,9 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <!-- <button type="object" name="view_reservations" class="oe_stat_button" icon="fa-book">
+                        <button type="object" name="view_reservations" class="oe_stat_button" icon="fa-book">
                             <field name="reservation_count" widget="statinfo" string="Reservations"/>
-                        </button> -->
+                        </button>
                         <button type="object" name="view_ownership_contracts" class="oe_stat_button" icon="fa-file-text-o">
                             <field name="ownership_contract_count" widget="statinfo" string="Sales"/>
                         </button>
@@ -244,7 +244,7 @@
         <field name="res_model">product.template</field>
         <field name="view_mode">kanban,list,form,graph</field>
         <field name="domain">[('is_property','=',True)]</field>
-        <field name="context">{'group_by': ['site_id', 'block_id', 'building_id', 'floor_id'], 'search_default_status': 1,'default_is_property':True,'default_sale_ok':False, 'default_purchase_ok':False}</field>
+        <field name="context">{'group_by': ['building_id', 'floor_id'], 'search_default_status': 1,'default_is_property':True,'default_sale_ok':False, 'default_purchase_ok':False}</field>
         <field name="view_id" ref="building_unit_list"/>
         <field name="search_view_id" ref="building_unit_filter"/>
     </record>
