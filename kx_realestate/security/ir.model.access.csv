@@ -63,6 +63,10 @@ access_realestate_late.payment.unit.check,late.payment.unit.check.reports,model_
 access_realestate_occupancy.check,occupancy.check.reports,model_occupancy_check,group_real_estate_reports,1,1,1,1
 access_realestate_salesperson.sales.check,salesperson.sales.check.reports,model_salesperson_sales_check,group_real_estate_reports,1,1,1,1
 
+access_dashboard_report_admin,access.dashboard.report.admin,model_dashboard_report,group_real_estate_admin,1,1,1,1
+access_payment_term_config_admin,access.payment.term.config.admin,model_payment_term_config,group_real_estate_admin,1,1,1,1
+
+
 access_realestate_installment_template_admin,access.realestate.installment.template.admin,model_installment_template,group_real_estate_admin,1,1,1,1
 access_realestate_building_description_admin,access.realestate.building.description.admin,model_building_description,group_real_estate_admin,1,1,1,1
 access_realestate_building_status_admin,access.realestate.building.status.admin,model_building_status,group_real_estate_admin,1,1,1,1

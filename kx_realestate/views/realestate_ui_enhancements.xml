@@ -64,7 +64,7 @@
         <field name="name">re.block.kanban</field>
         <field name="model">re.block</field>
         <field name="arch" type="xml">
-            <kanban sample="1" default_group_by="site_id">
+            <kanban sample="1" default_group_by="building_id">
                 <field name="id"/>
                 <field name="name"/>
                 <field name="code"/>
@@ -443,7 +443,7 @@
         <field name="view_mode">kanban,list,form</field>
         <field name="view_id" ref="re_floor_view_kanban"/>
         <field name="search_view_id" ref="re_floor_search_view"/>
-        <field name="context">{'group_by': ['site_id', 'block_id', 'building_id']}</field>
+        <field name="context">{'group_by': ['building_id']}</field>
     </record>
     <record id="re_floor_action_view_kanban" model="ir.actions.act_window.view">
         <field name="sequence" eval="0"/>

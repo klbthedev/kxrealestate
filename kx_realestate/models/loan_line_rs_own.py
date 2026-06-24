@@ -47,6 +47,18 @@ class LoanLineRsOwn(models.Model):
     selected_floor_id = fields.Many2one('re.floor', string="Floor #", store=True)
     
     date = fields.Date(string='Due Date')
+    month = fields.Char(compute="_compute_month",store=True)
+    year = fields.Char(compute="_compute_month",store=True)
+    @api.depends('date')
+    def _compute_month(self):
+        for rec in self:
+            if rec.date:
+                rec.month = rec.date.strftime('%B')
+                rec.year = str(rec.date.year)
+            else:
+                rec.month = False
+                rec.year = False
+    
     eligibility_state = fields.Selection(
         [('pending', 'Pending'), ('eligible', 'Eligible'), ('invoiced', 'Invoiced'), ('paid', 'Paid')],
         default='pending',
@@ -56,8 +68,7 @@ class LoanLineRsOwn(models.Model):
     trigger_level = fields.Selection(
         [('building', 'Building'), ('floor', 'Floor'), ('unit', 'Unit')],
         string='Trigger Level',
-        default='floor',
-        required=True,
+        # required=True,
     )
     trigger_building_type_id = fields.Many2one('building.type', compute='_compute_trigger_building_type_id')
 
@@ -191,12 +202,12 @@ class LoanLineRsOwn(models.Model):
                     raise ValidationError("Please set Unit Stage. You can not leave Unit Stage empty.")
     
     #######################################################################################################
-    # update installment due date field when payment_term_date field is chanaged
-    @api.onchange('payment_term_date')
+    # update installment due date field when payment_term_date field is chanaged    
+    @api.onchange('payment_term_date', 'status_complete_date')
     def _onchange_dates(self):
         for rec in self:
             if rec.payment_term_date and rec.status_complete_date:
-                rec.date = rec.status_complete_date + timedelta(days=rec.payment_term_date or 0)
+                rec.date = rec.status_complete_date + timedelta(days=rec.payment_term_date)
 
     # @api.constrains('payment_term_date')
     # def _check_payment_term_date(self):
@@ -246,7 +257,8 @@ class LoanLineRsOwn(models.Model):
     #     string='Trigger Type',
     #     tracking=True,
     # )
-    payment_term_date = fields.Integer(string='Payment Term Date', default=0,)
+    payment_term_date_id = fields.Many2one('payment.term.config', string='Payment Term Date')
+    payment_term_date = fields.Integer(related="payment_term_date_id.payment_term_date", string='Payment Term Date', default=0,)
     payment_request_letter = fields.Selection([('yes','Yes'),('no','No')], string='Payment Request Letter', default='no',required=True)
     status_complete_date = fields.Date(store=True,)
         
@@ -459,20 +471,6 @@ class LoanLineRsOwn(models.Model):
                 line.action_send_installment_sms()
                 line.action_send_installment_notification()
 
-    # def _is_trigger_ready(self):
-    #     self.ensure_one()
-    #     today = fields.Date.today()
-    #     date_ready = not self.trigger_date or self.trigger_date <= today
-    #     if self.trigger_type == 'date':
-    #         return date_ready
-    #     if self.trigger_type == 'progress':
-    #         return self._is_progress_ready()
-    #     if self.trigger_type == 'manual':
-    #         return self.eligibility_state == 'eligible'
-    #     if self.trigger_type == 'mixed':
-    #         return date_ready and self._is_progress_ready()
-    #     return False
-
     def action_refresh_eligibility(self):
         now = fields.Datetime.now()
         for rec in self:
@@ -480,7 +478,7 @@ class LoanLineRsOwn(models.Model):
                 rec.eligibility_state = 'paid'
             elif rec.invoice_id:
                 rec.eligibility_state = 'invoiced'
-            elif rec._is_trigger_ready():
+            elif not rec.invoice_id:
                 rec.eligibility_state = 'eligible'
             else:
                 rec.eligibility_state = 'pending'

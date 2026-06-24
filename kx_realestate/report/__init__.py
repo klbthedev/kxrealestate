@@ -12,3 +12,4 @@ from . import ownership_contract_bi_report
 from . import units_report
 
 from . import report_python
+from . import dashboard_pivot

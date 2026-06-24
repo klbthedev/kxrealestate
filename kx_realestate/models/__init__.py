@@ -37,4 +37,4 @@ from . import report_wizard
 from . import dashboard_service
 from . import warning_letter
 from . import warning_letter_level
-
+from . import payment_term_config

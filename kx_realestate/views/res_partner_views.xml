@@ -33,7 +33,7 @@
         <!-- <field name="domain">[('is_owner','=',True)]</field>
         <field name="context">{'search_default_is_owner': 1, 'search_default_customer': 1,'res_partner_search_mode': 'customer', 'default_customer_rank': 1, 'default_supplier_rank': 1, 'default_is_owner': True}</field> -->
     </record>
-
+<!-- 
     <menuitem id="menu_partners"
             name="Customers"
             parent="menu_kx_real_estate"
@@ -43,10 +43,10 @@
             action="action_partner_form_tenant"
             parent="menu_partners"
             active="False"
-            sequence="100"/>
+            sequence="100"/> -->
 
     <menuitem id="menu_res_partners_owners"
             action="action_partner_form_owner"
-            parent="menu_partners"
+            parent="menu_kx_real_estate"
             sequence="100"/>
 </odoo>
