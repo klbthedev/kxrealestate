@@ -25,6 +25,7 @@ class UnitReservation(models.Model):
     # contract_count_rent = fields.Integer(string='Rentals', compute='_contract_count_rent')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     date = fields.Datetime(string='Reservation Date', default=fields.Datetime.now)
+    exp_date = fields.Datetime(string='Reservation Expiry Date', )
     deposit = fields.Float(string='Deposit', digits=(16, 2))
     deposit_count = fields.Integer(string='Deposits', compute='_deposit_count')
     deposit_remaining_amount = fields.Integer(string="Remaining Deposit", compute="_compute_deposit_remaining_amount")
@@ -49,6 +50,16 @@ class UnitReservation(models.Model):
         own_obj = self.env['ownership.contract']
         own_ids = own_obj.search([('reservation_id', '=', self.id)])
         self.contract_count_own = len(own_ids)
+
+    @api.model
+    def check_and_cancel_expired_reservations(self):
+        now = fields.Datetime.now()
+        expired_reservations = self.search([
+            ('exp_date', '<', now),
+            ('state', 'in', ['draft', 'confirmed']) 
+        ])
+        if expired_reservations:
+            expired_reservations.write({'state': 'canceled'})
     
     def _deposit_count(self):
         payment_obj = self.env['account.payment']

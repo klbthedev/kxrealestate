@@ -76,7 +76,7 @@
                             <field name="name"/>
                             <field name="user_id" widget="many2one_avatar_user"/>
                             <field name="partner_id" widget="many2one_avatar" readonly="state != 'draft'" required="1"/>
-                            <field name="date" readonly="state != 'draft'" required="1"/>
+                            <field name="exp_date" readonly="state != 'draft'" required="1"/>
                         </group>
                     </group>
                     <separator string="Payment Info." colspan="4"/>
