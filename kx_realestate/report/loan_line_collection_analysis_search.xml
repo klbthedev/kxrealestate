@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- Collection Forecast -->
     <record id="view_loan_line_2_collection_analysis_search" model="ir.ui.view">
         <field name="name">loan.line.collection.analysis.search</field>
         <field name="model">loan.line.rs.own</field>
@@ -27,9 +28,9 @@
                 <field name="report_building_id" type="row"/>
                 <field name="report_floor_id" type="row"/>
                 <field name="report_unit_id" type="row"/>
-                <field name="total_amount_report" type="measure"/>
-                <field name="total_paid_amount" type="measure"/>
-                <field name="total_remaining_amount" type="measure"/>
+                <field name="total_amount_report" type="measure" sum="Total Amount"/>
+                <field name="total_paid_amount" type="measure" sum="Total Amount"/>
+                <field name="total_remaining_amount" type="measure" sum="Total Amount"/>
             </pivot>
         </field>
     </record>
@@ -43,13 +44,12 @@
                 <field name="report_floor_id"/>
                 <field name="report_unit_id"/>
                 <field name="total_amount_report"/>
-                <field name="total_paid_amount"/>
-                <field name="total_remaining_amount"/>
+                <field name="total_paid_amount" sum="Total Amount"/>
+                <field name="total_remaining_amount" sum="Total Amount"/>
             </list>
         </field>
     </record>
 
-    <!-- FIRST ACTION: Explicitly mapped to its own views -->
     <record id="action_collection_forecast" model="ir.actions.act_window">
         <field name="name">Collection Forecast</field>
         <field name="res_model">loan.line.rs.own</field>
@@ -69,6 +69,7 @@
         action="action_collection_forecast"
         sequence="100"/>
 
+    <!-- Loan Installments Analysis -->
     <record id="view_pivot_loan_line_rs_own" model="ir.ui.view">
         <field name="name">loan.line.rs.own.pivot</field>
         <field name="model">loan.line.rs.own</field>
@@ -77,8 +78,8 @@
                 <field name="contract_partner_id" type="row"/>
                 <field name="loan_id" type="row"/>
                 <field name="number" type="col"/>
-                <field name="amount" type="measure" string="Installment Amount"/>
-                <field name="amount_residual" type="measure" string="Remaining Amount"/>                
+                <field name="amount" type="measure" sum="Total Amount" string="Installment Amount"/>
+                <field name="amount_residual" type="measure" sum="Total Amount" string="Remaining Amount"/>                
             </pivot>
         </field>
     </record>
@@ -91,8 +92,8 @@
                 <field name="name"/>
                 <field name="loan_id"/>
                 <field name="contract_partner_id"/>
-                <field name="amount"/>
-                <field name="total_remaining_amount"/>
+                <field name="amount" sum="Total Amount"/>
+                <field name="total_remaining_amount" sum="Total Amount"/>
                 <field name="payment_state"/>
                 <field name="eligibility_state"/>
                 <field name="date"/>
@@ -106,13 +107,12 @@
         <field name="arch" type="xml">
             <graph string="Installments Analysis" type="bar">
                 <field name="payment_state" type="col"/>
-                <field name="amount" type="measure" string="Installment Amount"/>
-                <field name="amount_residual" type="measure" string="Remaining Amount"/>
+                <field name="amount" type="measure" sum="Total Amount" string="Installment Amount"/>
+                <field name="amount_residual" type="measure" sum="Total Amount" string="Remaining Amount"/>
             </graph>
         </field>
     </record>
 
-    <!-- SECOND ACTION: Explicitly mapped to its own distinct views -->
     <record id="action_report_loan_line_rs_own" model="ir.actions.act_window">
         <field name="name">Loan Installments Analysis</field>
         <field name="res_model">loan.line.rs.own</field>
@@ -131,5 +131,75 @@
         parent="real_estate_report_sell"
         action="action_report_loan_line_rs_own"
         sequence="110"/>
+
+
+    <!-- Installment by Contract (Building -> Floor -> Unit) -->
+    <record id="view_loan_line_by_contract_pivot" model="ir.ui.view">
+        <field name="name">loan.line.by.contract.pivot</field>
+        <field name="model">loan.line.rs.own</field>
+        <field name="arch" type="xml">
+            <pivot string="Installment by Contract">
+                <!-- Grouping requested: Building -> Floor -> Unit -->
+                <field name="report_building_id" type="row"/>
+                <field name="report_floor_id" type="row"/>
+                <!-- <field name="report_unit_id" type="row"/> -->
+                <field name="number" type="col"/>
+                <field name="amount" type="measure" sum="Total Amount" string="Installment Amount"/>
+                <field name="amount_residual" type="measure" sum="Total Amount" string="Remaining Amount"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_installment_by_contract" model="ir.actions.act_window">
+        <field name="name">Installment by Contract</field>
+        <field name="res_model">loan.line.rs.own</field>
+        <field name="view_mode">pivot,list</field>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'pivot', 'view_id': ref('view_loan_line_by_contract_pivot')}),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('view_loan_line_rs_own_tree')})
+        ]"/>
+    </record>
+
+    <menuitem
+        id="menu_installment_by_contract"
+        name="Installment by Contract"
+        parent="real_estate_report_sell"
+        action="action_installment_by_contract"
+        sequence="120"/>
+
+
+    <!-- Installment by Floor (Building Only) -->
+    <record id="view_loan_line_by_floor_pivot" model="ir.ui.view">
+        <field name="name">loan.line.by_floor.pivot</field>
+        <field name="model">loan.line.rs.own</field>
+        <field name="arch" type="xml">
+            <pivot string="Installment by Floor">
+                <field name="report_building_id" type="row"/>
+                <field name="report_floor_id" type="row"/>
+                <field name="number" type="col"/>
+                <field name="amount" type="measure" sum="Total Amount" string="Installment Amount"/>
+                <field name="amount_residual" type="measure" sum="Total Amount" string="Remaining Amount"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_installment_by_floor" model="ir.actions.act_window">
+        <field name="name">Installment by Floor</field>
+        <field name="res_model">loan.line.rs.own</field>
+        <field name="view_mode">pivot,list</field>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'pivot', 'view_id': ref('view_loan_line_by_floor_pivot')}),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('view_loan_line_rs_own_tree')})
+        ]"/>
+    </record>
+
+    <menuitem
+        id="menu_installment_by_floor"
+        name="Installment by Floor"
+        parent="real_estate_report_sell"
+        action="action_installment_by_floor"
+        sequence="130"/>
 
 </odoo>
