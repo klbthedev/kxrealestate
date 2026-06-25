@@ -261,7 +261,45 @@ class LoanLineRsOwn(models.Model):
     payment_term_date = fields.Integer(related="payment_term_date_id.payment_term_date", string='Payment Term Date', default=0,)
     payment_request_letter = fields.Selection([('yes','Yes'),('no','No')], string='Payment Request Letter', default='no',required=True)
     status_complete_date = fields.Date(store=True,)
-        
+
+    report_building_id = fields.Many2one(
+        'building.building',
+        string='Building',
+        related='loan_id.building_id',
+        store=True,
+        readonly=True,
+        index=True,
+    )
+
+    report_floor_id = fields.Many2one(
+        're.floor',
+        string='Floor',
+        related='loan_id.floor_id',
+        store=True,
+        readonly=True,
+        index=True,
+    )
+
+    report_unit_id = fields.Many2one(
+        'product.template',
+        string='Unit',
+        related='loan_id.building_unit_id',
+        store=True,
+        readonly=True,
+        index=True,
+    )
+
+    total_amount_report = fields.Float(
+        string='Total Amount',
+        compute='_compute_total_amount_report',
+        store=True,
+        group_operator='sum',
+    )
+
+    @api.depends('amount')
+    def _compute_total_amount_report(self):
+        for rec in self:
+            rec.total_amount_report = rec.amount or 0.0    
 
     def view_payments(self):
         payments = self.env['account.payment'].sudo().search([('loan_line_rs_own_id','=',self.id)]).ids

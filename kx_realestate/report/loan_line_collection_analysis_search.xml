@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <record id="view_loan_line_collection_analysis_search" model="ir.ui.view">
+        <field name="name">loan.line.collection.analysis.search</field>
+        <field name="model">loan.line.rs.own</field>
+        <field name="arch" type="xml">
+            <search string="Collection Analysis">
+                <field name="report_building_id"/>
+                <field name="report_floor_id"/>
+                <field name="report_unit_id"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter
+                        name="group_building"
+                        string="Building"
+                        context="{'group_by':'report_building_id'}"/>
+                    <filter
+                        name="group_floor"
+                        string="Floor"
+                        context="{'group_by':'report_floor_id'}"/>
+                    <filter
+                        name="group_unit"
+                        string="Unit"
+                        context="{'group_by':'report_unit_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_loan_line_collection_analysis_pivot" model="ir.ui.view">
+        <field name="name">loan.line.collection.analysis.pivot</field>
+        <field name="model">loan.line.rs.own</field>
+        <field name="arch" type="xml">
+            <pivot string="Collection Forecast">
+                <field name="report_building_id" type="row"/>
+                <field name="report_floor_id" type="row"/>
+                <field name="report_unit_id" type="row"/>
+                <field name="total_amount_report" type="measure"/>
+                <field name="total_paid_amount" type="measure"/>
+                <field name="total_remaining_amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_loan_line_collection_analysis_tree" model="ir.ui.view">
+        <field name="name">loan.line.collection.analysis.tree</field>
+        <field name="model">loan.line.rs.own</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="report_building_id"/>
+                <field name="report_floor_id"/>
+                <field name="report_unit_id"/>
+                <field name="total_amount_report"/>
+                <field name="total_paid_amount"/>
+                <field name="total_remaining_amount"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_collection_forecast" model="ir.actions.act_window">
+        <field name="name">Collection Forecast</field>
+        <field name="res_model">loan.line.rs.own</field>
+        <field name="view_mode">pivot,list</field>
+        <field name="search_view_id" ref="view_loan_line_collection_analysis_search"/>
+    </record>
+
+    <menuitem
+        id="menu_collection_forecast"
+        name="Collection Forecast"
+        parent="real_estate_report_sell"
+        action="action_collection_forecast"
+        sequence="100"/>
+
+
+</odoo>
