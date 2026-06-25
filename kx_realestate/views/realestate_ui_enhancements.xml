@@ -6,10 +6,10 @@
         <field name="model">re.site</field>
         <field name="arch" type="xml">
             <kanban sample="1">
-                <field name="id"/>
+                <!-- <field name="id"/> -->
                 <field name="name"/>
                 <field name="code"/>
-                <field name="owner_id"/>
+                <!-- <field name="owner_id"/> -->
                 <field name="building_count"/>
                 <field name="unit_count"/>
                 <templates> 
