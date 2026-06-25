@@ -42,7 +42,7 @@ class UnitReservation(models.Model):
                              ('confirmed','Confirmed'),
                              ('contracted','Contracted'),
                              ('canceled','Canceled')
-                             ], string='State', default='draft')
+    ], string='State', compute='_compute_state', store=True, readonly=False, default='draft')
     user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.user)
     unit_code = fields.Char(string='Code')
 
@@ -60,6 +60,14 @@ class UnitReservation(models.Model):
         ])
         if expired_reservations:
             expired_reservations.write({'state': 'canceled'})
+    @api.depends('exp_date')
+    def _compute_state(self):
+        now = fields.Datetime.now()
+        for record in self:
+            if record.exp_date and record.exp_date < now and record.state not in ['contracted', 'canceled']:
+                record.state = 'canceled'
+            elif not record.state:
+                record.state = 'draft'
     
     def _deposit_count(self):
         payment_obj = self.env['account.payment']
