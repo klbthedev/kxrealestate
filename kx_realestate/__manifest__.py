@@ -85,7 +85,7 @@
         'report/templates/report_ownership_contract_views.xml',
         # 'report/templates/rental_contract_views.xml',
         'report/templates/report_quittance_letter_views.xml',
-        'report/ownership_contract_bi_report_views.xml',
+        # 'report/ownership_contract_bi_report_views.xml',
         'report/templates/occupany_views.xml',
         'report/templates/due_payments_customers_views.xml',
         # 'report/templates/due_payments_customers_rent_views.xml',
