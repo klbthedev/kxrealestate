@@ -79,6 +79,7 @@
         # 'views/component_views.xml',
         'wizard/owner_account_views.xml',
         'report/dashboard_pivot.xml',
+        'report/loan_line_collection_analysis_search.xml',
         'report/report_action_views.xml',
         'report/templates/report_reservation_views.xml',
         'report/templates/report_ownership_contract_views.xml',

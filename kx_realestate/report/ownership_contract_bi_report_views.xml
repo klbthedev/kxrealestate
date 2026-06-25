@@ -202,6 +202,7 @@
     <menuitem id="menu_report_report_ownership_all"
               action="action_report_ownership_contract_all"
               groups="group_real_estate_reports"
+              active="False"
               parent="real_estate_report_sell"
               sequence="80"/>
 
