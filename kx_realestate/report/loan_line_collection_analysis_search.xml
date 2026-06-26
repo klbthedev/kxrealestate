@@ -142,6 +142,7 @@
                 <!-- Grouping requested: Building -> Floor -> Unit -->
                 <field name="report_building_id" type="row"/>
                 <field name="report_floor_id" type="row"/>
+                <field name="loan_id" type="row"/>
                 <!-- <field name="report_unit_id" type="row"/> -->
                 <field name="number" type="col"/>
                 <field name="amount" type="measure" sum="Total Amount" string="Installment Amount"/>
