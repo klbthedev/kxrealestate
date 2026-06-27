@@ -237,6 +237,7 @@
                                     <field name="sequence" widget="handle"/>
                                     <field name="name"/>
                                     <field name="checklist_type"/>
+                                    <field name="checklist_date"/>
                                     <field name="done" readonly="not is_fully_paid"/>
                                 </list>
                             </field>
