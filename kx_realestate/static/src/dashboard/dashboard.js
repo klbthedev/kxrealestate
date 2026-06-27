@@ -30,6 +30,15 @@ export class Dashboard extends Component {
         return (value || 0).toLocaleString( undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2, });
     }
 
+    async exportExcel() {
+        const params = new URLSearchParams({
+            date_from: this.state.date_from || "",
+            date_to: this.state.date_to || "",
+        });
+
+        window.open(`/kx_realestate/dashboard/export_excel?${params.toString()}`,"_blank");
+    }
+
     async loadDashboard() {
         const result = await this.orm.call( "kx.dashboard.service", "get_dashboard_data", [ this.state.date_from, this.state.date_to, ]);
         Object.assign(this.state, result);
