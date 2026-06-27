@@ -62,6 +62,7 @@ class OwnershipHandoverChecklist(models.Model):
         string='Fully Paid',
         store=True
     )
+    checklist_date = fields.Date(string='Date', required=True)
 
 
 class OwnershipTermPenaltyRule(models.Model):

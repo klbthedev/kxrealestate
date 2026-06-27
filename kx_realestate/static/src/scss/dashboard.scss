@@ -6,3 +6,29 @@
     width: 1%;
     white-space: nowrap;
 }
+.installment-chart-container {
+    height: 350px;
+    width: 100%;
+}
+
+.o_section_divider {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 0px 0;   /* space above and below */
+}
+
+.o_section_divider span {
+    font-size: 14px;
+    font-weight: 600;
+    color: #495057;
+    white-space: nowrap;
+    padding-right: 12px;
+}
+
+.o_section_divider::after {
+    content: "";
+    flex-grow: 1;
+    height: 1px;
+    background-color: #d8dadd;
+}

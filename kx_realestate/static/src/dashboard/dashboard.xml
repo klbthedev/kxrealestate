@@ -4,9 +4,36 @@
     <t t-name="kx_realestate.Dashboard">
         <div class="container-fluid p-4 dashboard_container">
             <!-- Filters ##########################################################################-->
-            <div class="row mb-4 pb-1 pe-3 border-bottom">
+            <div class="row mb-0 pb-1 pe-3">
                 <div class="col-md-5">
                     <h3 class="mb-4">Dashboard</h3>
+                </div>
+                <div class="col-md-3">
+                    <!-- <div class="row align-items-center">
+                        <div class="col-auto"><label class="mb-0 text-nowrap">From Date</label></div>
+                        <div class="col"><input type="date" class="form-control form-control-sm" t-model="state.date_from"/></div>
+                    </div> -->
+                </div>
+                <div class="col-md-3">
+                    <!-- <div class="row align-items-center">
+                        <div class="col-auto"><label class="mb-0 text-nowrap">To Date</label></div>
+                        <div class="col"><input type="date" class="form-control form-control-sm" t-model="state.date_to"/></div>
+                    </div> -->
+                </div>
+                <div class="col-md-1">
+                    <!-- <div class="row align-items-right"><button class="btn btn-primary btn-sm" t-on-click="applyFilter">Filter</button></div> -->
+                </div>
+            </div>
+            
+            <!-- Table #############################################################################-->
+            
+            <div class="o_section_divider">
+                <span>General Summary</span>
+            </div>
+
+            <div class="row mb-4 pb-1 pe-3">
+                <div class="col-md-5">
+                    <h3 class="mb-4"></h3>
                 </div>
                 <div class="col-md-3">
                     <div class="row align-items-center">
@@ -24,12 +51,13 @@
                     <div class="row align-items-right"><button class="btn btn-primary btn-sm" t-on-click="applyFilter">Filter</button></div>
                 </div>
             </div>
-            <!-- Table #############################################################################-->
-            <div class="row mb-4">
+
+            <div class="row mb-5">
                 <div class="col-md-12">
                     <div class="card shadow-sm">
-                        <div class="card-body text-center px-0 py-0">
-                            <table class="table table-hover table-striped table-sm mx-0 my-0">
+                        <div class="card-body">
+                            <!-- <h5>General Summary</h5> -->
+                            <table class="table table-hover table-striped table-sm">
                                 <thead>
                                     <tr>
                                         <th scope="col" class="text-center col-fit">Title</th>
@@ -48,141 +76,369 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td class="text-start col-fit">Customers Requested to Pay</td>
-                                        <td><t t-esc="state.payment_request_item1_sep"/></td><td>2,000,000</td><td>3,000,000</td><td>4,000,000</td><td>5,000,000</td><td>6,000,000</td>
-                                        <td>7,000,000</td><td>8,000,000</td><td>9,000,000</td><td>10,000,000</td><td>11,000,000</td><td>12,000,000</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-start col-fit">Customers Paid (count)</td>
-                                        <td><t t-esc="state.paid_customers_count_item_2_sep"/></td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
-                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-start col-fit">Customers Paid (%)</td>
-                                        <td><t t-esc="state.paid_customers_percent_item_3_sep"/></td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
-                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-start col-fit">Total Requested Amount</td>
-                                        <td><t t-esc="state.total_requested_amount_item_3_sep"/></td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
-                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-start col-fit">Total Collected Amount</td>
-                                        <td><t t-esc="state.total_collected_amount_item_4_sep"/></td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
-                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-start col-fit">Remaining Amount to be Collected</td>
-                                        <td><t t-esc="state.remaining_amount_tobe_collected_item_5_sep"/></td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
-                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-start col-fit">Customers Ready to be requested payment</td>
-                                        <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
-                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-start col-fit">Customers Not yet ready to request Payment</td>
-                                        <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
-                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-start col-fit">Customers Ready to be requested payment</td>
-                                        <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
-                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-start col-fit">Customers Not yet ready to request Payment</td>
-                                        <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
-                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-start col-fit">Cancelled Contracts</td>
-                                        <td><t t-esc="state.cancelled_contract_item11_sep"/></td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
-                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-start col-fit">Customers 1st Warning Issued</td>
-                                        <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
-                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-start col-fit">Customers 2nd Warning Issued</td>
-                                        <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
-                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-start col-fit">Customers 3rd Warning Issued</td>
-                                        <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
-                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-start col-fit">Customers Final Warning Issued</td>
-                                        <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
-                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
-                                    </tr>
-                                    <tr>
+                                    <t t-foreach="state.payment_request_letter || []" t-as="row" t-key="row.id">
+                                        <tr>
+                                            <td class="text-start col-fit">Customers Requested to Pay</td>
+                                            <td class="text-center"><t t-esc="row.sep_count"/></td>
+                                            <td class="text-center"><t t-esc="row.oct_count"/></td>
+                                            <td class="text-center"><t t-esc="row.nov_count"/></td>
+                                            <td class="text-center"><t t-esc="row.dec_count"/></td>
+                                            <td class="text-center"><t t-esc="row.jan_count"/></td>
+                                            <td class="text-center"><t t-esc="row.feb_count"/></td>
+                                            <td class="text-center"><t t-esc="row.mar_count"/></td>
+                                            <td class="text-center"><t t-esc="row.apr_count"/></td>
+                                            <td class="text-center"><t t-esc="row.may_count"/></td>
+                                            <td class="text-center"><t t-esc="row.jun_count"/></td>
+                                            <td class="text-center"><t t-esc="row.jul_count"/></td>
+                                            <td class="text-center"><t t-esc="row.aug_count"/></td>
+                                        </tr>
+                                    </t>
+                                    
+                                    <t t-foreach="state.paid_customers_count || []" t-as="row" t-key="row.id">
+                                        <tr>
+                                            <td class="text-start col-fit">Customers Paid (count)</td>
+                                            <td class="text-center"><t t-esc="row.sep_count"/></td>
+                                            <td class="text-center"><t t-esc="row.oct_count"/></td>
+                                            <td class="text-center"><t t-esc="row.nov_count"/></td>
+                                            <td class="text-center"><t t-esc="row.dec_count"/></td>
+                                            <td class="text-center"><t t-esc="row.jan_count"/></td>
+                                            <td class="text-center"><t t-esc="row.feb_count"/></td>
+                                            <td class="text-center"><t t-esc="row.mar_count"/></td>
+                                            <td class="text-center"><t t-esc="row.apr_count"/></td>
+                                            <td class="text-center"><t t-esc="row.may_count"/></td>
+                                            <td class="text-center"><t t-esc="row.jun_count"/></td>
+                                            <td class="text-center"><t t-esc="row.jul_count"/></td>
+                                            <td class="text-center"><t t-esc="row.aug_count"/></td>
+                                        </tr>
+                                    </t>
+
+                                    <t t-foreach="state.paid_customers_percentage || []" t-as="row" t-key="'paid_percentage'">
+                                        <tr>
+                                            <td class="text-start col-fit">Customers Paid (%)</td>
+                                            <td class="text-center"><t t-esc="row.sep_count"/></td>
+                                            <td class="text-center"><t t-esc="row.oct_count"/></td>
+                                            <td class="text-center"><t t-esc="row.nov_count"/></td>
+                                            <td class="text-center"><t t-esc="row.dec_count"/></td>
+                                            <td class="text-center"><t t-esc="row.jan_count"/></td>
+                                            <td class="text-center"><t t-esc="row.feb_count"/></td>
+                                            <td class="text-center"><t t-esc="row.mar_count"/></td>
+                                            <td class="text-center"><t t-esc="row.apr_count"/></td>
+                                            <td class="text-center"><t t-esc="row.may_count"/></td>
+                                            <td class="text-center"><t t-esc="row.jun_count"/></td>
+                                            <td class="text-center"><t t-esc="row.jul_count"/></td>
+                                            <td class="text-center"><t t-esc="row.aug_count"/></td>
+                                        </tr>
+                                    </t>                                    
+                                   
+                                    <t t-foreach="state.total_requested_amount || []" t-as="row" t-key="row.id">
+                                        <tr>
+                                            <td class="text-start col-fit">Total Requested Amount (Birr)</td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.sep_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.oct_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.nov_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.dec_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.jan_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.feb_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.mar_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.apr_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.may_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.jun_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.jul_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.aug_amount)"/></td>
+                                        </tr>
+                                    </t>
+                                    
+                                    <t t-foreach="state.total_collected_amount || []" t-as="row" t-key="row.id">
+                                        <tr>
+                                            <td class="text-start col-fit">Total Collected Amount (Birr)</td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.sep_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.oct_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.nov_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.dec_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.jan_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.feb_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.mar_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.apr_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.may_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.jun_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.jul_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.aug_amount)"/></td>
+                                        </tr>
+                                    </t>                                    
+
+                                    <t t-foreach="state.remaining_amount_tobe_collected || []" t-as="row" t-key="'paid_percentage'">
+                                        <tr>
+                                            <td class="text-start col-fit">Remaining Amount to be Collected</td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.sep_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.oct_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.nov_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.dec_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.jan_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.feb_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.mar_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.apr_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.may_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.jun_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.jul_amount)"/></td>
+                                            <td class="text-center"><t t-esc="formatAmount(row.aug_amount)"/></td>
+                                        </tr>
+                                    </t>
+
+                                    <t t-foreach="state.warning_letter_levels || []" t-as="row" t-key="row.id">
+                                        <tr>
+                                            <td><t t-esc="row.letter_level_name"/> Warning Letter</td>
+                                            <td class="text-center"><t t-esc="row.sep_count"/></td>
+                                            <td class="text-center"><t t-esc="row.oct_count"/></td>
+                                            <td class="text-center"><t t-esc="row.nov_count"/></td>
+                                            <td class="text-center"><t t-esc="row.dec_count"/></td>
+                                            <td class="text-center"><t t-esc="row.jan_count"/></td>
+                                            <td class="text-center"><t t-esc="row.feb_count"/></td>
+                                            <td class="text-center"><t t-esc="row.mar_count"/></td>
+                                            <td class="text-center"><t t-esc="row.apr_count"/></td>
+                                            <td class="text-center"><t t-esc="row.may_count"/></td>
+                                            <td class="text-center"><t t-esc="row.jun_count"/></td>
+                                            <td class="text-center"><t t-esc="row.jul_count"/></td>
+                                            <td class="text-center"><t t-esc="row.aug_count"/></td>
+                                        </tr>
+                                    </t>
+                                    
+                                    <t t-foreach="state.handover_ready_unit || []" t-as="row" t-key="row.id">
+                                        <tr>
+                                            <td><t t-esc="row.letter_level_name"/>Customer ready for Handover</td>
+                                            <td class="text-center"><t t-esc="row.sep_count"/></td>
+                                            <td class="text-center"><t t-esc="row.oct_count"/></td>
+                                            <td class="text-center"><t t-esc="row.nov_count"/></td>
+                                            <td class="text-center"><t t-esc="row.dec_count"/></td>
+                                            <td class="text-center"><t t-esc="row.jan_count"/></td>
+                                            <td class="text-center"><t t-esc="row.feb_count"/></td>
+                                            <td class="text-center"><t t-esc="row.mar_count"/></td>
+                                            <td class="text-center"><t t-esc="row.apr_count"/></td>
+                                            <td class="text-center"><t t-esc="row.may_count"/></td>
+                                            <td class="text-center"><t t-esc="row.jun_count"/></td>
+                                            <td class="text-center"><t t-esc="row.jul_count"/></td>
+                                            <td class="text-center"><t t-esc="row.aug_count"/></td>
+                                        </tr>
+                                    </t>
+                                    <!-- <tr>
                                         <td class="text-start col-fit">Customer ready for Handover</td>
-                                        <td><t t-esc="state.handover_ready_unit_item16_sep"/></td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
-                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
-                                    </tr>
+                                        <td class="text-center"><t t-esc="state.handover_ready_unit_item16_sep"/></td>
+                                        <td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+                                        <td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+                                    </tr> -->
                                     <tr>
                                         <td class="text-start col-fit">Customer Handovered</td>
-                                        <td><t t-esc="state.handed_over_unit_item17_sep"/></td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
-                                        <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
+                                        <td class="text-center"><t t-esc="state.handed_over_unit_item17_sep"/></td>
+                                        <td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+                                        <td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-                    </div>                    
+                    </div>
                 </div>
             </div>
             
             <!-- KPI Cards #########################################################################-->
             
-            <div class="row">
-                <div class="col-md-4">
+            <div class="o_section_divider">
+                <span>Property Units Summary</span>
+            </div>
+
+            <div class="row mb-5 mt-5">
+                <div class="col-md-3">
                     <div class="card shadow-sm">
                         <div class="card-body text-center">
-                            <h5>Total Payment Requests</h5>
-                            <h1><t t-esc="state.requested_payment_count"/></h1>
+                            <div class="row">
+                                <h5>Cancelled Contracts</h5>
+                            </div>
+                            <div class="row">
+                                <h1><t t-esc="state.cancelled_contract_count"/></h1>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card shadow-sm">
                         <div class="card-body text-center">
-                            <h5>Construction Trigger</h5>
-                            <h1><t t-esc="state.construction_count"/></h1>
+                            <div class="row">
+                                <h5>Available Units</h5>
+                            </div>
+                            <div class="row">
+                                <h1><t t-esc="state.available_units_count"/></h1>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card shadow-sm">
                         <div class="card-body text-center">
-                            <h5>Date Trigger</h5>
-                            <h1><t t-esc="state.date_count"/></h1>
+                            <div class="row">
+                                <h5>Sold Units</h5>
+                            </div>
+                            <div class="row">
+                                <h1><t t-esc="state.sold_units_count"/></h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="row">
+                                <h5>Blocked Units</h5>
+                            </div>
+                            <div class="row">
+                                <h1><t t-esc="state.blocked_units_count"/></h1>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Placeholder for future charts #####################################################-->
+            <!-- Installment Summary Table #####################################################-->
             
-            <div class="row mt-5">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            Future Chart Area
-                        </div>
+            <div class="o_section_divider">
+                <span>Installment Summary</span>
+            </div>
+
+            <div class="row mb-5 mt-5">
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
                         <div class="card-body">
-                            Chart.js or ApexCharts can be rendered here.
+                            <h6>Paid vs Remaining Amount per Installment</h6>
+                            <table class="table table-sm table-striped">
+                                <thead>
+                                    <tr> 
+                                        <th class="text-center">Installment</th> 
+                                        <th class="text-center">Paid Amount (Birr)</th> 
+                                        <th class="text-center">Remaining Amount (Birr)</th> 
+                                        <!-- <th class="text-center">Installment Total (Birr)</th>
+                                        <th class="text-center">Overdue Amount (Birr)</th>                                         -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="state.installment_summary || []" t-as="row" t-key="row.installment_number">
+                                        <tr>
+                                            <td class="text-center"> <t t-esc="row.installment_number"/> </td>
+                                            <td class="text-end pe-2">
+                                                <t t-esc="formatAmount(row.total_paid_amount)"/>
+                                            </td>
+                                            <td class="text-end pe-2">
+                                                <t t-esc="formatAmount(row.total_remaining_amount)"/>
+                                            </td>
+                                            <!-- <td class="text-end pe-2">
+                                                <t t-esc="formatAmount(row.total_installment_amount)"/>
+                                            </td>
+                                            <td class="text-end pe-2">
+                                                <t t-esc="formatAmount(row.total_overdue_amount)"/>
+                                            </td>                                             -->
+                                        </tr>
+                                    </t>
+                                    <tr class="fw-bold table-secondary">
+                                        <td class="text-end pe-2">Total</td>
+                                        <td class="text-end pe-2">
+                                            <t t-esc="formatAmount(state.total_paid_amount)"/>
+                                        </td>
+                                        <td class="text-end pe-2">
+                                            <t t-esc="formatAmount(state.total_remaining_amount)"/>
+                                        </td>
+                                        <!-- <td class="text-end pe-2">
+                                            <t t-esc="formatAmount(state.total_installment_amount)"/>
+                                        </td>
+                                        <td class="text-end pe-2">
+                                            <t t-esc="formatAmount(state.total_overdue_amount)"/>
+                                        </td>                                         -->
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h6>To be Collected vs Overdue Amount per Installment</h6>
+                            <table class="table table-sm table-striped">
+                                <thead>
+                                    <tr> 
+                                        <th class="text-center">Installment #</th> 
+                                        <th class="text-center">To Be Collected (Birr)</th> 
+                                        <th class="text-center">Overdue Amount (Birr)</th> 
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="state.installment_tobe_collected || []" t-as="row" t-key="row.installment_number">
+                                        <tr>
+                                            <td class="text-center"> 
+                                                <t t-esc="row.installment_number"/> 
+                                            </td>                                            
+                                            <td class="text-end pe-2">
+                                                <t t-esc="formatAmount(row.total_to_be_collected_amount)"/>
+                                            </td>
+                                            <td class="text-end pe-2">
+                                                <t t-esc="formatAmount(row.total_collectable_overdue_amount)"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <tr class="fw-bold table-secondary">
+                                        <td class="text-end pe-2">Total</td>
+                                        <td class="text-end pe-2">
+                                            <t t-esc="formatAmount(state.total_to_be_collected_amount)"/>
+                                        </td>
+                                        <td class="text-end pe-2">
+                                            <t t-esc="formatAmount(state.total_collectable_overdue_amount)"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Column Chart for Installment Summary ##############################################-->
+
+            <div class="o_section_divider">
+                <span>Installment Charts</span>
+            </div>
+
+            <div class="row mt-5">
+                <div class="col-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h6>Installment: Paid vs Remaining Amount</h6>
+                            <div class="installment-chart-container">
+                                <canvas t-ref="installmentChart"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h6>Installment: To Be Collected vs Overdue Amount</h6>
+                            <div class="installment-chart-container">
+                                <canvas t-ref="collectionChart"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Placeholder for future charts #####################################################-->
+            
+            <!-- <div class="row mt-5">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            Card Header
+                        </div>
+                        <div class="card-body">
+                            Card Body
+                        </div>
+                    </div>
+                </div>
+            </div> -->
 
             <!-- Placeholder for future items #####################################################-->
 

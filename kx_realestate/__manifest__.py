@@ -104,6 +104,7 @@
     ],
     "assets": {
         "web.assets_backend": [
+            "kx_realestate/static/lib/chartjs/chart.umd.js",
             "kx_realestate/static/src/xml/matterport_templates.xml",
             "kx_realestate/static/src/js/matterport_viewer.js",
             "kx_realestate/static/src/css/style.css",
