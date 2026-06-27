@@ -72,17 +72,20 @@
         
         # for report
         'views/wizard_views.xml',
+        'views/payment_term_config_views.xml',
 
         
 
         # 'views/component_views.xml',
         'wizard/owner_account_views.xml',
+        'report/dashboard_pivot.xml',
+        'report/loan_line_collection_analysis_search.xml',
         'report/report_action_views.xml',
         'report/templates/report_reservation_views.xml',
         'report/templates/report_ownership_contract_views.xml',
         # 'report/templates/rental_contract_views.xml',
         'report/templates/report_quittance_letter_views.xml',
-        'report/ownership_contract_bi_report_views.xml',
+        # 'report/ownership_contract_bi_report_views.xml',
         'report/templates/occupany_views.xml',
         'report/templates/due_payments_customers_views.xml',
         # 'report/templates/due_payments_customers_rent_views.xml',

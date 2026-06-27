@@ -49,13 +49,12 @@ class RealEstateFloorStatus(models.Model):
                 ('selected_floor_id', '=', rec.floor_id.id),
                 ('progress_floor_stage_id', '=', rec.floor_status_id.id),
             ])
-            if loan_lines.trigger_type == 'construction':
-                loan_lines.write({
-                    'status_complete_date': rec.floor_status_id_date,
-                })
-                loan_lines.write({
-                    'date': rec.floor_status_id_date + timedelta(days=loan_lines.payment_term_date or 0)
-                })
+            for line in loan_lines:
+                if line.trigger_type == 'construction':
+                    line.write({
+                        'status_complete_date': rec.floor_status_id_date,
+                        'date': rec.floor_status_id_date + timedelta(days=line.payment_term_date or 0)
+                    })
         return records
     ##############################################################################################
     # update installment records

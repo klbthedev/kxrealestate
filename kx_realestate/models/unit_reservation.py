@@ -12,7 +12,8 @@ class UnitReservation(models.Model):
     account_id = fields.Many2one('account.account', string='Income Account')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account')
     address = fields.Char(string='Address')
-    building_id = fields.Many2one('building.building', string='Building')
+    building_id = fields.Many2one('building.building', related="building_unit_id.building_id", string='Building')
+    floor_id = fields.Many2one('re.floor', related="building_unit_id.floor_id", string='Floor')
     building_code = fields.Char(string='Code')
     building_status_id = fields.Many2one('building.status', string='Building Unit Status')
     building_unit_id = fields.Many2one('product.template', string='Unit', required=False)
@@ -24,8 +25,10 @@ class UnitReservation(models.Model):
     # contract_count_rent = fields.Integer(string='Rentals', compute='_contract_count_rent')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     date = fields.Datetime(string='Reservation Date', default=fields.Datetime.now)
+    exp_date = fields.Datetime(string='Reservation Expiry Date', )
     deposit = fields.Float(string='Deposit', digits=(16, 2))
     deposit_count = fields.Integer(string='Deposits', compute='_deposit_count')
+    deposit_remaining_amount = fields.Integer(string="Remaining Deposit", compute="_compute_deposit_remaining_amount")
     first_payment_date = fields.Date(string='First Payment Date')
     floor = fields.Char(string='Floor')
     installment_template_id = fields.Many2one('installment.template', string='Payment Template')
@@ -39,7 +42,7 @@ class UnitReservation(models.Model):
                              ('confirmed','Confirmed'),
                              ('contracted','Contracted'),
                              ('canceled','Canceled')
-                             ], string='State', default='draft')
+    ], string='State', compute='_compute_state', store=True, readonly=False, default='draft')
     user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.user)
     unit_code = fields.Char(string='Code')
 
@@ -48,15 +51,51 @@ class UnitReservation(models.Model):
         own_ids = own_obj.search([('reservation_id', '=', self.id)])
         self.contract_count_own = len(own_ids)
 
-    # def _contract_count_rent(self):
-    #     rent_obj = self.env['rental.contract']
-    #     rent_ids = rent_obj.search([('reservation_id', '=', self.id)])
-    #     self.contract_count_rent = len(rent_ids)
-
+    @api.model
+    def check_and_cancel_expired_reservations(self):
+        now = fields.Datetime.now()
+        expired_reservations = self.search([
+            ('exp_date', '<', now),
+            ('state', 'in', ['draft', 'confirmed']) 
+        ])
+        if expired_reservations:
+            expired_reservations.write({'state': 'canceled'})
+    @api.depends('exp_date')
+    def _compute_state(self):
+        now = fields.Datetime.now()
+        for record in self:
+            if record.exp_date and record.exp_date < now and record.state not in ['contracted', 'canceled']:
+                record.state = 'canceled'
+            elif not record.state:
+                record.state = 'draft'
+    
     def _deposit_count(self):
         payment_obj = self.env['account.payment']
-        payment_ids = payment_obj.search([('reservation_id', '=', self.id)])
-        self.deposit_count = len(payment_ids)
+        for rec in self:
+            actual_id = rec._origin.id if rec._origin else rec.id
+            if not actual_id or isinstance(actual_id, models.NewId):
+                rec.deposit_count = 0
+                continue
+            payment_ids = payment_obj.search([
+                ('reservation_id', '=', actual_id),
+                ('state', 'not in', ['cancel'])
+            ])
+            rec.deposit_count = len(payment_ids)
+    
+    @api.depends('deposit') 
+    def _compute_deposit_remaining_amount(self):
+        payment_obj = self.env['account.payment']
+        for rec in self:
+            actual_id = rec._origin.id if rec._origin else rec.id
+            if not actual_id or isinstance(actual_id, models.NewId):
+                rec.deposit_remaining_amount = rec.deposit
+                continue
+            payment_ids = payment_obj.search([
+                ('reservation_id', '=', actual_id),
+                ('state', 'not in', ['cancel']) 
+            ])
+            paid_amount = sum(payment.amount for payment in payment_ids)
+            rec.deposit_remaining_amount = max(0.0, rec.deposit - paid_amount)
 
     def unlink(self):
         if self.state != 'draft':
@@ -142,11 +181,11 @@ class UnitReservation(models.Model):
             unit.write({'state': 'reserved'})
 
     def action_receive_deposit(self):
-        if not self.deposit:
-            raise UserError(_('Please set the deposit amount!'))
+        self.ensure_one()
+        if self.deposit_remaining_amount <= 0:
+            raise UserError(_('The deposit for this reservation has already been fully paid!'))
         return {
             'name': _('Payment'),
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'account.payment',
             'view_id': self.env.ref('account.view_account_payment_form').id,
@@ -154,9 +193,9 @@ class UnitReservation(models.Model):
             'context': {
                 'form_view_initial_mode': 'edit',
                 'default_payment_type': 'inbound',
-                'default_partner_type':'customer',
-                'default_amount':self.deposit,
-                'default_partner_id':self.partner_id.id,
+                'default_partner_type': 'customer',
+                'default_amount': self.deposit_remaining_amount, 
+                'default_partner_id': self.partner_id.id,
                 'default_reservation_id': self.id,
             },
             'target': 'current'
@@ -168,16 +207,19 @@ class UnitReservation(models.Model):
         return {
             'name': _('Payments'),
             'domain': [('id', 'in', payment_ids.ids)],
-            'view_type':'form',
-            'view_mode':'list,form',
-            'res_model':'account.payment',
-            'type':'ir.actions.act_window',
-            'nodestroy':True,
-            'view_id': False,
-            'target':'current',
+            'view_mode': 'list,form', 
+            'res_model': 'account.payment',
+            'type': 'ir.actions.act_window',
+            'target': 'current',
         }
 
     def action_contract_ownership(self):
+        existing_contract = self.env['ownership.contract'].search([
+            ('reservation_id', '=', self.id),
+            ('state', '!=', 'cancel')
+        ], limit=1)
+        if existing_contract:
+            raise UserError(_('An active ownership contract already exists for this reservation.'))
         return {
             'name': _('Ownership Contract'),
             'view_type': 'form',

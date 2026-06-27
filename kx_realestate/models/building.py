@@ -2,6 +2,7 @@ import logging
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from datetime import datetime, timedelta
 
 _logger = logging.getLogger(__name__)
 
@@ -36,6 +37,42 @@ class RealEstateBuildingStatus(models.Model):
         group_expand='_read_group_stage_ids',
         required=1,
     )
+
+    ##############################################################################################
+    # update installment records
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        for rec in records:
+            loan_lines = self.env['loan.line.rs.own'].search([
+                ('selected_floor_id', '=', rec.floor_id.id),
+                ('progress_floor_stage_id', '=', rec.floor_status_id.id),
+            ])
+            for line in loan_lines:
+                if line.trigger_type == 'construction':
+                    line.write({
+                        'status_complete_date': rec.floor_status_id_date,
+                        'date': rec.floor_status_id_date + timedelta(days=line.payment_term_date or 0)
+                    })
+        return records
+    ##############################################################################################
+    # update installment records
+    def write(self, vals_list):
+        records = super().create(vals_list)
+        for rec in records:
+            loan_lines = self.env['loan.line.rs.own'].search([
+                ('selected_floor_id', '=', rec.floor_id.id),
+                ('progress_floor_stage_id', '=', rec.floor_status_id.id),
+            ])
+            if loan_lines.trigger_type == 'construction':
+                loan_lines.write({
+                    'status_complete_date': rec.floor_status_id_date,
+                })
+                loan_lines.write({
+                    'date': rec.floor_status_id_date + timedelta(days=loan_lines.payment_term_date or 0)
+                })
+        return records    
+    ##############################################################################################
 
 
 

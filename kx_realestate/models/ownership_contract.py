@@ -490,10 +490,6 @@ class OwnershipContract(models.Model):
             #             'company_id': rec.company_id.id,
             #             'note': _('Released on contract confirmation'),
             #         })
-            if hasattr(rec, 'action_evaluate_sample_penalty_rules'):
-                rec.action_evaluate_sample_penalty_rules()
-            if hasattr(rec, 'action_evaluate_custom_penalty_rules'):
-                rec.action_evaluate_custom_penalty_rules()
 
     def action_create_invoice(self):
         self.ensure_one()
@@ -560,8 +556,6 @@ class OwnershipContract(models.Model):
                 if line.invoice_id:
                     line.invoice_id.button_draft()
                     line.invoice_id.button_cancel()
-            rec.action_evaluate_sample_penalty_rules()
-            rec.action_evaluate_custom_penalty_rules()
 
     @api.onchange('building_id')
     def onchange_building(self):
@@ -828,8 +822,6 @@ class OwnershipContract(models.Model):
     def process_installment_triggers(self):
         for contract in self.search([('state', '=', 'confirmed')]):
             contract.loan_line_rs_own_ids.action_refresh_eligibility()
-            contract.action_evaluate_sample_penalty_rules()
-            contract.action_evaluate_custom_penalty_rules()
             for line in contract.loan_line_rs_own_ids.filtered(
                 lambda installment: installment.eligibility_state == 'eligible'
                 and installment.auto_invoice
@@ -853,3 +845,20 @@ class OwnershipContract(models.Model):
             'company_id': self.company_id.id,
             'note': _('Released on customer payment'),
         })
+
+    def action_import_child_records(self):
+        self.ensure_one()
+        target_model = self.env.context.get('import_target_model')
+        context_field = self.env.context.get('import_context_field')
+        if not target_model or not context_field:
+            raise UserError("Developer Error: Missing context configurations 'import_target_model' or 'import_context_field' on the button view.")
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'import',
+            'params': {
+                'model': target_model,
+                'context': {
+                    f'default_{context_field}': self.id,
+                }
+            }
+        }
