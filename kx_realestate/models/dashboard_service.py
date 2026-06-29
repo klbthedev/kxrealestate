@@ -213,40 +213,40 @@ class DashboardService(models.AbstractModel):
                   
         
         # 1.8 For Unit Status Part -------------------------------------------------------------
-        query = """
-            SELECT
-                COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM b.checklist_date) = 1 THEN b.id END) AS jan_count,
-                COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM b.checklist_date) = 2 THEN b.id END) AS feb_count,
-                COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM b.checklist_date) = 3 THEN b.id END) AS mar_count,
-                COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM b.checklist_date) = 4 THEN b.id END) AS apr_count,
-                COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM b.checklist_date) = 5 THEN b.id END) AS may_count,
-                COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM b.checklist_date) = 6 THEN b.id END) AS jun_count,
-                COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM b.checklist_date) = 7 THEN b.id END) AS jul_count,
-                COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM b.checklist_date) = 8 THEN b.id END) AS aug_count,
-                COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM b.checklist_date) = 9 THEN b.id END) AS sep_count,
-                COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM b.checklist_date) = 10 THEN b.id END) AS oct_count,
-                COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM b.checklist_date) = 11 THEN b.id END) AS nov_count,
-                COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM b.checklist_date) = 12 THEN b.id END) AS dec_count
-            FROM ownership_contract a
-            INNER JOIN ownership_handover_checklist b
-                ON b.ownership_contract_id = a.id
-            INNER JOIN loan_line_rs_own c
-                ON c.loan_id = a.id
-            WHERE c.amount_residual > 0 AND b.done = false
-        """    
-        params = []
-        if date_from:
-            query += " AND b.checklist_date >= %s"
-            params.append(date_from)
-        if date_to:
-            query += " AND b.checklist_date <= %s"
-            params.append(date_to)
+        # query = """
+        #     SELECT
+        #         COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM b.checklist_date) = 1 THEN b.id END) AS jan_count,
+        #         COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM b.checklist_date) = 2 THEN b.id END) AS feb_count,
+        #         COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM b.checklist_date) = 3 THEN b.id END) AS mar_count,
+        #         COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM b.checklist_date) = 4 THEN b.id END) AS apr_count,
+        #         COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM b.checklist_date) = 5 THEN b.id END) AS may_count,
+        #         COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM b.checklist_date) = 6 THEN b.id END) AS jun_count,
+        #         COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM b.checklist_date) = 7 THEN b.id END) AS jul_count,
+        #         COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM b.checklist_date) = 8 THEN b.id END) AS aug_count,
+        #         COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM b.checklist_date) = 9 THEN b.id END) AS sep_count,
+        #         COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM b.checklist_date) = 10 THEN b.id END) AS oct_count,
+        #         COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM b.checklist_date) = 11 THEN b.id END) AS nov_count,
+        #         COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM b.checklist_date) = 12 THEN b.id END) AS dec_count
+        #     FROM ownership_contract a
+        #     INNER JOIN ownership_handover_checklist b
+        #         ON b.ownership_contract_id = a.id
+        #     INNER JOIN loan_line_rs_own c
+        #         ON c.loan_id = a.id
+        #     WHERE c.amount_residual > 0 AND b.done = false
+        # """    
+        # params = []
+        # if date_from:
+        #     query += " AND b.checklist_date >= %s"
+        #     params.append(date_from)
+        # if date_to:
+        #     query += " AND b.checklist_date <= %s"
+        #     params.append(date_to)
         # query += """ 
         #     GROUP BY b.id, b.name
         #     ORDER BY b.name
         # """
-        self.env.cr.execute(query, params)
-        handover_ready_unit = self.env.cr.dictfetchall()
+        # self.env.cr.execute(query, params)
+        # handover_ready_unit = self.env.cr.dictfetchall()
 
         #############################################################
         # 2. Cards
@@ -274,6 +274,32 @@ class DashboardService(models.AbstractModel):
         self.env.cr.execute(query_contract_state)
         cancelled_contract_count = self.env.cr.fetchone() or (0)
 
+        # 2.3. For handover checklist --------------------------------------------
+        query_handover = """
+            SELECT
+                COALESCE(COUNT(contract_id) 
+                    FILTER (WHERE checklist_type IS NOT NULL AND total_residual=0 AND handover_state=False),0) 
+                        AS handover_ready_count,
+                COALESCE(COUNT(contract_id) 
+                    FILTER (WHERE checklist_type IS NOT NULL AND total_residual=0 AND handover_state=True),0) 
+                        AS handovered_count
+            FROM 
+            (	SELECT
+                    contract_id, contract_code, total_residual, checklist_type, COUNT(name), done AS handover_state
+                FROM (
+                    SELECT	
+                        a.id AS contract_id, a.origin AS contract_code, SUM(b.amount_residual) AS total_residual
+                    FROM ownership_contract a
+                    INNER JOIN loan_line_rs_own b ON a.id = b.loan_id
+                    GROUP BY a.origin, a.id
+                ) contract_table
+                LEFT JOIN ownership_handover_checklist handover_table ON contract_table.contract_id = handover_table.ownership_contract_id
+                GROUP BY contract_id, contract_code, total_residual, name, checklist_type, done
+                ORDER BY contract_code
+            )
+        """
+        self.env.cr.execute(query_handover)
+        handover_list_count = self.env.cr.fetchone() or (0,0)
 
         #############################################################
         # 3. Installment Report
@@ -360,11 +386,10 @@ class DashboardService(models.AbstractModel):
             "available_units_count": units_state_count[0],
             "sold_units_count": units_state_count[1],
             "blocked_units_count": units_state_count[2],
+            "handover_ready_units": handover_list_count[0],
+            "handovered_units": handover_list_count[1],
 
-            "warning_letter_levels": warning_letter_levels,
-                        
-            "handover_ready_unit": handover_ready_unit,
-            "handed_over_unit_item17_sep": 0, #result113[1],
+            "warning_letter_levels": warning_letter_levels,            
             
             "installment_summary": installment_summary,
             "total_paid_amount": total_paid,

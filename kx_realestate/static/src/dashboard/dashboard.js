@@ -70,7 +70,20 @@ export class Dashboard extends Component {
         this.installmentChart = new Chart(installmentCanvas, { type: "bar",
             data: {
                 labels: installmentLabel,
-                datasets: [ { label: "Remaining Amount", data: remaining, }, { label: "Paid Amount", data: paid, } ]
+                datasets: [ 
+                    {   label: "Remaining Amount", 
+                        data: remaining, 
+                        backgroundColor: "#7A4E59",
+                        borderColor: "#68414C",
+                        borderWidth: 1,
+                    }, 
+                    {   label: "Paid Amount", 
+                        data: paid,
+                        backgroundColor: "#E6D8DC",
+                        borderColor: "#68414C",
+                        borderWidth: 1,
+                    } 
+                ]
             },
             options: { responsive: true, maintainAspectRatio: false, }
         });
@@ -79,7 +92,19 @@ export class Dashboard extends Component {
         this.collectionChart = new Chart(collectionCanvas, { type: "bar",
             data: {
                 labels: collectionLabel,
-                datasets: [ { label: "Collectable Amount", data: collectable, }, { label: "Overdue Amount", data: overdue, } ]
+                datasets: [ 
+                    {   label: "Collectable Amount", 
+                        data: collectable, 
+                        backgroundColor: "#7A4E59",
+                        borderColor: "#68414C",
+                        borderWidth: 1,
+                    }, 
+                    {   label: "Overdue Amount", 
+                        data: overdue, 
+                        backgroundColor: "#E6D8DC",
+                        borderColor: "#68414C",
+                        borderWidth: 1,
+                    } ]
             },
             options: { responsive: true, maintainAspectRatio: false, }
         });

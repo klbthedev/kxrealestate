@@ -32,3 +32,49 @@
     height: 1px;
     background-color: #d8dadd;
 }
+
+.dashboard-table {
+    border-collapse: collapse;
+}
+
+.dashboard-table thead th {
+    background: #7A4E59;
+    color: white;
+}
+
+.dashboard-table tbody tr:nth-child(odd) {
+    background: White;
+}
+
+.dashboard-table tbody tr:nth-child(even) {
+    background: #F5EEF0;
+}
+
+.dashboard-table tbody tr:hover {
+    background: #E8D9DD;
+}
+
+
+// .dashboard-card {
+//     background: #7A4E59;
+//     color: white;
+//     border: 1px solid #643F49;
+//     transition: all 0.2s ease;
+// }
+
+// .dashboard-card:hover {
+//     background: #643F49;
+// }
+
+// .dashboard-table thead th {
+//     background: #643F49;
+//     color: white;
+// }
+
+// .dashboard-table tbody tr:nth-child(even) {
+//     background: #F4ECEE;
+// }
+
+// .dashboard-table tbody tr:hover {
+//     background: #E8D9DD;
+// }
