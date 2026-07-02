@@ -221,6 +221,7 @@ class OwnershipContract(models.Model):
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
+        ('handover', 'Handover'),
         ('cancel', 'Cancelled'),
         ('closed', 'Closed')], default='draft', string="State")
     unit_code = fields.Char(string='Code')
@@ -473,7 +474,7 @@ class OwnershipContract(models.Model):
                 if rec.reservation_id.contract_count_own > 1:
                     rec.state = 'resell'
                 else:
-                    if rec.state == 'draft':
+                    if rec.state == 'draft' or rec.state == 'handover':
                         rec.state = 'confirmed'
             rec.loan_line_rs_own_ids.action_refresh_eligibility()
 
@@ -545,6 +546,12 @@ class OwnershipContract(models.Model):
                 record.state = 'draft'
             else:
                 raise UserError(_('You do not have permission to reset the contract to draft.'))
+    def action_set_to_handover(self):
+        for record in self:
+            if self.env.user.has_group('kx_realestate.group_contract_supervisor'):
+                record.state = 'handover'
+            else:
+                raise UserError(_('You do not have permission to reset the contract to Handover.'))
 
     def action_cancel(self):
         for rec in self:

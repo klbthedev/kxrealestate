@@ -51,6 +51,13 @@ class OwnershipHandoverChecklist(models.Model):
     ownership_contract_id = fields.Many2one('ownership.contract', required=True, ondelete='cascade')
     sequence = fields.Integer(default=10)
     name = fields.Char(string='Checklist Item', required=True)
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('confirmed', 'Confirmed'),
+        ('handover', 'Handover'),
+        ('cancel', 'Cancelled'),
+        ('closed', 'Closed')
+    ], default='draft', string="State")
     checklist_type = fields.Selection(
         [('common', 'Common'), ('individual', 'Individual')],
         default='common',

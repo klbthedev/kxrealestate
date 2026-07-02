@@ -119,8 +119,8 @@
     </record>
 
     <menuitem id="menu_reservation_main"
-            name="Property Reservation"
-            parent="menu_kx_real_estate"
+            name="Reservation"
+            parent="kx_realestate.menu_contracts_main"
             active="True"
             action="unit_reservation_form_action"
             sequence="2"/>
