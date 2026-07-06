@@ -74,7 +74,7 @@
         'views/wizard_views.xml',
         'views/payment_term_config_views.xml',
 
-        
+        'views/sales_person_commission_views.xml',
 
         # 'views/component_views.xml',
         'wizard/owner_account_views.xml',
