@@ -7,7 +7,7 @@ class SalespersonCommissionLine(models.Model):
     _order = 'release_date desc, id desc'
 
     sales_person = fields.Many2one('res.partner', string='Sales Person', required=False)
-    user_id = fields.Many2one('res.users', string='Salesperson', required=True)
+    user_id = fields.Many2one('res.users', string='Salesperson', required=False)
     amount = fields.Float(string='Commission Amount', required=True)
     amount_base = fields.Float(string='Base Amount', required=True)
     commission_percent = fields.Float(string='Commission %', required=True)
