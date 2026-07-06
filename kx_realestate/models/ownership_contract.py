@@ -68,11 +68,17 @@ class OwnershipContract(models.Model):
     building_status_id = fields.Many2one('building.status', string='Building Unit Status')
     building_type_id = fields.Many2one('building.type', string='Building Unit Type')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
-    commission_paid_amount = fields.Float(string='Released Commission', compute='_compute_commission_totals')
-    commission_percent = fields.Float(string='Commission %', default=lambda self: self.env.user.realestate_commission_percent)
+    # salesperson_commission_line_id = fields.Many2one('salesperson.commission.line', string='Sales Person', required=False)
+    # sales_person_id = fields.Many2one(related="salesperson_commission_line_id.sales_person", string='Sales Person', required=False)
+    # sales_person_commission_id = fields.Float(related="salesperson_commission_line_id.commission_percent", string='Sales Commission', required=False)
+    sales_person_id = fields.Many2one('res.partner', string='Sales Person', required=False)
+    commission_paid_amount = fields.Float(string='Released Commission', compute='_compute_commission_total_amount', store="True")
+    commission_percent = fields.Float(string='Commission %', 
+        # default=lambda self: self.env.user.realestate_commission_percent
+    )
     commission_release_policy = fields.Selection(
-        [('on_payment', 'On Payment'), ('on_confirm', 'On Confirmation')],
-        default=lambda self: self.env.user.realestate_commission_release_policy or 'on_payment',
+        [('on_payment', 'On Payment/Installment'), ('on_confirm', 'On Confirmation')],
+        # default=lambda self: self.env.user.realestate_commission_release_policy or 'on_payment',
         string='Commission Release Policy',
     )
     date = fields.Datetime(string='Date',required=True, default=fields.Datetime.now)
@@ -172,9 +178,6 @@ class OwnershipContract(models.Model):
     paid = fields.Float(string='Paid', compute='_check_amounts', store=True)
     payment_initiator = fields.Char(string='Payment Initiator')
     partner_id = fields.Many2one('res.partner', string='Customer', required=False)
-    salesperson_commission_line_id = fields.Many2one('salesperson.commission.line', string='Sales Person', required=False)
-    sales_person_id = fields.Many2one(related="salesperson_commission_line_id.sales_person", string='Sales Person', required=False)
-    sales_person_commission_id = fields.Float(related="salesperson_commission_line_id.commission_percent", string='Sales Commission', required=False)
     phone = fields.Char(string='Phone')
     email = fields.Char(string='Email')
     seller_company_name = fields.Char(related='company_id.name', string='Seller / Builder', readonly=True)
@@ -481,19 +484,20 @@ class OwnershipContract(models.Model):
                         rec.state = 'confirmed'
             rec.loan_line_rs_own_ids.action_refresh_eligibility()
 
-            # if hasattr(rec, 'commission_release_policy') and rec.commission_release_policy == 'on_confirm':
-            #     if rec.commission_percent and hasattr(rec, 'commission_line_ids') and not rec.commission_line_ids:
-            #         self.env['salesperson.commission.line'].create({
-            #             'amount': rec.commission_expected_amount if hasattr(rec, 'commission_expected_amount') else 0.0,
-            #             'amount_base': rec.selling_price,
-            #             'commission_percent': rec.commission_percent,
-            #             'contract_id': rec.id,
-            #             'release_date': fields.Date.today(),
-            #             'state': 'earned',
-            #             'user_id': rec.user_id.id,
-            #             'company_id': rec.company_id.id,
-            #             'note': _('Released on contract confirmation'),
-            #         })
+            if rec.commission_release_policy == 'on_confirm' and rec.commission_percent:
+                self.commission_paid_amount = (rec.amount_total * rec.commission_percent) / 100.0
+                # responsible_user = rec.user_id.id if hasattr(rec, 'user_id') and rec.user_id else self.env.user.id
+                # self.env['salesperson.commission.line'].create({
+                #     'amount': calculated_commission,
+                #     'amount_base': rec.amount_total,
+                #     'commission_percent': rec.commission_percent,
+                #     'contract_id': rec.id,
+                #     'release_date': fields.Date.today(),
+                #     'state': 'earned',
+                #     'user_id': self.sales_person_id,
+                #     'company_id': rec.company_id.id if hasattr(rec, 'company_id') and rec.company_id else self.env.company.id,
+                #     'note': _('Released globally on Contract Confirmation'),
+                # })
 
     def action_create_invoice(self):
         self.ensure_one()
@@ -839,20 +843,30 @@ class OwnershipContract(models.Model):
             ):
                 line.make_invoice(post=False)
 
+    @api.depends('commission_percent', 'amount_total')
+    def _compute_commission_paid_amount(self):
+        for contract in self:
+            commission_lines = self.env['salesperson.commission.line'].search([
+                ('contract_id', '=', contract.id),
+                ('state', '!=', 'cancelled')
+            ])
+            contract.commission_paid_amount = sum(commission_lines.mapped('amount'))
     def get_commission_paid(self, amount, payment_date, payment_id=False):
         self.ensure_one()
         if not self.commission_percent or self.commission_release_policy != 'on_payment':
             return False
+        self.commission_paid_amount = (amount * self.commission_percent) / 100.0
+        # responsible_user = self.user_id.id if hasattr(self, 'user_id') and self.user_id else self.env.user.id
         return self.env['salesperson.commission.line'].create({
-            'amount': amount * self.commission_percent / 100.0,
-            'amount_base': amount,
+            'amount': self.commission_paid_amount,
+            'amount_base': amount, 
             'commission_percent': self.commission_percent,
             'contract_id': self.id,
             'payment_id': payment_id,
             'release_date': payment_date or fields.Date.today(),
             'state': 'earned',
-            'user_id': self.user_id.id,
-            'company_id': self.company_id.id,
+            'user_id': self.sales_person_id,
+            'company_id': self.company_id.id if hasattr(self, 'company_id') and self.company_id else self.env.company.id,
             'note': _('Released on customer payment'),
         })
 
