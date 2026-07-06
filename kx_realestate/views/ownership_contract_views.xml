@@ -44,7 +44,12 @@
                             <field name="user_id" widget="many2one_avatar_user" readonly="state != 'draft'"/>
                             <field name="partner_id" widget="many2one_avatar" readonly="state != 'draft'"/>
                             <field name="date" readonly="state != 'draft'"/>
-                            <field name="agreement_type" readonly="state != 'draft'"/>
+                            <!-- <field name="agreement_type" readonly="state != 'draft'"/> -->
+                            <div class="o_row">
+                                <field name="sales_person_id" string="Sales Person" readonly="state != 'draft'"/>
+                                <field name="sales_person_commission_id" readonly="state != 'draft'"/>
+                                <span>%%</span>
+                            </div>
                         </group>
                     </group>
                     
