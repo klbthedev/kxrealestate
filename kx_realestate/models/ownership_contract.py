@@ -41,7 +41,6 @@ class OwnershipContract(models.Model):
     building_id = fields.Many2one('building.building', string='Building', copy=False)
     building_code = fields.Char(string='Code')
     building_unit_id = fields.Many2one('product.template', string='Unit', copy=False)
-    building_unit_ids = fields.Many2many('product.template', string='Units')
     @api.onchange('building_unit_id')
     def onchange_units(self):
         if self.building_unit_id:
