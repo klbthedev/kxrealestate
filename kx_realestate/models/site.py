@@ -11,6 +11,9 @@ class RealEstateSite(models.Model):
     building_ids = fields.One2many('building.building', 'site_id', string='Buildings')
     code = fields.Char(string='Code', tracking=True, readonly=True)
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
+    country_id = fields.Many2one('res.country', required=True)
+    state_id = fields.Many2one('res.country.state', required=True)
+    city = fields.Char(string="City")
     name = fields.Char(required=True, tracking=True)
     ####################################################################
     @api.model_create_multi

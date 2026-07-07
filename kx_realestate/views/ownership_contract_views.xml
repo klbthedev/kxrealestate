@@ -30,20 +30,30 @@
                 <header>
                     <button name="action_confirm" type="object" invisible="state in ('cancel','confirmed','closed')" string="Confirm" class="oe_highlight" data-hotkey="q"/>
                     <button name="action_cancel" type="object" invisible="state in ('cancel','draft')" string="Cancel" class="oe_highlight" data-hotkey="x"/>
-                    <button name="action_set_closed" type="object" string="Set to Closed" class="oe_highlight" invisible="state in ('closed','draft')"/>
+                    <button name="action_set_closed" type="object" string="Set to Closed" class="oe_highlight" invisible="state in ('closed','draft','confirmed','handover')"/>
                     <button name="action_reset_to_draft" type="object" string="Reset to Draft" class="oe_highlight" invisible="state in ('draft')"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,cancel,closed"/>
+                    <button name="action_set_to_handover" type="object" string="Set to Handover" class="oe_highlight" invisible="state in ('draft','handover','closed','cancel',)"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,handover,cancel,closed"/>
                 </header>
                 <sheet>
                     <group string="Customer Details">
-                        <group>
+                        <group string="Customer Details">
                             <field name="origin" string="Contract Reference No." readonly="state != 'draft'"/>
                             <field name="active" readonly="state != 'draft'"/>
                             <field name="name" readonly="state != 'draft'"/>
                             <field name="user_id" widget="many2one_avatar_user" readonly="state != 'draft'"/>
                             <field name="partner_id" widget="many2one_avatar" readonly="state != 'draft'"/>
                             <field name="date" readonly="state != 'draft'"/>
-                            <field name="agreement_type" readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Sales Person Commission">
+                            <label for="sales_person_id" string="Sales Person &amp; Commission"/>
+                            <div class="o_row">
+                                <field name="sales_person_id" string="Sales Person" options="{'no_create': True}" readonly="state != 'draft'"/>
+                                <field name="commission_percent" readonly="state != 'draft'"/>
+                                <span>%%</span>
+                            </div>
+                            <field name="commission_release_policy"/>
+                            <field name="commission_paid_amount" readonly="1"/>
                         </group>
                     </group>
                     
@@ -232,12 +242,12 @@
                                         context="{'import_target_model': 'ownership.handover.checklist', 'import_context_field': 'ownership_contract_id'}"
                                         readonly="state != 'draft'"/>
                             </div>
-                            <field name="handover_checklist_ids" readonly="state != 'draft'">
+                            <field name="handover_checklist_ids" readonly="state not in ['draft', 'handover']">
                                 <list editable="bottom">
                                     <field name="sequence" widget="handle"/>
-                                    <field name="name"/>
-                                    <field name="checklist_type"/>
-                                    <field name="checklist_date"/>
+                                    <field name="name" />
+                                    <field name="checklist_type" />
+                                    <field name="checklist_date" />
                                     <field name="done" readonly="not is_fully_paid"/>
                                 </list>
                             </field>
@@ -334,13 +344,14 @@
         <field name="view_id" ref="ownership_contract_tree_view"/>
     </record>
 
-    <!-- <menuitem
+    <menuitem
             id="menu_contracts_main"
             name="Contracts"
             parent="menu_kx_real_estate"
-            sequence="23"/> -->
+            sequence="23"/>
     <menuitem id="menu_ownership_contract_form_action"
+            name="Ownership Contract"
             action="ownership_contract_form_action"
-            parent="menu_kx_real_estate"
+            parent="menu_contracts_main"
             sequence="30" />
 </odoo>

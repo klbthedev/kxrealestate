@@ -60,9 +60,9 @@
         'views/installment_template_views.xml',
         'views/res_partner_views.xml',
         'views/res_users_views.xml',
-        'views/unit_reservation_views.xml',
         # 'views/rental_contract_views.xml',
         'views/ownership_contract_views.xml',
+        'views/unit_reservation_views.xml',
         'views/configuration_views.xml',
         'views/installments_views.xml',
         'views/realestate_ui_enhancements.xml',
@@ -74,7 +74,7 @@
         'views/wizard_views.xml',
         'views/payment_term_config_views.xml',
 
-        
+        'views/sales_person_commission_views.xml',
 
         # 'views/component_views.xml',
         'wizard/owner_account_views.xml',
