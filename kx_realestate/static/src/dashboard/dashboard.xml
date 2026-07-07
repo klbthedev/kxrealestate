@@ -3,31 +3,232 @@
 <templates xml:space="preserve">
     <t t-name="kx_realestate.Dashboard">
         <div class="container-fluid p-4 dashboard_container">
+            
             <!-- Filters ##########################################################################-->
-            <div class="row mb-0 pb-1">
-                <div class="col-md-5">
+            
+            <div class="row mx-auto">
+                <div class="col-md-10 ps-0">
                     <h3 class="mb-4">Dashboard</h3>                    
                 </div>                
-                <div class="col-md-3"> </div>
-                <div class="col-md-2"> </div>
-                <div class="col-md-2 text-end">
+                <div class="col-md-2 pe-0 text-end">
                     <button class="btn btn-sm" style="background-color: #643F49;color:white;" t-on-click="exportExcel">Export to Excel</button>
                 </div>
             </div>
-            <separator/>
 
-            <!-- KPI Cards #########################################################################-->
+            <!-- Filtering  #########################################################################-->
+
+            <div class="row mx-auto mb-5 pt-2" style="border-top:2px solid #643F49;">
+                <div class="col-md-5">
+                    <!-- <h3 class="mb-4">Part A</h3> -->
+                </div>
+                <div class="col-md-2">
+                    <div class="col">
+                        <Many2XAutocomplete
+                            resModel="'re.site'"
+                            value="state.site"
+                            update.bind="onSiteSelected"
+                            getDomain.bind="getSiteDomain"
+                            context="getContext()"
+                            activeActions="activeActions"
+                            fieldString="'Site'"
+                            isToMany="false"
+                            placeholder="'Select Site'"
+                        />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="col">
+                        <Many2XAutocomplete
+                            resModel="'building.building'"
+                            value="state.building"
+                            update.bind="onBuildingSelected"
+                            getDomain.bind="getBuildingDomain"
+                            context="getContext()"
+                            activeActions="activeActions"
+                            fieldString="'Building'"
+                            isToMany="false"
+                            placeholder="'Select Building'"
+                        />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="col">
+                        <Many2XAutocomplete
+                            resModel="'re.floor'"
+                            value="state.floor"
+                            update.bind="onFloorSelected"
+                            getDomain.bind="getFloorDomain"
+                            context="getContext()"
+                            activeActions="activeActions"
+                            fieldString="'Floor'"
+                            isToMany="false"
+                            placeholder="'Select Floor'"
+                        />
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="row align-items-right">
+                        <button class="btn btn-sm" style="background-color: #643F49;color:white;" t-on-click="applyFilter">Filter</button>
+                    </div>
+                </div>
+            </div>            
             
-            <div class="o_section_divider">
-                <span>Property Units Summary</span>
+            <!-- ###################################################################################-->
+            
+            <div class="row mb-5 mt-5">
+                <div class="col-md-6">
+                    <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0">
+                        <div class="card-body pt-2 pb-0 text-center">
+                            <div class="row text-white mt-3 mb-3">
+                                <h1 style="text-color: #7A4E59">Total Collected Amount (ETB)</h1>
+                            </div>
+                            <div class="row text-white mt-3 mb-3">
+                                <h1 style="text-color: #7A4E59">
+                                    <t t-esc="formatAmount(state.total_paid_amount)"/>
+                                    (<t t-esc="formatAmount(state.total_paid_amount_percent)"/>%)
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0">
+                        <div class="card-body pt-2 pb-0 text-center">
+                            <div class="row text-white mt-3 mb-3">
+                                <h1 style="text-color: #7A4E59">Total Remaining Amount (ETB)</h1>
+                            </div>
+                            <div class="row text-white mt-3 mb-3">
+                                <h1 style="text-color: #7A4E59">
+                                    <t t-esc="formatAmount(state.total_remaining_amount)"/>
+                                    (<t t-esc="formatAmount(state.total_remaining_amount_percent)"/>%)
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="row mb-5 mt-5">
+            <!-- ####################################################################################-->
+            
+            <div class="row mb-5 my-5">
                 <div class="col-md-2">
-                    <div class="card shadow-sm" style="background-color: #F5EEF0">
+                    <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0">
+                        <div class="card-body pt-2 pb-0 text-center">
+                            <div class="row">
+                                <h6 class="mb-0 mt-0" style="text-color: #7A4E59">Total Available</h6>
+                            </div>
+                            <div class="row">
+                                <h6 class="mb-0 mt-0" style="text-color: #7A4E59">Units</h6>
+                            </div>
+                            <div class="row">
+                                <h2 style="text-color: #7A4E59">
+                                    <t t-esc="state.available_units_count"/>
+                                    (<t t-esc="formatAmount(state.available_units_percent)"/>%)
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="card dashboard-card shadow-sm" style="background-color: #E6D8DC">
+                        <div class="card-body pt-2 pb-0 text-center">
+                            <div class="row">
+                                <h6 class="mb-0 mt-0" style="text-color: #7A4E59">Total Sold</h6>
+                            </div>
+                            <div class="row">
+                                <h6 class="mb-0 mt-0" style="text-color: #7A4E59">Units</h6>
+                            </div>
+                            <div class="row">
+                                <h2 style="text-color: #7A4E59">
+                                    <t t-esc="state.sold_units_count"/>
+                                    (<t t-esc="formatAmount(state.sold_units_percent)"/>%)
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="card dashboard-card shadow-sm" style="background-color: #E6D8DC">
+                        <div class="card-body pt-2 pb-0 text-center">
+                            <div class="row">
+                                <h6 class="mb-0 mt-0" style="text-color: #7A4E59">Total Researved</h6>
+                            </div>
+                            <div class="row">
+                                <h6 class="mb-0 mt-0" style="text-color: #7A4E59">Units</h6>
+                            </div>
+                            <div class="row">
+                                <h2 style="text-color: #7A4E59">
+                                    <t t-esc="state.blocked_units_count"/>
+                                    (<t t-esc="formatAmount(state.blocked_units_percent)"/>%)
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="card dashboard-card shadow-sm" style="background-color: #E6D8DC">
+                        <div class="card-body pt-2 pb-0 text-center">
+                            <div class="row pe-0">
+                                <h6 class="mb-0 mt-0" style="text-color: #7A4E59">Total Handover</h6>
+                            </div>
+                            <div class="row pe-0">
+                                <h6 class="mb-0 mt-0" style="text-color: #7A4E59">Ready Units</h6>
+                            </div>
+                            <div class="row">
+                                <h2 style="text-color: #7A4E59">
+                                    <t t-esc="state.handover_ready_units"/>
+                                    (<t t-esc="formatAmount(state.handover_ready_units_percent)"/>%)
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="card dashboard-card shadow-sm" style="background-color: #E6D8DC">
+                        <div class="card-body pt-2 pb-0 text-center">
+                            <div class="row">
+                                <h6 class="mb-0 mt-0" style="text-color: #7A4E59">Total Handovered</h6>
+                            </div>
+                            <div class="row">
+                                <h6 class="mb-0 mt-0" style="text-color: #7A4E59">Units</h6>
+                            </div>
+                            <div class="row">
+                                <h2 style="text-color: #7A4E59">
+                                    <t t-esc="state.handovered_units"/>
+                                    (<t t-esc="formatAmount(state.handovered_units_percent)"/>%)
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0">
+                        <div class="card-body pt-2 pb-0 text-center">
+                            <div class="row">
+                                <h6 class="mb-0 mt-0" style="text-color: #7A4E59">Total Cancelled</h6>
+                            </div>
+                            <div class="row">
+                                <h6 class="mb-0 mt-0" style="text-color: #7A4E59">Contracts</h6>
+                            </div>
+                            <div class="row text-white">
+                                <h2 style="text-color: #7A4E59">
+                                    <t t-esc="state.cancelled_contract_count"/>
+                                    (<t t-esc="formatAmount(state.cancelled_contract_percent)"/>%)
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- <div class="row mb-5 mt-5">
+                <div class="col-md-2"></div>
+                <div class="col-md-3">
+                    <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0">
                         <div class="card-body pt-2 pb-0 text-center">
                             <div class="row text-white">
-                                <h6 style="text-color: #7A4E59">Cancelled Contracts</h6>
+                                <h6 style="text-color: #7A4E59">Total Cancelled Contracts</h6>
                             </div>
                             <div class="row text-white">
                                 <h2 style="text-color: #7A4E59"><t t-esc="state.cancelled_contract_count"/></h2>
@@ -35,11 +236,45 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2">
-                    <div class="card shadow-sm" style="background-color: #F5EEF0">
+                <div class="col-md-3">
+                    <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0">
+                        <div class="card-body pt-2 pb-0 text-center">
+                            <div class="row text-white">
+                                <h6 style="text-color: #7A4E59">Total Collected Amount (ETB)</h6>
+                            </div>
+                            <div class="row text-white">
+                                <h2 style="text-color: #7A4E59"><t t-esc="formatAmount(state.total_paid_amount)"/></h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0">
                         <div class="card-body pt-2 pb-0 text-center">
                             <div class="row">
-                                <h6 style="text-color: #7A4E59">Available Units</h6>
+                                <h6 style="text-color: #7A4E59">Total Remaining Amount (ETB)</h6>
+                            </div>
+                            <div class="row">
+                                <h2 style="text-color: #7A4E59"><t t-esc="formatAmount(state.total_remaining_amount)"/></h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-1"></div>
+            </div> -->
+            
+            <!-- KPI Cards #########################################################################-->
+            
+            <!-- <div class="o_section_divider">
+                <span>Property Units</span>
+            </div>
+
+            <div class="row mb-5 mt-5">
+                <div class="col-md-2">
+                    <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0">
+                        <div class="card-body pt-2 pb-0 text-center">
+                            <div class="row">
+                                <h6 style="text-color: #7A4E59">Total Available Units</h6>
                             </div>
                             <div class="row">
                                 <h2 style="text-color: #7A4E59"><t t-esc="state.available_units_count"/></h2>
@@ -48,10 +283,10 @@
                     </div>
                 </div>
                 <div class="col-md-2">
-                    <div class="card shadow-sm" style="background-color: #F5EEF0">
+                    <div class="card dashboard-card shadow-sm" style="background-color: #E6D8DC">
                         <div class="card-body pt-2 pb-0 text-center">
                             <div class="row">
-                                <h6 style="text-color: #7A4E59">Sold Units</h6>
+                                <h6 style="text-color: #7A4E59">Total Sold Units</h6>
                             </div>
                             <div class="row">
                                 <h2 style="text-color: #7A4E59"><t t-esc="state.sold_units_count"/></h2>
@@ -60,10 +295,10 @@
                     </div>
                 </div>
                 <div class="col-md-2">
-                    <div class="card shadow-sm" style="background-color: #E6D8DC">
+                    <div class="card dashboard-card shadow-sm" style="background-color: #E6D8DC">
                         <div class="card-body pt-2 pb-0 text-center">
                             <div class="row">
-                                <h6 style="text-color: #7A4E59">Blocked Units</h6>
+                                <h6 style="text-color: #7A4E59">Total Researved Units</h6>
                             </div>
                             <div class="row">
                                 <h2 style="text-color: #7A4E59"><t t-esc="state.blocked_units_count"/></h2>
@@ -71,11 +306,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2">
-                    <div class="card shadow-sm" style="background-color: #E6D8DC">
+                <div class="col-md-3">
+                    <div class="card dashboard-card shadow-sm" style="background-color: #E6D8DC">
                         <div class="card-body pt-2 pb-0 text-center">
                             <div class="row pe-0">
-                                <h6 style="text-color: #7A4E59">Handover Ready Units</h6>
+                                <h6 style="text-color: #7A4E59">Total Handover Ready Units</h6>
                             </div>
                             <div class="row">
                                 <h2 style="text-color: #7A4E59"><t t-esc="state.handover_ready_units"/></h2>
@@ -83,11 +318,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2">
-                    <div class="card shadow-sm" style="background-color: #E6D8DC">
+                <div class="col-md-3">
+                    <div class="card dashboard-card shadow-sm" style="background-color: #E6D8DC">
                         <div class="card-body pt-2 pb-0 text-center">
                             <div class="row">
-                                <h6 style="text-color: #7A4E59">Handovered Units</h6>
+                                <h6 style="text-color: #7A4E59">Total Handovered Units</h6>
                             </div>
                             <div class="row">
                                 <h2 style="text-color: #7A4E59"><t t-esc="state.handovered_units"/></h2>
@@ -95,38 +330,270 @@
                         </div>
                     </div>
                 </div>
-            </div> 
+            </div>  -->
+
+            <!-- second card line -->
+
+            <!-- <div class="o_section_divider">
+                <span>Contract Payment Collection</span>
+            </div>
+
+            <div class="row mb-5 mt-5">
+                <div class="col-md-3">
+                    <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0">
+                        <div class="card-body pt-2 pb-0 text-center">
+                            <div class="row text-white">
+                                <h6 style="text-color: #7A4E59">Total Cancelled Contracts</h6>
+                            </div>
+                            <div class="row text-white">
+                                <h2 style="text-color: #7A4E59"><t t-esc="state.cancelled_contract_count"/></h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0">
+                        <div class="card-body pt-2 pb-0 text-center">
+                            <div class="row text-white">
+                                <h6 style="text-color: #7A4E59">Total Collected Amount (ETB)</h6>
+                            </div>
+                            <div class="row text-white">
+                                <h2 style="text-color: #7A4E59"><t t-esc="formatAmount(state.total_paid_amount)"/></h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0">
+                        <div class="card-body pt-2 pb-0 text-center">
+                            <div class="row">
+                                <h6 style="text-color: #7A4E59">Total Remaining Amount (ETB)</h6>
+                            </div>
+                            <div class="row">
+                                <h2 style="text-color: #7A4E59"><t t-esc="formatAmount(state.total_remaining_amount)"/></h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->      
+
+
+
+            <!-- Installment Summary Table #####################################################-->
             
-            <!-- Table #############################################################################-->
+            <div class="o_section_divider">
+                <span>Installment Summary</span>
+            </div>
+
+            <div class="row mb-5 mt-5">
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h6>Collected vs Remaining Amount per Installment (ETB)</h6>
+                            <table class="table dashboard-table table-sm table-striped">
+                                <thead>
+                                    <tr> 
+                                        <th class="text-center">Installment #</th> 
+                                        <th class="text-center">Collected Amount</th> 
+                                        <th class="text-center">Remaining Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="state.installment_summary || []" t-as="row" t-key="row.installment_number">
+                                        <tr>
+                                            <td class="text-center"> <t t-esc="row.installment_number"/> </td>
+                                            <td class="text-end pe-2">
+                                                <t t-esc="formatAmount(row.total_paid_amount)"/>
+                                            </td>
+                                            <td class="text-end pe-2">
+                                                <t t-esc="formatAmount(row.total_remaining_amount)"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <tr class="fw-bold table-secondary">
+                                        <td class="text-end pe-2">Total</td>
+                                        <td class="text-end pe-2">
+                                            <t t-esc="formatAmount(state.total_paid_amount)"/>
+                                        </td>
+                                        <td class="text-end pe-2">
+                                            <t t-esc="formatAmount(state.total_remaining_amount)"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h6>To be Collected vs Overdue Amount per Installment (ETB)</h6>
+                            <table class="table dashboard-table table-sm table-striped">
+                                <thead>
+                                    <tr> 
+                                        <th class="text-center">Installment #</th> 
+                                        <th class="text-center">To Be Collected</th> 
+                                        <th class="text-center">Overdue Amount</th> 
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="state.installment_tobe_collected || []" t-as="row" t-key="row.installment_number">
+                                        <tr>
+                                            <td class="text-center"> 
+                                                <t t-esc="row.installment_number"/> 
+                                            </td>                                            
+                                            <td class="text-end pe-2">
+                                                <t t-esc="formatAmount(row.total_to_be_collected_amount)"/>
+                                            </td>
+                                            <td class="text-end pe-2">
+                                                <t t-esc="formatAmount(row.total_collectable_overdue_amount)"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <tr class="fw-bold table-secondary">
+                                        <td class="text-end pe-2">Total</td>
+                                        <td class="text-end pe-2">
+                                            <t t-esc="formatAmount(state.total_to_be_collected_amount)"/>
+                                        </td>
+                                        <td class="text-end pe-2">
+                                            <t t-esc="formatAmount(state.total_collectable_overdue_amount)"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column Chart for Installment Summary ##############################################-->
+
+            <div class="o_section_divider">
+                <span>Installment Charts</span>
+            </div>
+
+            <div class="row mb-5 mt-5">
+                <div class="col-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h6>Installment: Collected vs Remaining Amount (ETB)</h6>
+                            <div class="installment-chart-container">
+                                <canvas t-ref="installmentChart"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h6>Installment: To Be Collected vs Overdue Amount (ETB)</h6>
+                            <div class="installment-chart-container">
+                                <canvas t-ref="collectionChart"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- General Summary Table ###################################################################-->
+
+            <div class="row mx-auto mb-5 mt-5 pt-3" style="border-top:2px solid #643F49;">
+                <div class="col-md-1">
+                    <!-- <h3 class="mb-4">Part A</h3> -->
+                </div>
+                <!-- <div class="col-md-2">
+                    <div class="col-auto"><label class="mb-0 text-nowrap">Site</label></div>
+                    <div class="col">
+                        <select name="site_id_filter2" class="form-select form-control form-control-sm py-0" required="1">
+                            <option value="">All Sites</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="col-auto"><label class="mb-0 text-nowrap">Building</label></div>
+                    <div class="col">
+                        <select name="building_id_filter2" class="form-select form-control form-control-sm py-0" required="1">
+                            <option value="">All Buildings</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="col-auto"><label class="mb-0 text-nowrap">Floor</label></div>
+                    <div class="col">
+                        <select name="floor_id_filter2" class="form-select form-control form-control-sm py-0" required="1">
+                            <option value="">All Floors</option>
+                        </select>
+                    </div>
+                </div> -->
+                <div class="col-md-2">
+                    <div class="col-auto"><label class="mb-0 text-nowrap"></label></div>
+                    <div class="col">
+                        <Many2XAutocomplete
+                            resModel="'re.site'"
+                            value="state.site2"
+                            update.bind="onSiteSelected2"
+                            getDomain.bind="getSiteDomain2"
+                            context="getContext2()"
+                            activeActions="activeActions2"
+                            fieldString="'Site'"
+                            isToMany="false"
+                            placeholder="'Select Site'"
+                        />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="col-auto"><label class="mb-0 text-nowrap"></label></div>
+                    <div class="col">
+                        <Many2XAutocomplete
+                            resModel="'building.building'"
+                            value="state.building2"
+                            update.bind="onBuildingSelected2"
+                            getDomain.bind="getBuildingDomain2"
+                            context="getContext2()"
+                            activeActions="activeActions2"
+                            fieldString="'Building'"
+                            isToMany="false"
+                            placeholder="'Select Building'"
+                        />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="col-auto"><label class="mb-0 text-nowrap"></label></div>
+                    <div class="col">
+                        <Many2XAutocomplete
+                            resModel="'re.floor'"
+                            value="state.floor2"
+                            update.bind="onFloorSelected2"
+                            getDomain.bind="getFloorDomain2"
+                            context="getContext2()"
+                            activeActions="activeActions2"
+                            fieldString="'Floor'"
+                            isToMany="false"
+                            placeholder="'Select Floor'"
+                        />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="col-auto"><label class="mb-0 text-nowrap">From Date</label></div>
+                    <div class="col"><input type="date" class="form-control form-control-sm" t-model="state.date_from"/></div>
+                </div>
+                <div class="col-md-2">
+                    <div class="col-auto"><label class="mb-0 text-nowrap">To Date</label></div>
+                    <div class="col"><input type="date" class="form-control form-control-sm" t-model="state.date_to"/></div>
+                </div>
+                <div class="col-md-1">
+                    <div class="col-auto"><label class="mb-0 text-nowrap"></label></div>
+                    <div class="row align-items-right">
+                        <button class="btn btn-sm" style="background-color: #643F49;color:white;" t-on-click="applyFilter2">Filter</button>
+                    </div>
+                </div>
+            </div>
             
             <div class="o_section_divider">
                 <span>General Summary</span>
             </div>
 
-            <div class="row mb-4 pb-1 pe-3">
-                <div class="col-md-5">
-                    <h3 class="mb-4"></h3>
-                </div>
-                <div class="col-md-3">
-                    <div class="row align-items-center">
-                        <div class="col-auto"><label class="mb-0 text-nowrap">From Date</label></div>
-                        <div class="col"><input type="date" class="form-control form-control-sm" t-model="state.date_from"/></div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="row align-items-center">
-                        <div class="col-auto"><label class="mb-0 text-nowrap">To Date</label></div>
-                        <div class="col"><input type="date" class="form-control form-control-sm" t-model="state.date_to"/></div>
-                    </div>
-                </div>
-                <div class="col-md-1">
-                    <div class="row align-items-right">
-                        <button class="btn btn-sm" style="background-color: #643F49;color:white;" t-on-click="applyFilter">Filter</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row mb-5">
+            <div class="row mb-5 mt-5">
                 <div class="col-md-12">
                     <div class="card shadow-sm">
                         <div class="card-body">
@@ -283,152 +750,7 @@
                 </div>
             </div>
 
-            <!-- Installment Summary Table #####################################################-->
-            
-            <div class="o_section_divider">
-                <span>Installment Summary</span>
-            </div>
-
-            <div class="row mb-5 mt-5">
-                <div class="col-md-6">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h6>Paid vs Remaining Amount per Installment</h6>
-                            <table class="table dashboard-table table-sm table-striped">
-                                <thead>
-                                    <tr> 
-                                        <th class="text-center">Installment</th> 
-                                        <th class="text-center">Paid Amount (Birr)</th> 
-                                        <th class="text-center">Remaining Amount (Birr)</th> 
-                                        <!-- <th class="text-center">Installment Total (Birr)</th>
-                                        <th class="text-center">Overdue Amount (Birr)</th>                                         -->
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <t t-foreach="state.installment_summary || []" t-as="row" t-key="row.installment_number">
-                                        <tr>
-                                            <td class="text-center"> <t t-esc="row.installment_number"/> </td>
-                                            <td class="text-end pe-2">
-                                                <t t-esc="formatAmount(row.total_paid_amount)"/>
-                                            </td>
-                                            <td class="text-end pe-2">
-                                                <t t-esc="formatAmount(row.total_remaining_amount)"/>
-                                            </td>
-                                            <!-- <td class="text-end pe-2">
-                                                <t t-esc="formatAmount(row.total_installment_amount)"/>
-                                            </td>
-                                            <td class="text-end pe-2">
-                                                <t t-esc="formatAmount(row.total_overdue_amount)"/>
-                                            </td>                                             -->
-                                        </tr>
-                                    </t>
-                                    <tr class="fw-bold table-secondary">
-                                        <td class="text-end pe-2">Total</td>
-                                        <td class="text-end pe-2">
-                                            <t t-esc="formatAmount(state.total_paid_amount)"/>
-                                        </td>
-                                        <td class="text-end pe-2">
-                                            <t t-esc="formatAmount(state.total_remaining_amount)"/>
-                                        </td>
-                                        <!-- <td class="text-end pe-2">
-                                            <t t-esc="formatAmount(state.total_installment_amount)"/>
-                                        </td>
-                                        <td class="text-end pe-2">
-                                            <t t-esc="formatAmount(state.total_overdue_amount)"/>
-                                        </td>                                         -->
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h6>To be Collected vs Overdue Amount per Installment</h6>
-                            <table class="table dashboard-table table-sm table-striped">
-                                <thead>
-                                    <tr> 
-                                        <th class="text-center">Installment #</th> 
-                                        <th class="text-center">To Be Collected (Birr)</th> 
-                                        <th class="text-center">Overdue Amount (Birr)</th> 
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <t t-foreach="state.installment_tobe_collected || []" t-as="row" t-key="row.installment_number">
-                                        <tr>
-                                            <td class="text-center"> 
-                                                <t t-esc="row.installment_number"/> 
-                                            </td>                                            
-                                            <td class="text-end pe-2">
-                                                <t t-esc="formatAmount(row.total_to_be_collected_amount)"/>
-                                            </td>
-                                            <td class="text-end pe-2">
-                                                <t t-esc="formatAmount(row.total_collectable_overdue_amount)"/>
-                                            </td>
-                                        </tr>
-                                    </t>
-                                    <tr class="fw-bold table-secondary">
-                                        <td class="text-end pe-2">Total</td>
-                                        <td class="text-end pe-2">
-                                            <t t-esc="formatAmount(state.total_to_be_collected_amount)"/>
-                                        </td>
-                                        <td class="text-end pe-2">
-                                            <t t-esc="formatAmount(state.total_collectable_overdue_amount)"/>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Column Chart for Installment Summary ##############################################-->
-
-            <div class="o_section_divider">
-                <span>Installment Charts</span>
-            </div>
-
-            <div class="row mt-5">
-                <div class="col-6">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h6>Installment: Paid vs Remaining Amount</h6>
-                            <div class="installment-chart-container">
-                                <canvas t-ref="installmentChart"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h6>Installment: To Be Collected vs Overdue Amount</h6>
-                            <div class="installment-chart-container">
-                                <canvas t-ref="collectionChart"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Placeholder for future charts #####################################################-->
-            
-            <!-- <div class="row mt-5">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            Card Header
-                        </div>
-                        <div class="card-body">
-                            Card Body
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-
-            <!-- Placeholder for future items #####################################################-->
+            <!-- ############################################################################## -->
 
         </div>
     </t>
