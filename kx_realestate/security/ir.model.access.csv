@@ -3,6 +3,21 @@ access_realestate_building_building,access.realestate.building,model_building_bu
 access_building_attachment_line,access.building.attachment.line,model_building_attachment_line,group_units_structure,1,1,1,1
 access_unit_attachment_line,access.unit.attachment.line,model_unit_attachment_line,group_units_structure,1,1,1,1
 
+access_contract_item_category,contract.item.category,model_ownership_contract_item_category,,1,1,1,1
+access_contract_clause,contract.clause,model_ownership_contract_clause,,1,1,1,1
+access_contract_clause_item,contract.clause.item,model_ownership_contract_clause_item,,1,1,1,1
+access_contract_item,contract.item,model_ownership_contract_item,,1,1,1,1
+
+access_contract_article_edit,access.contract.article.edit,model_contract_article,group_contract_edit,1,1,1,0
+access_contract_clause_edit,access.contract.clause.edit,model_contract_clause,group_contract_edit,1,1,1,0
+access_contract_contract_edit,access.contract.contract.edit,model_contract_contract,group_contract_edit,1,1,1,0
+access_contract_template_edit,access.contract.template.edit,model_contract_template,group_contract_edit,1,1,1,0
+access_contract_variable_edit,access.contract.variable.edit,model_contract_variable,group_contract_edit,1,1,1,0
+access_contract_article_supervisor,access.contract.article.supervisor,model_contract_article,group_contract_supervisor,1,1,1,1
+access_contract_clause_supervisor,access.contract.clause.supervisor,model_contract_clause,group_contract_supervisor,1,1,1,1
+access_contract_contract_supervisor,access.contract.contract.supervisor,model_contract_contract,group_contract_supervisor,1,1,1,1
+access_contract_template_supervisor,access.contract.template.supervisor,model_contract_template,group_contract_supervisor,1,1,1,1
+access_contract_variable_supervisor,access.contract.variable.supervisor,model_contract_variable,group_contract_supervisor,1,1,1,1
 
 access_realestate_building_unit,access.realestate.product.template,model_product_template,group_units_structure,1,1,1,1
 access_realestate_site_structure,access.realestate.site.structure,model_re_site,group_units_structure,1,1,1,1

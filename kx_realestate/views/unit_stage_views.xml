@@ -44,9 +44,13 @@
         <field name="view_mode">list,form</field>
     </record>
 
+    <menuitem id="menu_stage_header" 
+            name="Stages" 
+            parent="menu_settings"
+            sequence="10" />
     <menuitem id="menu_re_unit_stage"
               name="Unit Stages"
-              parent="menu_settings"
+              parent="menu_stage_header"
               action="re_unit_stage_action"
               sequence="37"/>
 </odoo>

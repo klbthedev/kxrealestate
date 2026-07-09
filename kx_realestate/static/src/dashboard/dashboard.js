@@ -1,4 +1,3 @@
-/** @odoo-module **/
 import { Component, useState, onWillStart, onMounted, useRef } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -8,6 +7,7 @@ export class Dashboard extends Component {
     static components = {
         Many2XAutocomplete,
     };
+
     setup() {
         this.orm = useService("orm");
         this.installmentChartRef = useRef("installmentChart");
@@ -26,6 +26,11 @@ export class Dashboard extends Component {
             installment_summary: [],
             installment_tobe_collected: [],        
 
+            // Filter 1 State Attributes
+            country: "",
+            country_id: false,
+            state_record: "",
+            state_id: false,
             site: "",
             site_id: false,
             building: "",
@@ -33,6 +38,7 @@ export class Dashboard extends Component {
             floor: "",
             floor_id: false,
 
+            // Filter 2 State Attributes
             site2: "",
             site_id2: false,
             building2: "",
@@ -40,56 +46,79 @@ export class Dashboard extends Component {
             floor2: "",
             floor_id2: false,
         });
-        onWillStart(
-            async () => { 
-                await this.loadDashboard(); 
-                await this.loadDashboard2(); 
+
+        onWillStart(async () => { 
+            await this.loadDashboard(); 
+            await this.loadDashboard2(); 
         });
+
         onMounted(() => { this.renderInstallmentChart(); });
     }
     
-    // filter 1 setup ////////////////////////////////////////////////////////////////////////////////////
-    getContext() {  return {}; }    
-    getSiteDomain() {  return []; }    
-    
-    // domains for building and floor
-    getBuildingDomain() {
-        if (!this.state.site) { return [];  }
-        return [ ["site_id", "=", this.state.site.id]  ];
+    // Filter 1 Setup Engine /////////////////////////////////////////////////////////////////////////////
+    getContext() { return {}; }    
+    getCountryDomain() { return []; }
+
+    getStateDomain() {
+        if (!this.state.country_id) { return []; }
+        return [["country_id", "=", this.state.country_id]];
+    }
+
+    getSiteDomain() {  
+        let domain = [];
+        if (this.state.country_id) { domain.push(["country_id", "=", this.state.country_id]); }
+        if (this.state.state_id) { domain.push(["state_id", "=", this.state.state_id]); }
+        return domain; 
     }    
+    
     getBuildingDomain() {
         if (!this.state.site_id) { return []; }
-        return [  ["site_id", "=", this.state.site_id] ];
+        return [["site_id", "=", this.state.site_id]];
     }    
-    getFloorDomain() {
-        if (!this.state.building) { return []; }
-        return [ ["building_id", "=", this.state.building.id] ];
-    }
+
     getFloorDomain() {
         if (!this.state.building_id) { return []; }
-        return [ ["building_id", "=", this.state.building_id] ];
+        return [["building_id", "=", this.state.building_id]];
     }
 
-    // get display name for selection from Search More option
-    async getDisplayName(model, id) {
-        const result = await this.orm.call( model, "name_get", [[id]]  );
-        return result.length ? result[0][1] : "";
-    }
-
+    // Record Name Resolution Helpers ////////////////////////////////////////////////////////////////////
     async resolveDisplayName(model, record) {
         if (record.display_name) { return record.display_name; }
-        const result = await this.orm.call( model, "read", [[record.id], ["display_name"]] );
+        const result = await this.orm.call(model, "read", [[record.id], ["display_name"]]);
         return result.length ? result[0].display_name : "";
     }
 
-    onSiteSelected(site) {
-        this.state.site = site.display_name || site.name || "";
-        this.state.site_id = site.id;
-        this.state.building = "";
-        this.state.building_id = false;
-        this.state.floor = "";
-        this.state.floor_id = false;
-    }    
+    // Auto-complete Events Handlers (Filter Set 1) /////////////////////////////////////////////////////
+    async onCountrySelected(records) {
+        if (!records || !records.length) {
+            this.state.country = "";
+            this.state.country_id = false;
+        } else {
+            const country = records[0];
+            this.state.country_id = country.id;
+            this.state.country = await this.resolveDisplayName("res.country", country);
+        }
+        // Cascading Clearances
+        this.state.state_record = ""; this.state.state_id = false;
+        this.state.site = ""; this.state.site_id = false;
+        this.state.building = ""; this.state.building_id = false;
+        this.state.floor = ""; this.state.floor_id = false;
+    }
+
+    async onStateSelected(records) {
+        if (!records || !records.length) {
+            this.state.state_record = "";
+            this.state.state_id = false;
+        } else {
+            const stateRec = records[0];
+            this.state.state_id = stateRec.id;
+            this.state.state_record = await this.resolveDisplayName("res.country_state", stateRec);
+        }
+        this.state.site = ""; this.state.site_id = false;
+        this.state.building = ""; this.state.building_id = false;
+        this.state.floor = ""; this.state.floor_id = false;
+    }
+
     async onSiteSelected(records) {
         if (!records || !records.length) {
             this.state.site = "";
@@ -99,16 +128,10 @@ export class Dashboard extends Component {
         const site = records[0];
         this.state.site_id = site.id;
         this.state.site = await this.resolveDisplayName("re.site", site);
-        this.state.building = "";
-        this.state.building_id = false;
-        this.state.floor = "";
-        this.state.floor_id = false;
+        this.state.building = ""; this.state.building_id = false;
+        this.state.floor = ""; this.state.floor_id = false;
     }
 
-    onBuildingSelected(building) {
-        this.state.building = building;
-        this.state.floor = null;
-    }
     async onBuildingSelected(records) {
         if (!records || !records.length) {
             this.state.building = "";
@@ -118,14 +141,9 @@ export class Dashboard extends Component {
         const building = records[0];
         this.state.building_id = building.id;
         this.state.building = await this.resolveDisplayName("building.building", building);
-        this.state.floor = "";
-        this.state.floor_id = false;
-        console.log(building);
+        this.state.floor = ""; this.state.floor_id = false;
     }
 
-    onFloorSelected(floor) {
-        this.state.floor = floor;
-    }    
     async onFloorSelected(records) {
         if (!records || !records.length) {
             this.state.floor = "";
@@ -135,93 +153,49 @@ export class Dashboard extends Component {
         const floor = records[0];
         this.state.floor_id = floor.id;
         this.state.floor = await this.resolveDisplayName("re.floor", floor);
-        console.log(floor);
     }
     
-    // for filer 1
-    activeActions = { create: false, createEdit: false, write: false, };
+    activeActions = { create: false, createEdit: false, write: false };
     
-    // filter 2 setup ////////////////////////////////////////////////////////////////////////////////////
-    getContext2() {  return {}; }    
-    getSiteDomain2() {  return []; }    
+    // Filter 2 Setup (Preserved Intact) /////////////////////////////////////////////////////////////////
+    getContext2() { return {}; }    
+    getSiteDomain2() { return []; }    
     
-    // domains for building and floor
-    getBuildingDomain2() {
-        if (!this.state.site2) { return [];  }
-        return [ ["site_id2", "=", this.state.site.id2]  ];
-    }    
     getBuildingDomain2() {
         if (!this.state.site_id2) { return []; }
-        return [  ["site_id2", "=", this.state.site_id2] ];
+        return [["site_id", "=", this.state.site_id2]];
     }    
-    getFloorDomain2() {
-        if (!this.state.building2) { return []; }
-        return [ ["building_id2", "=", this.state.building.id2] ];
-    }
     getFloorDomain2() {
         if (!this.state.building_id2) { return []; }
-        return [ ["building_id2", "=", this.state.building_id2] ];
+        return [["building_id", "=", this.state.building_id2]];
     }
 
-    // get display name for selection from Search More option
-    async getDisplayName2(model, id) {
-        const result = await this.orm.call( model, "name_get", [[id]]  );
-        return result.length ? result[0][1] : "";
-    }
-
-    async resolveDisplayName2(model, record) {
-        if (record.display_name) { return record.display_name; }
-        const result = await this.orm.call( model, "read", [[record.id], ["display_name"]] );
-        return result.length ? result[0].display_name : "";
-    }
-
-    onSiteSelected2(site2) {
-        this.state.site2 = site2.display_name || site2.name || "";
-        this.state.site_id2 = site2.id;
-        this.state.building2 = "";
-        this.state.building_id2 = false;
-        this.state.floor2 = "";
-        this.state.floor_id2 = false;
-    }    
     async onSiteSelected2(records) {
         if (!records || !records.length) {
-            this.state.site2 = "";
-            this.state.site_id2 = false;
+            this.state.site2 = ""; this.state.site_id2 = false;
             return;
         }
         const site = records[0];
         this.state.site_id2 = site.id;
         this.state.site2 = await this.resolveDisplayName("re.site", site);
-        this.state.building2 = "";
-        this.state.building_id2 = false;
-        this.state.floor2 = "";
-        this.state.floor_id2 = false;
+        this.state.building2 = ""; this.state.building_id2 = false;
+        this.state.floor2 = ""; this.state.floor_id2 = false;
     }
 
-    onBuildingSelected2(building) {
-        this.state.building2 = building;
-        this.state.floor2 = null;
-    }
     async onBuildingSelected2(records) {
         if (!records || !records.length) {
-            this.state.building2 = "";
-            this.state.building_id2 = false;
+            this.state.building2 = ""; this.state.building_id2 = false;
             return;
         }
         const building = records[0];
         this.state.building_id2 = building.id;
         this.state.building2 = await this.resolveDisplayName("building.building", building);
-        this.state.floor2 = "";
-        this.state.floor_id2 = false;
+        this.state.floor2 = ""; this.state.floor_id2 = false;
     }
 
-    onFloorSelected2(floor) {
-        this.state.floor2 = floor;
-    }    
     async onFloorSelected2(records) {
         if (!records || !records.length) {
-            this.state.floor2 = "";
-            this.state.floor_id2 = false;
+            this.state.floor2 = ""; this.state.floor_id2 = false;
             return;
         }
         const floor = records[0];
@@ -229,129 +203,127 @@ export class Dashboard extends Component {
         this.state.floor2 = await this.resolveDisplayName("re.floor", floor);
     }
     
-    // for filer 2
-    activeActions2 = { create: false, createEdit: false, write: false, };
+    activeActions2 = { create: false, createEdit: false, write: false };
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // format number values  ////////////////////////////////////////////////////////////
     formatAmount(value) {
-        return (value || 0).toLocaleString( undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2, });
+        return (value || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
-    // export to excel //////////////////////////////////////////////////////////////////
     async exportExcel() {
         const params = new URLSearchParams({
             date_from: this.state.date_from || "",
             date_to: this.state.date_to || "",
-            site2: this.state.site2 || "",
-            building2: this.state.building2 || "",
-            floor2: this.state.floor2 || "",
-        });
+            country: this.state.country2 || "",
+            state: this.state.state2 || "",
+            city: this.state.city2 || "",
 
-        window.open(`/kx_realestate/dashboard/export_excel?${params.toString()}`,"_blank");
+            site: this.state.site2 || "",
+            building: this.state.building2 || "",
+            floor: this.state.floor2 || "",
+        });
+        window.open(`/kx_realestate/dashboard/export_excel?${params.toString()}`, "_blank");
     }
 
-    // connect frontend to backend /////////////////////////////////////////////////////
+    // Connect Front-end Context to Backend Server RPC Methods //////////////////////////////////////////
     async loadDashboard() {
+        // Must align directly with: (country, state, city, site, building, floor)
         const result = await this.orm.call( 
             "kx.dashboard.service", 
             "get_dashboard_data", 
-            [ this.state.site, this.state.building, this.state.floor,]
+            [ 
+                this.state.country_id, 
+                this.state.state_id, 
+                "", // City is a fallback empty string for now as it lacks an absolute model id
+                this.state.site_id, 
+                this.state.building_id, 
+                this.state.floor_id
+            ]
         );
         Object.assign(this.state, result);
     }
 
-    // connect frontend to backend for filter 2 /////////////////////////////////////////
     async loadDashboard2() {
-        const result = await this.orm.call( 
-            "kx.dashboard.service", 
-            "get_dashboard_data2", 
-            [ this.state.date_from, this.state.date_to, this.state.site2, this.state.building2, this.state.floor2,]
+        const _getCleanId = (fieldValue) => {
+            if (Array.isArray(fieldValue) && fieldValue.length > 0) {
+                return fieldValue[0];
+            }
+            return fieldValue || false;
+        };
+        const params = {
+            date_from: this.state.date_from || false,
+            date_to: this.state.date_to || false,
+            // country: _getCleanId(this.state.country_id2),
+            // state: _getCleanId(this.state.state_id2),
+            // city: Array.isArray(this.state.city2) ? this.state.city2[1] : (this.state.city2 || false),
+            country: false, 
+            state: false,
+            city: false,
+            site: _getCleanId(this.state.site_id2),
+            building: _getCleanId(this.state.building_id2),
+            floor: _getCleanId(this.state.floor_id2),
+        };
+        const result = await this.orm.call(
+            "kx.dashboard.service",
+            "get_dashboard_data2",
+            [],
+            params
         );
         Object.assign(this.state, result);
     }
-    
-    // apply filter ////////////////////////////////////////////////////////////////////
+
     async applyFilter() {
         await this.loadDashboard();
         this.renderInstallmentChart();
     }
 
-    // apply filter 2 //////////////////////////////////////////////////////////////////
     async applyFilter2() {
         await this.loadDashboard2();
         this.renderInstallmentChart();
     }
 
-    // create charts ////////////////////////////////////////////////////////////////////
+    // Chart Render Logics (Preserved Intact) ///////////////////////////////////////////////////////////
     renderInstallmentChart() {
         const installmentCanvas = this.installmentChartRef.el;
         const collectionCanvas = this.collectionChartRef.el;
 
-        if (this.installmentChart)  { this.installmentChart.destroy();  }
-        if (this.collectionChart)   { this.collectionChart.destroy();   }
+        if (this.installmentChart)  { this.installmentChart.destroy(); }
+        if (this.collectionChart)   { this.collectionChart.destroy(); }
         
-        if (!installmentCanvas)     { return; }
-        if (!collectionCanvas)      { return; }
+        if (!installmentCanvas || !collectionCanvas) { return; }
         
-        // for installmentChart
-        const installmentLabel = this.state.installment_summary.map( row => row.installment_number );
-        const remaining = this.state.installment_summary.map( row => Number(row.total_remaining_amount || 0) );
-        const paid = this.state.installment_summary.map( row => Number(row.total_paid_amount || 0) );
+        const installmentLabel = this.state.installment_summary.map(row => row.installment_number);
+        const remaining = this.state.installment_summary.map(row => Number(row.total_remaining_amount || 0));
+        const paid = this.state.installment_summary.map(row => Number(row.total_paid_amount || 0));
 
-        // for collectionChart
-        const collectionLabel = this.state.installment_tobe_collected.map( row => row.installment_number );
-        const collectable = this.state.installment_tobe_collected.map( row => Number(row.total_to_be_collected_amount || 0) );
-        const overdue = this.state.installment_tobe_collected.map( row => Number(row.total_collectable_overdue_amount || 0) );
+        const collectionLabel = this.state.installment_tobe_collected.map(row => row.installment_number);
+        const collectable = this.state.installment_tobe_collected.map(row => Number(row.total_to_be_collected_amount || 0));
+        const overdue = this.state.installment_tobe_collected.map(row => Number(row.total_collectable_overdue_amount || 0));
 
-        if (this.installmentChart) { this.installmentChart.destroy(); }
-
-        // for installmentChart
-        this.installmentChart = new Chart(installmentCanvas, { type: "bar",
+        this.installmentChart = new Chart(installmentCanvas, { 
+            type: "bar",
             data: {
                 labels: installmentLabel,
                 datasets: [ 
-                    {   label: "Remaining Amount", 
-                        data: remaining, 
-                        backgroundColor: "#7A4E59",
-                        borderColor: "#68414C",
-                        borderWidth: 1,
-                    }, 
-                    {   label: "Collected Amount", 
-                        data: paid,
-                        backgroundColor: "#E6D8DC",
-                        borderColor: "#68414C",
-                        borderWidth: 1,
-                    } 
+                    { label: "Remaining Amount", data: remaining, backgroundColor: "#7A4E59", borderColor: "#68414C", borderWidth: 1 }, 
+                    { label: "Collected Amount", data: paid, backgroundColor: "#E6D8DC", borderColor: "#68414C", borderWidth: 1 } 
                 ]
             },
-            options: { responsive: true, maintainAspectRatio: false, }
+            options: { responsive: true, maintainAspectRatio: false }
         });
 
-        // for collectionChart
-        this.collectionChart = new Chart(collectionCanvas, { type: "bar",
+        this.collectionChart = new Chart(collectionCanvas, { 
+            type: "bar",
             data: {
                 labels: collectionLabel,
                 datasets: [ 
-                    {   label: "Collectable Amount", 
-                        data: collectable, 
-                        backgroundColor: "#7A4E59",
-                        borderColor: "#68414C",
-                        borderWidth: 1,
-                    }, 
-                    {   label: "Overdue Amount", 
-                        data: overdue, 
-                        backgroundColor: "#E6D8DC",
-                        borderColor: "#68414C",
-                        borderWidth: 1,
-                    } ]
+                    { label: "Collectable Amount", data: collectable, backgroundColor: "#7A4E59", borderColor: "#68414C", borderWidth: 1 }, 
+                    { label: "Overdue Amount", data: overdue, backgroundColor: "#E6D8DC", borderColor: "#68414C", borderWidth: 1 } 
+                ]
             },
-            options: { responsive: true, maintainAspectRatio: false, }
+            options: { responsive: true, maintainAspectRatio: false }
         });
     }
-
 }
 
 Dashboard.template = "kx_realestate.Dashboard";
-registry.category("actions").add( "kx_dashboard", Dashboard );
+registry.category("actions").add("kx_dashboard", Dashboard);

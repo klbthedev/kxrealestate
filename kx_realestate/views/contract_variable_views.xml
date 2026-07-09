@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_contract_variable_tree" model="ir.ui.view">
+            <field name="name">contract.variable.tree</field>
+            <field name="model">contract.variable</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="model_id"/>
+                    <field name="field_id"/>
+                    <field name="required"/>
+                    <field name="active"/>
+                </list>
+            </field>
+        </record>
+        <record id="view_contract_variable_form" model="ir.ui.view">
+            <field name="name">contract.variable.form</field>
+            <field name="model">contract.variable</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="template_id"/>
+                            <field name="required"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="model_id" options="{'no_create': True}"/>
+                            <field name="field_id" options="{'no_create': True}"/>
+                            <field name="example_value" readonly="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_contract_variable_search" model="ir.ui.view">
+            <field name="name">contract.variable.search</field>
+            <field name="model">contract.variable</field>
+            <field name="arch" type="xml">
+                <search string="Search Variables">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="template_id"/>
+                    <filter string="Required" name="filter_required" domain="[('required', '=', True)]"/>
+                    <!-- <filter string="Data Type" name="group_data_type" context="{'group_by': 'data_type'}"/> -->
+                    <filter string="Template" name="group_template" context="{'group_by': 'template_id'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_contract_variable" model="ir.actions.act_window">
+            <field name="name">Variables</field>
+            <field name="res_model">contract.variable</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        <menuitem id="menu_contract_variable_list" name="Variables"
+                  parent="menu_contract_header" action="action_contract_variable" sequence="40"/>
+
+    </data>
+</odoo>

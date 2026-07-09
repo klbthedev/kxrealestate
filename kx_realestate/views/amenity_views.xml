@@ -53,5 +53,9 @@
         <field name="view_mode">list,form</field>
     </record>
 
-    <menuitem id="menu_re_amenity" name="Amenities" parent="menu_settings" action="re_amenity_action" sequence="30"/>
+    <menuitem id="menu_property_header" 
+            name="Property" 
+            parent="menu_settings"
+            sequence="10" />
+    <menuitem id="menu_re_amenity" name="Amenities" parent="menu_property_header" action="re_amenity_action" sequence="30"/>
 </odoo>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <record id="action_report_ownership_contract" model="ir.actions.report">
+        <field name="name">Ownership Contract</field>
+        <field name="model">ownership.contract</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">kx_realestate.ownership_contract_template</field>
+        <field name="report_file">kx_realestate.ownership_contract_template</field>
+        <field name="binding_model_id" ref="model_ownership_contract"/>
+        <field name="binding_type">report</field>
+    </record>
+
+
+    <template id="ownership_contract_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div t-field="doc.generated_html"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

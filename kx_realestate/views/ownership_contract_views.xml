@@ -39,6 +39,7 @@
                     <group string="Customer Details">
                         <group string="Customer Details">
                             <field name="origin" string="Contract Reference No." readonly="state != 'draft'"/>
+                            <field name="contract_template_id" string="Contract Template" readonly="state != 'draft'"/>
                             <field name="active" readonly="state != 'draft'"/>
                             <field name="name" readonly="state != 'draft'"/>
                             <field name="user_id" widget="many2one_avatar_user" readonly="state != 'draft'"/>
@@ -231,6 +232,20 @@
                                     <field name="done"/>
                                 </list>
                             </field>
+                        </page>
+                        <page string="Contract">
+                            <group>
+                                <field name="contract_template_id"/>
+                                <button
+                                    name="action_print_contract"
+                                    type="object"
+                                    string="Print"/>
+                            </group>
+                            <separator string="Preview"/>
+                            <field
+                                name="generated_html"
+                                widget="html"
+                                nolabel="1"/>
                         </page>
                         <page string="Handover List">   
                             <div class="mb-2">

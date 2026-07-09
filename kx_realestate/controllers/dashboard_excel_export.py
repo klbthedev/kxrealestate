@@ -4,7 +4,8 @@ from odoo import http
 from odoo.http import request
 import io
 import xlsxwriter
-
+import logging
+_logger = logging.getLogger(__name__)
 
 def safe(val):
     if isinstance(val, (tuple, list)):
@@ -14,10 +15,31 @@ def safe(val):
 class DashboardExcelExport(http.Controller):
 
     @http.route('/kx_realestate/dashboard/export_excel', type='http', auth='user', csrf=False)
-    def export_dashboard_excel(self, date_from=None, date_to=None):
+    def export_dashboard_excel(self, date_from=None, date_to=None, country=None, state=None, city=None,site=None, building=None, floor=None,):
 
-        service = request.env['kx.dashboard.service'].sudo()
-        data = service.get_dashboard_data(date_from, date_to)
+        service = request.env["kx.dashboard.service"].sudo()
+        dashboard1 = service.get_dashboard_data(
+            country,
+            state,
+            city,
+            site,
+            building,
+            floor,
+        )
+        dashboard2 = service.get_dashboard_data2(
+            date_from,
+            date_to,
+            country,
+            state,
+            city,
+            site,
+            building,
+            floor,
+        )
+
+        data = {}
+        data.update(dashboard1)
+        data.update(dashboard2)
 
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
@@ -32,6 +54,8 @@ class DashboardExcelExport(http.Controller):
 
         # DASHBOARD 
         sheet = workbook.add_worksheet("Dashboard")
+        sheet.set_column("A:A", 30)
+        sheet.set_column("B:M", 15)
         sheet.write(0, 0, "REAL ESTATE DASHBOARD EXPORT", title)
         # KPI CARDS 
         sheet.write(2, 0, "Cancelled Contracts", bold)
@@ -46,8 +70,40 @@ class DashboardExcelExport(http.Controller):
         sheet.write(5, 0, "Blocked Units", bold)
         sheet.write(5, 1, safe(data.get("blocked_units_count")))
 
+        # FINANCIAL SUMMARY
+        summary_row = 7
+        sheet.write(summary_row, 0, "Financial Summary", title)
+        summary_row += 1
+        financial_headers = [
+            "Total Installment Amount",
+            "Total Collected Amount",
+            "Total Remaining Amount",
+            "Total Overdue Amount",
+            "Total To Be Collected",
+            "Total Collectable Overdue",
+        ]
+        for col, header_name in enumerate(financial_headers):
+            sheet.write(summary_row, col, header_name, header)
+        summary_row += 1
+        financial_values = [
+            data.get("total_installment_amount", 0),
+            data.get("total_paid_amount", 0),
+            data.get("total_remaining_amount", 0),
+            data.get("total_overdue_amount", 0),
+            data.get("total_to_be_collected_amount", 0),
+            data.get("total_collectable_overdue_amount", 0),
+        ]
+        for col, value in enumerate(financial_values):
+            sheet.write(summary_row, col, safe(value), money)
+
+        sheet.write(summary_row + 2, 0, "Collection %", header)
+        sheet.write(summary_row + 2, 1, safe(data.get("total_paid_amount_percent")) / 100, percent)
+
+        sheet.write(summary_row + 3, 0, "Remaining %", header)
+        sheet.write(summary_row + 3, 1, safe(data.get("total_remaining_amount_percent")) / 100,percent)
+
         # GENERAL SUMMARY TABLE
-        start_row = 8
+        start_row = 15
         headers = ["Title", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"]
         for c, h in enumerate(headers):
             sheet.write(start_row, c, h, header)
@@ -75,11 +131,11 @@ class DashboardExcelExport(http.Controller):
 
         # HANDOVER
         sheet.write(r, 0, "Customer Ready for Handover", cell)
-        sheet.write(r, 1, data.get("handover_ready_unit", [{}])[0].get("jan_count", 0))
+        sheet.write(r, 1, data.get("handover_ready_units", 0), cell)
         r += 1
 
         sheet.write(r, 0, "Customer Handovered", cell)
-        sheet.write(r, 1, data.get("handed_over_unit_item17_sep", 0))
+        sheet.write(r, 1, data.get("handovered_units", 0), cell)
         r += 2
 
         # WARNING LETTER SHEET
@@ -134,6 +190,18 @@ class DashboardExcelExport(http.Controller):
             inst.write(r, 2, safe(l.get("total_remaining_amount")), money)
             inst.write(r, 3, safe(l.get("total_overdue_amount")), money)
             r += 1
+        
+        # COLLECTION SHEET
+        collect_sheet = workbook.add_worksheet("Collection Due")
+        collect_sheet.write(0, 0, "Installment", header)
+        collect_sheet.write(0, 1, "To Be Collected", header)
+        collect_sheet.write(0, 2, "Overdue", header)
+        row = 1
+        for line in data.get("installment_tobe_collected", []):
+            collect_sheet.write(row, 0, safe(line.get("installment_number")))
+            collect_sheet.write(row, 1, safe(line.get("total_to_be_collected_amount")), money)
+            collect_sheet.write(row, 2, safe(line.get("total_collectable_overdue_amount")), money)
+            row += 1
 
         # CHARTS SHEET
         chart_sheet = workbook.add_worksheet("Charts")

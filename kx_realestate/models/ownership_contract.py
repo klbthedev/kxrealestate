@@ -1,7 +1,9 @@
 import calendar
+import re
+import base64
 from datetime import date
 import math
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, Command
 from odoo.tools.translate import _
 from odoo.exceptions import UserError, ValidationError
 
@@ -10,13 +12,33 @@ class OwnershipContract(models.Model):
     _description = "Ownership Contract"
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    def _default_income_account(self):
-        params = self.env['ir.config_parameter'].sudo()
-        return (
-            params.get_param('kx_real_estate.account_id')
-            or params.get_param('kx_realestate.account_id')
-            or params.get_param('kx_realestate.income_account')
-        )
+    contract_template_id = fields.Many2one(
+        "contract.template",
+        string="Contract Template",
+        domain=[("state", "=", "approved")],
+    )
+
+    generated_html = fields.Html(
+        string="Generated Contract",
+        sanitize=False,
+        copy=False,
+    )
+
+    generated_pdf = fields.Binary(
+        string="PDF",
+        attachment=True,
+        copy=False,
+    )
+
+    generated_pdf_name = fields.Char()
+
+    last_generated = fields.Datetime(
+        readonly=True,
+    )
+
+    preview_html = fields.Html(
+        sanitize=False,
+    )
 
     amount_total = fields.Float(string='Total', compute='_check_amounts', store=True)
     agreement_type = fields.Selection(
@@ -33,7 +55,6 @@ class OwnershipContract(models.Model):
     active = fields.Boolean(default=True)
     address = fields.Char(string='Address')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account')
-    account_id = fields.Many2one('account.account', string='Income Account', default=_default_income_account,)
     building_attachment_line_ids = fields.One2many("own.attachment.line", "ownership_contract_id", string="Documents")
     balance = fields.Float(string='Balance', compute='_check_amounts', store=True)
     site_id = fields.Many2one('re.site', string='Site', copy=False)
@@ -71,7 +92,7 @@ class OwnershipContract(models.Model):
     # sales_person_id = fields.Many2one(related="salesperson_commission_line_id.sales_person", string='Sales Person', required=False)
     # sales_person_commission_id = fields.Float(related="salesperson_commission_line_id.commission_percent", string='Sales Commission', required=False)
     sales_person_id = fields.Many2one('res.partner', string='Sales Person', required=False)
-    commission_paid_amount = fields.Float(string='Released Commission', compute='_compute_commission_total_amount', store="True")
+    commission_paid_amount = fields.Float(string='Released Commission', compute='_compute_commission_paid_amount', store="True")
     commission_percent = fields.Float(string='Commission %', 
         # default=lambda self: self.env.user.realestate_commission_percent
     )
@@ -80,13 +101,12 @@ class OwnershipContract(models.Model):
         # default=lambda self: self.env.user.realestate_commission_release_policy or 'on_payment',
         string='Commission Release Policy',
     )
+    contract_generated_on = fields.Datetime(string='Date')
     date = fields.Datetime(string='Date',required=True, default=fields.Datetime.now)
     invoice_count = fields.Integer(string='Customer Invoices', compute='_compute_invoice_count')
     first_payment_date = fields.Date(string='First Payment Date')
     floor = fields.Char(string='Floor')
     floor_id = fields.Many2one('re.floor', string='Floor', related='building_unit_id.floor_id', store=True, readonly=True)
-    garage_date = fields.Date(string='Garage Date')
-    garage_included = fields.Float(string='Garage', digits='Product Price')
     installment_template_id = fields.Many2one('installment.template', string='Payment Template')
     loan_line_rs_own_ids = fields.One2many('loan.line.rs.own', 'loan_id',string="Installments", store=True)
 
@@ -271,6 +291,76 @@ class OwnershipContract(models.Model):
     all_invoices_paid = fields.Boolean(compute='_compute_all_invoices_paid', string='All Invoices Paid')
 
     user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.user)
+
+    def _get_render_values(self):
+        self.ensure_one()
+        resolver = self.env["contract.field.resolver"]
+        values = {}
+        for variable in self.contract_template_id.variable_ids.filtered("active"):
+            values[variable.code] = resolver.resolve_field(
+                self,
+                variable.field_id.name,
+            )
+        return values
+
+    def _render_contract_html(self):
+        self.ensure_one()
+        html = self.contract_template_id.get_combined_html()
+        values = self._get_render_values()
+        for key, value in values.items():
+            html = html.replace(
+                "{{%s}}" % key,
+                str(value or "")
+            )
+
+        return html
+
+    def action_generate_preview(self):
+
+        for rec in self:
+
+            if not rec.contract_template_id:
+                raise UserError(_("Please select a Contract Template."))
+
+            rec.generated_html = rec._render_contract_html()
+
+            rec.contract_generated_on = fields.Datetime.now()
+
+        return True
+
+    def action_generate_pdf(self):
+
+        self.ensure_one()
+
+        self.action_generate_preview()
+
+        report = self.env.ref(
+            "kx_realestate.action_report_ownership_contract"
+        )
+
+        pdf, _ = report._render_qweb_pdf(self.ids)
+
+        self.write({
+            "generated_pdf": base64.b64encode(pdf),
+            "generated_pdf_name": "%s.pdf" % (self.name or "Contract"),
+        })
+
+        return True
+    
+    def action_print_contract(self):
+        self.ensure_one()
+        self.action_generate_preview()
+        return self.env.ref("kx_realestate.action_report_ownership_contract").report_action(self)
+
+    @api.onchange("contract_template_id")
+    def _onchange_contract_template(self):
+        if self.contract_template_id:
+            self.generated_html = self._render_contract_html()
+    
+    def get_live_preview_html(self):
+        self.ensure_one()
+        return self._render_contract_html()
+
     @api.depends('loan_line_rs_own_ids')
     def _compute_invoice_count(self):
         for rec in self:
@@ -443,15 +533,18 @@ class OwnershipContract(models.Model):
             },
         }
 
-    @api.model
-    def create(self, vals):
+    @api.model 
+    @api.model_create_multi
+    def create(self, vals, vals_list):
         if vals.get('building_unit_id') and not vals.get('building_id'):
             unit = self.env['product.template'].browse(vals['building_unit_id'])
             vals['building_id'] = unit.building_id.id
         vals['name'] = self.env['ir.sequence'].next_by_code('ownership.contract')
         new_id = super(OwnershipContract, self).create(vals)
-
-        return new_id
+        records = super().create(vals_list)
+        for rec in records.filtered("contract_template_id"):
+            rec.generated_html = rec._render_contract_html()
+        return records, new_id
 
     def unit_status(self):
         return self.building_unit_id.state
@@ -460,10 +553,29 @@ class OwnershipContract(models.Model):
         if vals.get('building_unit_id') and not vals.get('building_id'):
             unit = self.env['product.template'].browse(vals['building_unit_id'])
             vals['building_id'] = unit.building_id.id
-        res = super().write(vals)
         self._check_penalty_rules()
+        res = super().write(vals)
+        trigger_fields = {
+            "partner_id",
+            "company_id",
+            "building_id",
+            "building_unit_id",
+            "selling_price",
+            "address",
+            "phone",
+            "email",
+            "contract_sign_date",
+            "state",
+        }
+
+        if trigger_fields.intersection(vals.keys()):
+
+            for rec in self.filtered("contract_template_id"):
+                rec.generated_html = rec._render_contract_html()
+
         return res
         
+
     def _check_penalty_rules(self):
         rules = self.env['ownership.term.penalty.rule'].search([('ownership_contract_id', 'in', self.ids)])
         for rule in rules:
@@ -474,12 +586,14 @@ class OwnershipContract(models.Model):
             unit = rec.building_unit_id
             unit.write({'state' : 'sold'})
             if not rec.reservation_id or rec.reservation_id.contract_count_own == 0:
+                rec.action_generate_preview()
                 rec.state = 'confirmed'
             elif rec.reservation_id.contract_count_own >= 1:
                 if rec.reservation_id.contract_count_own > 1:
                     rec.state = 'resell'
                 else:
                     if rec.state == 'draft' or rec.state == 'handover':
+                        rec.action_generate_preview()
                         rec.state = 'confirmed'
             rec.loan_line_rs_own_ids.action_refresh_eligibility()
 
@@ -555,6 +669,7 @@ class OwnershipContract(models.Model):
     def action_set_to_handover(self):
         for record in self:
             if self.env.user.has_group('kx_realestate.group_contract_supervisor'):
+                record.action_generate_pdf()
                 record.state = 'handover'
             else:
                 raise UserError(_('You do not have permission to reset the contract to Handover.'))

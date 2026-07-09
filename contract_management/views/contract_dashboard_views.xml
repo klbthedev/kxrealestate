@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="action_contract_dashboard_pivot" model="ir.actions.act_window">
+            <field name="name">Contracts Dashboard (Pivot)</field>
+            <field name="res_model">contract.contract</field>
+            <field name="view_mode">pivot,graph</field>
+            <field name="context">{'search_default_group_state': 1}</field>
+        </record>
+
+        <record id="action_contract_dashboard_graph" model="ir.actions.act_window">
+            <field name="name">Contracts Dashboard (Graph)</field>
+            <field name="res_model">contract.contract</field>
+            <field name="view_mode">graph,pivot</field>
+        </record>
+
+        <record id="view_contract_dashboard_kanban" model="ir.ui.view">
+            <field name="name">contract.contract.dashboard.kanban</field>
+            <field name="model">contract.contract</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_dashboard" create="false">
+                    <field name="state"/>
+                    <field name="is_expired"/>
+                    <field name="expiring_soon"/>
+                    <templates>
+                        <t t-name="card">
+                            <div class="oe_kanban_global_click p-3">
+                                <field name="reference"/> - <field name="partner_id"/>
+                                <field name="state" widget="badge"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="action_contract_dashboard" model="ir.actions.act_window">
+            <field name="name">Contracts Dashboard</field>
+            <field name="res_model">contract.contract</field>
+            <field name="view_mode">graph,pivot,list,kanban</field>
+        </record>
+
+    </data>
+</odoo>

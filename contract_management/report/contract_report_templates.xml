@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="report_contract_document">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="contract_management.report_contract_layout">
+                        <t t-set="doc" t-value="o"/>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <template id="report_contract_layout">
+            <t t-call="web.external_layout">
+                <t t-set="company" t-value="doc.company_id"/>
+                <div class="page contract_report_page">
+                    <div class="text-center mb-4">
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
+                             style="max-height: 80px;" alt="Company Logo"/>
+                        <h2 class="mt-2">Contract <span t-field="doc.reference"/></h2>
+                    </div>
+
+                    <table class="table table-sm" style="width: 100%;">
+                        <tr>
+                            <td><strong>Customer:</strong> <span t-field="doc.partner_id.name"/></td>
+                            <td><strong>Template:</strong> <span t-field="doc.template_id.name"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Contract Date:</strong> <span t-field="doc.contract_date"/></td>
+                            <td><strong>Expiry Date:</strong> <span t-field="doc.expiry_date"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Status:</strong> <span t-field="doc.state"/></td>
+                            <td><strong>Effective Date:</strong> <span t-field="doc.effective_date"/></td>
+                        </tr>
+                    </table>
+
+                    <hr/>
+
+                    <div class="contract_body" t-raw="doc.generated_html or doc.template_id.get_combined_html()"/>
+
+                    <div class="mt-5 row">
+                        <div class="col-6">
+                            <p>Signed for and on behalf of <span t-field="company.name"/></p>
+                            <br/><br/>
+                            <p>_______________________________</p>
+                        </div>
+                        <div class="col-6">
+                            <p>Signed for and on behalf of <span t-field="doc.partner_id.name"/></p>
+                            <br/><br/>
+                            <p>_______________________________</p>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+    </data>
+</odoo>
