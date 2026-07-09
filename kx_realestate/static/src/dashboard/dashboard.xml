@@ -75,18 +75,18 @@
             
             <!-- ###################################################################################-->
             
-            <div class="row mb-5 mt-5">
+            <div class="row mb-3 mt-2">
                 <div class="col-md-6">
                     <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0">
                         <div class="card-body pt-2 pb-0 text-center">
-                            <div class="row text-white mt-3 mb-3">
-                                <h1 style="text-color: #7A4E59">Total Collected Amount (ETB)</h1>
+                            <div class="row text-white">
+                                <h2 style="text-color: #7A4E59">Total Collected Amount (ETB)</h2>
                             </div>
-                            <div class="row text-white mt-3 mb-3">
-                                <h1 style="text-color: #7A4E59">
+                            <div class="row text-white">
+                                <h2 style="text-color: #7A4E59">
                                     <t t-esc="formatAmount(state.total_paid_amount)"/>
                                     (<t t-esc="formatAmount(state.total_paid_amount_percent)"/>%)
-                                </h1>
+                                </h2>
                             </div>
                         </div>
                     </div>
@@ -94,14 +94,14 @@
                 <div class="col-md-6">
                     <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0">
                         <div class="card-body pt-2 pb-0 text-center">
-                            <div class="row text-white mt-3 mb-3">
-                                <h1 style="text-color: #7A4E59">Total Remaining Amount (ETB)</h1>
+                            <div class="row text-white">
+                                <h2 style="text-color: #7A4E59">Total Remaining Amount (ETB)</h2>
                             </div>
-                            <div class="row text-white mt-3 mb-3">
-                                <h1 style="text-color: #7A4E59">
+                            <div class="row text-white">
+                                <h2 style="text-color: #7A4E59">
                                     <t t-esc="formatAmount(state.total_remaining_amount)"/>
                                     (<t t-esc="formatAmount(state.total_remaining_amount_percent)"/>%)
-                                </h1>
+                                </h2>
                             </div>
                         </div>
                     </div>
@@ -110,111 +110,111 @@
 
             <!-- ####################################################################################-->
             
-            <div class="row mb-5 my-5">
+            <div class="row mb-5 my-3">
                 <div class="col-md-2">
                     <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0">
-                        <div class="card-body pt-2 pb-0 text-center">
+                        <div class="card-body pt-1 pb-0 text-center">
                             <div class="row">
-                                <h6 class="mb-0 mt-0" style="text-color: #7A4E59">Total Available</h6>
+                                <h6 class="mb-0 mt-0 px-0 px-0 small" style="text-color: #7A4E59">Total Available</h6>
                             </div>
                             <div class="row">
-                                <h6 class="mb-0 mt-0" style="text-color: #7A4E59">Units</h6>
+                                <h6 class="mb-0 mt-0 px-0 small" style="text-color: #7A4E59">Units</h6>
                             </div>
                             <div class="row">
-                                <h2 style="text-color: #7A4E59">
+                                <h3 style="text-color: #7A4E59">
                                     <t t-esc="state.available_units_count"/>
                                     (<t t-esc="formatAmount(state.available_units_percent)"/>%)
-                                </h2>
+                                </h3>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="card dashboard-card shadow-sm" style="background-color: #E6D8DC">
-                        <div class="card-body pt-2 pb-0 text-center">
+                        <div class="card-body pt-1 pb-0 text-center">
                             <div class="row">
-                                <h6 class="mb-0 mt-0" style="text-color: #7A4E59">Total Sold</h6>
+                                <h6 class="mb-0 mt-0 px-0 small" style="text-color: #7A4E59">Total Sold</h6>
                             </div>
                             <div class="row">
-                                <h6 class="mb-0 mt-0" style="text-color: #7A4E59">Units</h6>
+                                <h6 class="mb-0 mt-0 px-0 small" style="text-color: #7A4E59">Units</h6>
                             </div>
                             <div class="row">
-                                <h2 style="text-color: #7A4E59">
+                                <h3 style="text-color: #7A4E59">
                                     <t t-esc="state.sold_units_count"/>
                                     (<t t-esc="formatAmount(state.sold_units_percent)"/>%)
-                                </h2>
+                                </h3>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="card dashboard-card shadow-sm" style="background-color: #E6D8DC">
-                        <div class="card-body pt-2 pb-0 text-center">
+                        <div class="card-body pt-1 pb-0 text-center">
                             <div class="row">
-                                <h6 class="mb-0 mt-0" style="text-color: #7A4E59">Total Researved</h6>
+                                <h6 class="mb-0 mt-0 px-0 small" style="text-color: #7A4E59">Total Researved</h6>
                             </div>
                             <div class="row">
-                                <h6 class="mb-0 mt-0" style="text-color: #7A4E59">Units</h6>
+                                <h6 class="mb-0 mt-0 px-0 small" style="text-color: #7A4E59">Units</h6>
                             </div>
                             <div class="row">
-                                <h2 style="text-color: #7A4E59">
+                                <h3 style="text-color: #7A4E59">
                                     <t t-esc="state.blocked_units_count"/>
                                     (<t t-esc="formatAmount(state.blocked_units_percent)"/>%)
-                                </h2>
+                                </h3>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="card dashboard-card shadow-sm" style="background-color: #E6D8DC">
-                        <div class="card-body pt-2 pb-0 text-center">
+                        <div class="card-body pt-1 pb-0 text-center">
                             <div class="row pe-0">
-                                <h6 class="mb-0 mt-0" style="text-color: #7A4E59">Total Handover</h6>
+                                <h6 class="mb-0 mt-0 px-0 small" style="text-color: #7A4E59">Total Handover Ready</h6>
                             </div>
                             <div class="row pe-0">
-                                <h6 class="mb-0 mt-0" style="text-color: #7A4E59">Ready Units</h6>
+                                <h6 class="mb-0 mt-0 px-0 small" style="text-color: #7A4E59">Units</h6>
                             </div>
                             <div class="row">
-                                <h2 style="text-color: #7A4E59">
+                                <h3 style="text-color: #7A4E59">
                                     <t t-esc="state.handover_ready_units"/>
                                     (<t t-esc="formatAmount(state.handover_ready_units_percent)"/>%)
-                                </h2>
+                                </h3>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="card dashboard-card shadow-sm" style="background-color: #E6D8DC">
-                        <div class="card-body pt-2 pb-0 text-center">
+                        <div class="card-body pt-1 pb-0 text-center">
                             <div class="row">
-                                <h6 class="mb-0 mt-0" style="text-color: #7A4E59">Total Handovered</h6>
+                                <h6 class="mb-0 mt-0 px-0 small" style="text-color: #7A4E59">Total Handovered</h6>
                             </div>
                             <div class="row">
-                                <h6 class="mb-0 mt-0" style="text-color: #7A4E59">Units</h6>
+                                <h6 class="mb-0 mt-0 px-0 small" style="text-color: #7A4E59">Units</h6>
                             </div>
                             <div class="row">
-                                <h2 style="text-color: #7A4E59">
+                                <h3 style="text-color: #7A4E59">
                                     <t t-esc="state.handovered_units"/>
                                     (<t t-esc="formatAmount(state.handovered_units_percent)"/>%)
-                                </h2>
+                                </h3>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0">
-                        <div class="card-body pt-2 pb-0 text-center">
+                        <div class="card-body pt-1 pb-0 text-center">
                             <div class="row">
-                                <h6 class="mb-0 mt-0" style="text-color: #7A4E59">Total Cancelled</h6>
+                                <h6 class="mb-0 mt-0 px-0 small" style="text-color: #7A4E59">Total Cancelled</h6>
                             </div>
                             <div class="row">
-                                <h6 class="mb-0 mt-0" style="text-color: #7A4E59">Contracts</h6>
+                                <h6 class="mb-0 mt-0 px-0 small" style="text-color: #7A4E59">Contracts</h6>
                             </div>
                             <div class="row text-white">
-                                <h2 style="text-color: #7A4E59">
+                                <h3 style="text-color: #7A4E59">
                                     <t t-esc="state.cancelled_contract_count"/>
                                     (<t t-esc="formatAmount(state.cancelled_contract_percent)"/>%)
-                                </h2>
+                                </h3>
                             </div>
                         </div>
                     </div>
@@ -385,7 +385,7 @@
                 <span>Installment Summary</span>
             </div>
 
-            <div class="row mb-5 mt-5">
+            <div class="row mb-5 mt-3">
                 <div class="col-md-6">
                     <div class="card shadow-sm">
                         <div class="card-body">
@@ -472,7 +472,7 @@
                 <span>Installment Charts</span>
             </div>
 
-            <div class="row mb-5 mt-5">
+            <div class="row mb-3 mt-2">
                 <div class="col-6">
                     <div class="card shadow-sm">
                         <div class="card-body">

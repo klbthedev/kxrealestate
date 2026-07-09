@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <menuitem id="menu_contract_management_root" name="Contracts" sequence="45"
+                  web_icon="contract_management,static/description/icon.png"
+                  groups="contract_management.group_contract_legal_user"/>
+
+        <menuitem id="menu_contract_contracts" name="Contracts"
+                  parent="menu_contract_management_root" sequence="10"/>
+        <menuitem id="menu_contract_contract_list" name="Contracts"
+                  parent="menu_contract_contracts" action="action_contract_contract" sequence="10"/>
+
+        <menuitem id="menu_contract_reporting" name="Reporting"
+                  parent="menu_contract_management_root" sequence="20"
+                  groups="contract_management.group_contract_legal_manager"/>
+        <menuitem id="menu_contract_dashboard" name="Dashboard"
+                  parent="menu_contract_reporting" action="action_contract_dashboard" sequence="10"/>
+
+        <menuitem id="menu_contract_configuration" name="Configuration"
+                  parent="menu_contract_management_root" sequence="30"
+                  groups="contract_management.group_contract_legal_manager"/>
+        <menuitem id="menu_contract_template_list" name="Templates"
+                  parent="menu_contract_configuration" action="action_contract_template" sequence="10"/>
+        <menuitem id="menu_contract_article_list" name="Articles"
+                  parent="menu_contract_configuration" action="action_contract_article" sequence="20"/>
+        <menuitem id="menu_contract_clause_list" name="Clauses"
+                  parent="menu_contract_configuration" action="action_contract_clause" sequence="30"/>
+        <menuitem id="menu_contract_variable_list" name="Variables"
+                  parent="menu_contract_configuration" action="action_contract_variable" sequence="40"/>
+
+    </data>
+</odoo>

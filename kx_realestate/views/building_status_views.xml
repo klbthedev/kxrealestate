@@ -31,8 +31,12 @@
         <field name="view_id" ref="building_status_list_view"/>
     </record>
 
+    <menuitem id="menu_property_header" 
+            name="Property" 
+            parent="menu_settings"
+            sequence="10" />
     <menuitem id="menu_building_status_form_action"
             action="building_status_form_action"
-            parent="menu_settings"
+            parent="menu_property_header"
             sequence="30" />
 </odoo>

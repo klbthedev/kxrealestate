@@ -22,6 +22,8 @@ from . import loan_line_rs
 from . import loan_line_rs_own
 from . import own_attachment_line
 from . import ownership_contract
+from . import contract
+
 from . import ownership_contract_lines
 from . import property_image
 from . import res_users

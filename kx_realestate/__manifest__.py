@@ -75,9 +75,14 @@
         'views/payment_term_config_views.xml',
 
         'views/sales_person_commission_views.xml',
+        'views/contract_template_views.xml',
+        'views/contract_article_views.xml',
+        'views/contract_clause_views.xml',
+        'views/contract_variable_views.xml',
 
         # 'views/component_views.xml',
         'wizard/owner_account_views.xml',
+        'report/report_contract_print.xml',
         'report/dashboard_pivot.xml',
         'report/loan_line_collection_analysis_search.xml',
         'report/report_action_views.xml',

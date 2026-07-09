@@ -196,7 +196,7 @@ class BuildingUnit(models.Model):
     electricity_meter = fields.Char(string='Electricity meter', size=16)
     east = fields.Char(string='Eastern border by')
     floor = fields.Char(string='Floor', size=16)
-    floor_id = fields.Many2one('re.floor', string='Floor', ondelete='restrict')
+    floor_id = fields.Many2one('re.floor', string='Floor',)
     garden = fields.Integer(string='Garden m²')
     garage_included = fields.Integer(string='Garage included')
     handicap_accessible = fields.Boolean(string='Handicap Accessible')
