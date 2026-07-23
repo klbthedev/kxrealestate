@@ -16,6 +16,33 @@ class RealEstateSite(models.Model):
     city_id = fields.Many2one("site.city", string="City Name", required=True, domain="[('region_id', '=', site_region_id)]",)
 
     name = fields.Char(required=True, tracking=True)
+    acquisition_id = fields.Many2one(
+        "land.acquisition",
+        string="Source Land Acquisition",
+        readonly=True,
+        copy=False,
+    )
+    acquisition_document_count = fields.Integer(
+        compute="_compute_acquisition_document_count",
+        string="Acquisition Documents",
+    )
+
+
+    def _compute_acquisition_document_count(self):
+
+        for record in self:
+
+            record.acquisition_document_count = len(
+                record.acquisition_id.document_ids
+            ) if record.acquisition_id else 0
+
+
+
+    def action_view_acquisition_documents(self):
+
+        self.ensure_one()
+
+        return self.acquisition_id.action_view_documents()
     ####################################################################
     
     # remove city field content when region field changed

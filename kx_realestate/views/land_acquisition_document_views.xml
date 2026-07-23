@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+   <record id="land_acquisition_document_tree" model="ir.ui.view">
+      <field name="name">land.acquisition.document.tree</field>
+      <field name="model">land.acquisition.document</field>
+      <field name="arch" type="xml">
+         <list editable="bottom">
+            <field name="name" />
+            <field name="document_type" />
+            <field name="attachment_id" />
+            <field name="date" />
+         </list>
+      </field>
+   </record>
+   <record id="land_acquisition_document_form" model="ir.ui.view">
+      <field name="name">land.acquisition.document.form</field>
+      <field name="model">land.acquisition.document</field>
+      <field name="arch" type="xml">
+         <form>
+            <sheet>
+               <group>
+                  <field name="name" />
+                  <field name="document_type" />
+                  <field name="attachment_id" />
+                  <field name="date" />
+               </group>
+               <group>
+                  <field name="notes" />
+               </group>
+            </sheet>
+         </form>
+      </field>
+   </record>
+</odoo>

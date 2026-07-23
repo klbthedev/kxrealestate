@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+   <record id="land_acquisition_view_tree" model="ir.ui.view">
+      <field name="name">land.acquisition.tree</field>
+      <field name="model">land.acquisition</field>
+      <field name="arch" type="xml">
+         <list>
+            <field name="name" />
+            <field name="land_name" />
+            <field name="owner_id" />
+            <field name="stage_id" />
+            <field name="land_area" />
+            <field name="expected_purchase_price" />
+            <field name="expected_closing_date" />
+         </list>
+      </field>
+   </record>
+   <!-- Kanban View -->
+   <record id="land_acquisition_view_kanban" model="ir.ui.view">
+      <field name="name">land.acquisition.kanban</field>
+      <field name="model">land.acquisition</field>
+      <field name="arch" type="xml">
+         <kanban default_group_by="stage_id">
+            <field name="name" />
+            <field name="land_name" />
+            <field name="owner_id" />
+            <field name="expected_purchase_price" />
+            <field name="stage_id" />
+            <templates>
+               <t t-name="card">
+                  <div class="oe_kanban_global_click">
+                     <strong>
+                        <field name="name" />
+                     </strong>
+                     <div>
+                        <field name="land_name" />
+                     </div>
+                     <div>
+                        Owner:
+                        <field name="owner_id" />
+                     </div>
+                     <div>
+                        Area:
+                        <field name="land_area" />
+                        m²
+                     </div>
+                     <div>
+                        Price:
+                        <field name="expected_purchase_price" />
+                     </div>
+                  </div>
+               </t>
+            </templates>
+         </kanban>
+      </field>
+   </record>
+   <!-- Form View -->
+   <record id="land_acquisition_view_form" model="ir.ui.view">
+      <field name="name">land.acquisition.form</field>
+      <field name="model">land.acquisition</field>
+      <field name="arch" type="xml">
+         <form string="Land Acquisition">
+            <header>
+               <field name="stage_id" widget="statusbar" options="{'clickable': True}" />
+            </header>
+            <sheet>
+               <div class="oe_button_box" name="button_box" />
+               <div class="oe_title">
+                  <h1>
+                     <field name="name" />
+                  </h1>
+               </div>
+               <group>
+                  <group string="General Information">
+                     <field name="land_name" />
+                     <field name="owner_id" />
+                     <field name="land_area" />
+                     <field name="company_id" />
+                  </group>
+                  <group string="Commercial">
+                     <field name="expected_purchase_price" />
+                     <field name="negotiated_price" />
+                     <field name="expected_closing_date" />
+                  </group>
+               </group>
+               <notebook>
+                  <page string="Location">
+                     <group>
+                        <field name="country_id" />
+                        <field name="state_id" />
+                        <field name="city" />
+                        <field name="address" />
+                        <field name="gps_latitude" />
+                        <field name="gps_longitude" />
+                     </group>
+                  </page>
+                  <page string="Legal">
+                     <group>
+                        <field name="parcel_id" />
+                        <field name="title_deed_no" />
+                        <field name="title_deed_date" />
+                        <field name="land_title_ref" />
+                     </group>
+                  </page>
+                  <page string="Notes">
+                     <field name="note" />
+                  </page>
+               </notebook>
+            </sheet>
+            <chatter />
+         </form>
+      </field>
+   </record>
+   <!-- Search -->
+   <record id="land_acquisition_view_search" model="ir.ui.view">
+      <field name="name">land.acquisition.search</field>
+      <field name="model">land.acquisition</field>
+      <field name="arch" type="xml">
+         <search>
+            <field name="name" />
+            <field name="land_name" />
+            <field name="owner_id" />
+            <filter name="active" string="Active" domain="[('active','=',True)]" />
+            <group expand="0" string="Group By">
+               <filter name="stage" string="Stage" context="{'group_by':'stage_id'}" />
+               <filter name="owner" string="Owner" context="{'group_by':'owner_id'}" />
+            </group>
+         </search>
+      </field>
+   </record>
+</odoo>

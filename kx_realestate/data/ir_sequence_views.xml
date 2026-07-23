@@ -1,4 +1,12 @@
 <odoo>
+    <record id="seq_land_acquisition" model="ir.sequence">
+        <field name="name">Land Acquisition</field>
+        <field name="code">land.acquisition</field>
+        <field name="prefix">LA/%(year)s/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
     <record id="sequence_ownership_contract" model="ir.sequence">
         <field name="name">Ownership Contract</field>
         <field name="code">ownership.contract</field>

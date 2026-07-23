@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+   <record id="action_land_acquisition" model="ir.actions.act_window">
+      <field name="name">Land Acquisitions</field>
+      <field name="res_model">land.acquisition</field>
+      <field name="view_mode">kanban,list,form</field>
+   </record>
+   <menuitem id="menu_real_estate_root" name="Real Estate" sequence="10" />
+   <menuitem id="menu_land_acquisition" name="Land Acquisition" parent="menu_real_estate_root" action="action_land_acquisition" sequence="20" />
+   <menuitem id="menu_land_acquisition_configuration" name="Configuration" parent="menu_real_estate_root" sequence="90" />
+   <menuitem id="menu_land_acquisition_stage" name="Acquisition Stages" parent="menu_land_acquisition_configuration" action="action_land_acquisition_stage" sequence="10" />
+</odoo>
