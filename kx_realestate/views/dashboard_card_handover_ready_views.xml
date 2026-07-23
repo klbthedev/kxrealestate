@@ -1,0 +1,30 @@
+<odoo>
+
+    <record id="view_handover_checklist_dashboard_list" model="ir.ui.view">
+        <field name="name">ownership.handover.checklist.dashboard.list</field>
+        <field name="model">ownership.handover.checklist</field>
+        <field name="arch" type="xml">
+            <list string="Properties Ready for Handover">
+                <field name="ownership_contract_id"/>
+                <field name="name"/>
+                <field name="contract_no" string="Contract #"/>
+                <field name="partner_id"/>
+                <field name="site_id"/>
+                <field name="building_id"/>
+                <field name="floor_id"/>
+                <field name="unit_id"/>
+                <field name="name"/>
+                <field name="checklist_type"/>
+                <field name="done" string="Handover Done"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_handover_ready_properties" model="ir.actions.act_window">
+        <field name="name">Properties Ready for Handover</field>
+        <field name="res_model">ownership.handover.checklist</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_handover_checklist_dashboard_list"/>
+    </record>
+
+</odoo>

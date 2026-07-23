@@ -45,6 +45,20 @@ class UnitReservation(models.Model):
     ], string='State', compute='_compute_state', store=True, readonly=False, default='draft')
     user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.user)
     unit_code = fields.Char(string='Code')
+    contract_maker_id = fields.Many2one("contract.maker", string = "Contract Maker", domain=['&', ('contract_maker_type', '=', 'reservation'), ('state', '=', 'confirmed')],)
+
+    @api.onchange("contract_maker_id")
+    def _onchange_contract_maker_id(self):
+        maker = self.contract_maker_id
+        if not maker:
+            return
+        # self.origin = maker.origin
+        # self.generated_html = maker.generated_html
+        self.user_id = maker.user_id
+        self.partner_id = maker.partner_id
+        self.building_unit_id = maker.building_unit_id
+        
+
 
     def _contract_count_own(self):
         own_obj = self.env['ownership.contract']
@@ -331,11 +345,20 @@ class UnitReservation(models.Model):
     #         'target': 'current',
     #     }
 
-    @api.model
-    def create(self, vals):
-        vals['name'] = self.env['ir.sequence'].next_by_code('unit.reservation')
-        new_id = super(UnitReservation, self).create(vals)
-        return new_id
+    # @api.model
+    # def create(self, vals):
+    #     vals['name'] = self.env['ir.sequence'].next_by_code('unit.reservation')
+    #     new_id = super(UnitReservation, self).create(vals)
+    #     return new_id
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get("name"):
+                vals["name"] = self.env["ir.sequence"].next_by_code(
+                    "unit.reservation"
+                )
+
+        return super().create(vals_list)
 
     def add_months(self,sourcedate,months):
         month = sourcedate.month - 1 + months

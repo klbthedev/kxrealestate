@@ -1,0 +1,24 @@
+@font-face {
+    font-family: "NotoSansEthiopic";
+    src: url("/kx_realestate/static/src/fonts/NotoSansEthiopic-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+body,
+.page,
+.lg-wrap,
+.lg-table,
+.lg-table td,
+.lg-table th,
+.lg-title,
+.lg-bold,
+.lg-small {
+    font-family: "NotoSansEthiopic", "Abyssinica SIL", "Noto Sans Ethiopic", "Noto Serif Ethiopic", "DejaVu Sans", sans-serif !important;
+}
+.page {
+    margin-top: -40px !important;
+}
+.ethiopic-report {
+    padding-top: 0 !important;
+}

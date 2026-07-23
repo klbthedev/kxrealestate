@@ -6,11 +6,26 @@ import math
 from odoo import api, fields, models, _, Command
 from odoo.tools.translate import _
 from odoo.exceptions import UserError, ValidationError
+import logging
+_logger = logging.getLogger(__name__)
 
 class OwnershipContract(models.Model):
     _name = "ownership.contract"
     _description = "Ownership Contract"
     _inherit = ['mail.thread', 'mail.activity.mixin']
+
+    contract_maker_id = fields.Many2one("contract.maker", string="Contract Maker", domain=['&', ('contract_maker_type', '=', 'sales_contract'), ('state', '=', 'confirmed')], ) 
+    salesperson_commission_ids = fields.One2many("salesperson.commission.line", "contract_id", string="Commissions")
+    commission_release_policy = fields.Selection(
+        [
+            (' ', ' '),
+            ('one_time', 'One Time Payment'),
+            ('on_payment', 'Per Installment Payment'),
+        ],
+        string='Commission Release Policy',
+        default=' ',
+        required=True,
+    )
 
     contract_template_id = fields.Many2one(
         "contract.template",
@@ -32,13 +47,9 @@ class OwnershipContract(models.Model):
 
     generated_pdf_name = fields.Char()
 
-    last_generated = fields.Datetime(
-        readonly=True,
-    )
+    last_generated = fields.Datetime(readonly=True,)
 
-    preview_html = fields.Html(
-        sanitize=False,
-    )
+    preview_html = fields.Html(sanitize=False,)
 
     amount_total = fields.Float(string='Total', compute='_check_amounts', store=True)
     agreement_type = fields.Selection(
@@ -62,44 +73,13 @@ class OwnershipContract(models.Model):
     building_id = fields.Many2one('building.building', string='Building', copy=False)
     building_code = fields.Char(string='Code')
     building_unit_id = fields.Many2one('product.template', string='Unit', copy=False)
-    @api.onchange('building_unit_id')
-    def onchange_units(self):
-        if self.building_unit_id:
-            unit = self.building_unit_id
-            self.unit_code = unit.code
-            self.floor = unit.floor
-            self.selling_price = unit.selling_price
-            self.building_type_id = unit.building_type_id
-            self.address = unit.address
-            self.building_status_id = unit.building_status_id
-            # self.building_unit_area = unit.building_unit_area
-            self.building_id = unit.building_id.id
-            self.primary_address = unit.building_id.address or unit.address
-        else:
-            self.unit_code = False
-            self.floor = False
-            self.selling_price = False
-            self.building_type_id = False
-            self.address = False
-            self.building_status_id = False
-            # self.building_unit_area = False
-            self.building_id = False
-            self.primary_address = False
     building_status_id = fields.Many2one('building.status', string='Building Unit Status')
     building_type_id = fields.Many2one('building.type', string='Building Unit Type')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
-    # salesperson_commission_line_id = fields.Many2one('salesperson.commission.line', string='Sales Person', required=False)
-    # sales_person_id = fields.Many2one(related="salesperson_commission_line_id.sales_person", string='Sales Person', required=False)
-    # sales_person_commission_id = fields.Float(related="salesperson_commission_line_id.commission_percent", string='Sales Commission', required=False)
     sales_person_id = fields.Many2one('res.partner', string='Sales Person', required=False)
     commission_paid_amount = fields.Float(string='Released Commission', compute='_compute_commission_paid_amount', store="True")
     commission_percent = fields.Float(string='Commission %', 
         # default=lambda self: self.env.user.realestate_commission_percent
-    )
-    commission_release_policy = fields.Selection(
-        [('on_payment', 'On Payment/Installment'), ('on_confirm', 'On Confirmation')],
-        # default=lambda self: self.env.user.realestate_commission_release_policy or 'on_payment',
-        string='Commission Release Policy',
     )
     contract_generated_on = fields.Datetime(string='Date')
     date = fields.Datetime(string='Date',required=True, default=fields.Datetime.now)
@@ -268,8 +248,8 @@ class OwnershipContract(models.Model):
         string='Seller / Builder Responsibility',
     )
     handover_checklist_ids = fields.One2many(
-        'ownership.handover.checklist',
-        'ownership_contract_id',
+        'handover.checklist',
+        'contract_id',
         string='Handover Checklist',
     )
     is_fully_paid = fields.Boolean(
@@ -278,8 +258,8 @@ class OwnershipContract(models.Model):
         store=True
     )
     term_penalty_rule_ids = fields.One2many(
-        'ownership.term.penalty.rule',
-        'ownership_contract_id',
+        'term.penalty.rule',
+        'contract_id',
         string='Terms & Penalty Rules',
     )
     trigger_policy = fields.Selection(
@@ -292,6 +272,112 @@ class OwnershipContract(models.Model):
 
     user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.user)
 
+    handover_ids = fields.One2many(
+        "handover.checklist",
+        "contract_id",
+        string="Handover Checklist",
+    )
+
+    penalty_rule_ids = fields.One2many(
+        "term.penalty.rule",
+        "contract_id",
+        string="Penalty Rules",
+    )
+
+    @api.onchange('commission_release_policy')
+    def _onchange_commission_release_policy(self):
+        if self.commission_release_policy != 'on_payment':
+            return
+        lines = [(5, 0, 0)]
+        for installment in self.loan_line_rs_own_ids:
+            lines.append((0, 0, {
+                'installment_id': installment.id,
+                'amount_base': installment.amount,
+                'release_date': installment.date,
+            }))
+        self.salesperson_commission_ids = lines
+    
+    def _sync_installment_commissions(self):
+        Commission = self.env['salesperson.commission.line']
+        for contract in self:
+            if contract.commission_release_policy != 'on_payment':
+                continue
+            existing = contract.salesperson_commission_ids.mapped('installment_id')
+            for installment in contract.loan_line_rs_own_ids:
+                if installment in existing:
+                    continue
+                Commission.create({
+                    'contract_id': contract.id,
+                    'installment_id': installment.id,
+                    'amount_base': installment.amount,
+                    'release_date': installment.date,
+                })
+
+
+    @api.onchange("contract_maker_id")
+    def _onchange_contract_maker_id(self):
+        maker = self.contract_maker_id
+        if not maker:
+            return
+        self.origin = maker.origin
+        self.generated_html = maker.generated_html
+        self.user_id = maker.user_id
+        self.partner_id = maker.partner_id
+        self.site_id = maker.site_id
+        self.block_id = maker.block_id
+        self.building_id = maker.building_id
+        self.floor_id = maker.floor_id
+        self.building_unit_id = maker.building_unit_id
+        self.selling_price = maker.selling_price
+        self.loan_line_rs_own_ids = [(5, 0, 0)]
+        self.loan_line_rs_own_ids = [
+            (0, 0, {
+                "number": line.number,
+                "finance_means": line.finance_means,
+                "trigger_type": line.trigger_type,
+                "date": line.date,
+                "trigger_level": line.trigger_level,
+                "trigger_building_type_id": line.trigger_building_type_id.id,
+                "progress_building_stage_id": line.progress_building_stage_id.id,
+                "progress_floor_stage_id": line.progress_floor_stage_id.id,
+                "selected_floor_id": line.selected_floor_id.id,
+                "progress_unit_stage_id": line.progress_unit_stage_id.id,
+                "status_complete_date": line.status_complete_date,
+                "payment_term_date_id": line.payment_term_date_id.id,
+                "payment_request_letter": line.payment_request_letter,
+                "contract_partner_id": self.partner_id.id,
+                "discount_percent": line.discount_percent,
+                "amount": line.amount,
+            })
+            for line in maker.installment_line_ids
+        ]
+        # Handover Checklist
+        self.handover_ids = [
+            (0, 0, {
+                "sequence": item.sequence,
+                "name": item.name,
+                "state": item.state,
+                "checklist_type": item.checklist_type,
+            })
+            for item in maker.handover_ids
+        ]
+
+        _logger.info("New handover_ids: %s", self.handover_ids)
+
+        # Penalty Rules
+        self.penalty_rule_ids = [(5, 0, 0)]
+        self.penalty_rule_ids = [
+            (0, 0, {
+                "name": rule.name,
+                "sequence": rule.sequence,
+                "clause_ref": rule.clause_ref,
+                "rule_text": rule.rule_text,
+                "applies_to": rule.applies_to,
+                "action_type": rule.action_type,
+            })
+            for rule in maker.penality_ids
+        ]
+    
     def _get_render_values(self):
         self.ensure_one()
         resolver = self.env["contract.field.resolver"]
@@ -338,7 +424,8 @@ class OwnershipContract(models.Model):
             "kx_realestate.action_report_ownership_contract"
         )
 
-        pdf, _ = report._render_qweb_pdf(self.ids)
+        # pdf, _ = report._render_qweb_pdf(self.ids)
+        pdf, _ = report._render_qweb_pdf(report.report_name,self.ids)
 
         self.write({
             "generated_pdf": base64.b64encode(pdf),
@@ -361,6 +448,30 @@ class OwnershipContract(models.Model):
         self.ensure_one()
         return self._render_contract_html()
 
+    @api.onchange('building_unit_id')
+    def onchange_units(self):
+        if self.building_unit_id:
+            unit = self.building_unit_id
+            self.unit_code = unit.code
+            self.floor = unit.floor
+            self.selling_price = unit.selling_price
+            self.building_type_id = unit.building_type_id
+            self.address = unit.address
+            self.building_status_id = unit.building_status_id
+            # self.building_unit_area = unit.building_unit_area
+            self.building_id = unit.building_id.id
+            self.primary_address = unit.building_id.address or unit.address
+        else:
+            self.unit_code = False
+            self.floor = False
+            self.selling_price = False
+            self.building_type_id = False
+            self.address = False
+            self.building_status_id = False
+            # self.building_unit_area = False
+            self.building_id = False
+            self.primary_address = False
+        
     @api.depends('loan_line_rs_own_ids')
     def _compute_invoice_count(self):
         for rec in self:
@@ -533,18 +644,32 @@ class OwnershipContract(models.Model):
             },
         }
 
-    @api.model 
-    @api.model_create_multi
-    def create(self, vals, vals_list):
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     for vals in vals_list:
+    #         if vals.get('building_unit_id') and not vals.get('building_id'):
+    #             unit = self.env['product.template'].browse(vals['building_unit_id'])
+    #             vals['building_id'] = unit.building_id.id
+    #         vals['name'] = self.env['ir.sequence'].next_by_code('ownership.contract')
+    #     records = super().create(vals_list)
+    #     for rec in records.filtered('contract_template_id'):
+    #         rec.generated_html = rec._render_contract_html()
+    #     return records
+
+    @api.model
+    def create(self, vals):
         if vals.get('building_unit_id') and not vals.get('building_id'):
             unit = self.env['product.template'].browse(vals['building_unit_id'])
             vals['building_id'] = unit.building_id.id
         vals['name'] = self.env['ir.sequence'].next_by_code('ownership.contract')
-        new_id = super(OwnershipContract, self).create(vals)
-        records = super().create(vals_list)
-        for rec in records.filtered("contract_template_id"):
-            rec.generated_html = rec._render_contract_html()
-        return records, new_id
+        record = super().create(vals)
+
+        if record.commission_release_policy == 'on_payment':
+            record._sync_installment_commissions()
+
+        if record.contract_template_id:
+            record.generated_html = record._render_contract_html()
+        return record
 
     def unit_status(self):
         return self.building_unit_id.state
@@ -555,6 +680,10 @@ class OwnershipContract(models.Model):
             vals['building_id'] = unit.building_id.id
         self._check_penalty_rules()
         res = super().write(vals)
+
+        if vals.get('commission_release_policy') == 'on_payment':
+            self._sync_installment_commissions()
+
         trigger_fields = {
             "partner_id",
             "company_id",
@@ -577,9 +706,9 @@ class OwnershipContract(models.Model):
         
 
     def _check_penalty_rules(self):
-        rules = self.env['ownership.term.penalty.rule'].search([('ownership_contract_id', 'in', self.ids)])
+        rules = self.env['term.penalty.rule'].search([('contract_id', 'in', self.ids)])
         for rule in rules:
-            rule._matches_contract_domain(rule.ownership_contract_id)
+            rule._matches_contract_domain(rule.contract_id)
 
     def action_confirm(self):
         for rec in self:
@@ -597,8 +726,8 @@ class OwnershipContract(models.Model):
                         rec.state = 'confirmed'
             rec.loan_line_rs_own_ids.action_refresh_eligibility()
 
-            if rec.commission_release_policy == 'on_confirm' and rec.commission_percent:
-                self.commission_paid_amount = (rec.amount_total * rec.commission_percent) / 100.0
+            # if rec.commission_release_policy == 'on_confirm' and rec.commission_percent:
+            #     self.commission_paid_amount = (rec.amount_total * rec.commission_percent) / 100.0
                 # responsible_user = rec.user_id.id if hasattr(rec, 'user_id') and rec.user_id else self.env.user.id
                 # self.env['salesperson.commission.line'].create({
                 #     'amount': calculated_commission,
@@ -956,33 +1085,6 @@ class OwnershipContract(models.Model):
                 and contract.trigger_policy == 'auto_invoice'
             ):
                 line.make_invoice(post=False)
-
-    @api.depends('commission_percent', 'amount_total')
-    def _compute_commission_paid_amount(self):
-        for contract in self:
-            commission_lines = self.env['salesperson.commission.line'].search([
-                ('contract_id', '=', contract.id),
-                ('state', '!=', 'cancelled')
-            ])
-            contract.commission_paid_amount = sum(commission_lines.mapped('amount'))
-    def get_commission_paid(self, amount, payment_date, payment_id=False):
-        self.ensure_one()
-        if not self.commission_percent or self.commission_release_policy != 'on_payment':
-            return False
-        self.commission_paid_amount = (amount * self.commission_percent) / 100.0
-        # responsible_user = self.user_id.id if hasattr(self, 'user_id') and self.user_id else self.env.user.id
-        return self.env['salesperson.commission.line'].create({
-            'amount': self.commission_paid_amount,
-            'amount_base': amount, 
-            'commission_percent': self.commission_percent,
-            'contract_id': self.id,
-            'payment_id': payment_id,
-            'release_date': payment_date or fields.Date.today(),
-            'state': 'earned',
-            'user_id': self.sales_person_id,
-            'company_id': self.company_id.id if hasattr(self, 'company_id') and self.company_id else self.env.company.id,
-            'note': _('Released on customer payment'),
-        })
 
     def action_import_child_records(self):
         self.ensure_one()

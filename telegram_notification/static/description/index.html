@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Telegram Notification Center</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #243447;
+            background: #ffffff;
+        }
+        .wrap {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 32px 24px 48px;
+        }
+        h1 {
+            margin: 0 0 12px;
+            font-size: 32px;
+        }
+        p {
+            line-height: 1.6;
+            margin: 0 0 16px;
+        }
+        ul {
+            margin: 0 0 16px 20px;
+            padding: 0;
+        }
+        li {
+            margin: 0 0 8px;
+        }
+        .hero {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 24px;
+            align-items: start;
+            margin-bottom: 28px;
+        }
+        .card {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            background: #fafafa;
+        }
+        .cover {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            display: block;
+        }
+        .badge {
+            display: inline-block;
+            background: #0f766e;
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+        @media (max-width: 800px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="hero">
+            <div class="card">
+                <span class="badge">Odoo 19 Community</span>
+                <h1>Telegram Notification Center</h1>
+                <p>
+                    Send Telegram alerts for important Odoo events so your team can react faster to sales,
+                    purchases, invoices, stock changes, CRM activity, and attendance issues.
+                </p>
+                <ul>
+                    <li>Sale order notifications</li>
+                    <li>Purchase order notifications</li>
+                    <li>Invoice payment alerts</li>
+                    <li>Scheduled due invoice reminders</li>
+                    <li>Low stock alerts</li>
+                    <li>CRM lead assignment notifications</li>
+                    <li>Attendance alerts</li>
+                </ul>
+            </div>
+            <div class="card">
+                <img class="cover" src="cover.png" alt="Telegram Notification Center cover">
+            </div>
+        </div>
+        <div class="card">
+            <h2>Setup</h2>
+            <p>Configure your bot token, chat ID, and notification threshold from Odoo settings after installing the module.</p>
+        </div>
+    </div>
+</body>
+</html>

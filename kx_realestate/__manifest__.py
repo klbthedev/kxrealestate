@@ -46,6 +46,8 @@
         'views/building_images_views.xml',
         'views/building_views.xml',
         'views/site_views.xml',
+        'views/site_city_views.xml',
+        'views/site_region_views.xml',
         'views/block_views.xml',
         'views/floor_views.xml',
         'views/floor_stage_views.xml',
@@ -69,6 +71,7 @@
         # 'views/my_dashboard_views.xml',
         'views/dashboard_action.xml',
         'views/warning_letter_level_views.xml',
+        'views/contract_maker_views.xml',
         
         # for report
         'views/wizard_views.xml',
@@ -79,6 +82,12 @@
         'views/contract_article_views.xml',
         'views/contract_clause_views.xml',
         'views/contract_variable_views.xml',
+
+        'views/dashboard_card_handover_ready_views.xml',
+        'views/dashboard_card_handovered_units_views.xml',
+        'views/site_region_views.xml',
+        'views/site_city_views.xml',
+
 
         # 'views/component_views.xml',
         'wizard/owner_account_views.xml',
@@ -122,6 +131,9 @@
             "kx_realestate/static/src/dashboard/dashboard.xml",
             "kx_realestate/static/src/scss/dashboard.scss",
         ],
+        "web.report_assets_common": [
+            "kx_realestate/static/src/css/report_fonts.css",
+        ],
     },
     'price': 299.99,
     'currency': 'USD',
@@ -135,3 +147,11 @@
     # },
     'images': ['static/description/real_estate.gif'],
 }
+
+# telegram bot 
+# penality
+# remove payment term days fro date. - - -
+# check unit total - - - 
+# change name to origin in contract maker pdf and ownership contract - - - 
+# add selling price computed field in contract maker - - - 
+# 

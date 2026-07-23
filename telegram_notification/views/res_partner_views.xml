@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_partner_form_telegram_notification" model="ir.ui.view">
+        <field name="name">res.partner.form.telegram.notification</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//page[@name='sales_purchases']" position="after">
+
+                <page string="Telegram">
+
+                    <group>
+                        <group>
+
+                            <field name="telegram_notifications_enabled"/>
+
+                            <field name="telegram_chat_id"/>
+
+                            <button
+                                name="action_send_test_telegram_message"
+                                type="object"
+                                string="Send Test Message"
+                                class="btn-primary"
+                                icon="fa-paper-plane"
+                                invisible="not telegram_notifications_enabled or not telegram_chat_id"/>
+
+                        </group>
+
+                    </group>
+
+                </page>
+
+            </xpath>
+
+        </field>
+
+    </record>
+
+</odoo>
+

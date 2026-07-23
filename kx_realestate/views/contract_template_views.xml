@@ -91,6 +91,7 @@
                         </div>
                         <group>
                             <group>
+                                <field name="type"/>
                                 <field name="code"/>
                                 <field name="version"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
@@ -101,7 +102,7 @@
                         </group>
                         <field name="description" placeholder="Internal description of this template..."/>
                         <notebook>
-                            <page string="Articles" name="articles">
+                            <!-- <page string="Articles" name="articles">
                                 <field name="article_ids">
                                     <list editable="bottom">
                                         <field name="sequence" widget="handle"/>
@@ -110,10 +111,90 @@
                                         <field name="active" widget="boolean_toggle"/>
                                     </list>
                                 </field>
+                            </page> -->
+                            <page string="Articles" name="articles">
+                                <field name="article_ids">
+                                    <!--context="{'default_template_id': id}"
+                                    mode="list,form"
+                                     form_view_ref="kx_realestate.view_contract_article_form"> -->
+                                    <list editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="template_id" invisible="context.get('default_template_id')"/>
+                                        <field name="name"/>
+                                        <field name="description"/>
+                                        <field name="active" widget="boolean_toggle"/>
+                                    </list>
+                                    <!-- <form>
+                                        <group>
+                                            <field name="template_id" invisible="context.get('default_template_id')"/>
+                                            <field name="name"/>
+                                            <field name="sequence"/>
+                                            <field name="active"/>
+                                        </group>
+
+                                        <field name="description"/>
+
+                                        <notebook>
+                                            <page string="Clauses">
+                                                <field name="clause_ids"
+                                                    context="{'default_article_id': id}"
+                                                    mode="list,form">
+                                                    <list >
+                                                        <field name="sequence" widget="handle"/>
+                                                        <field name="name"/>
+                                                        <field name="mandatory"/>
+                                                        <field name="active" widget="boolean_toggle"/>
+                                                    </list>
+
+                                                    <form>
+                                                        <group>
+                                                            <field name="article_id"
+                                                                invisible="context.get('default_article_id')"/>
+                                                            <field name="name"/>
+                                                            <field name="sequence"/>
+                                                            <field name="mandatory"/>
+                                                            <field name="active"/>
+                                                        </group>
+
+                                                        <separator string="Clause Body"/>
+                                                        <field name="body"
+                                                            widget="html"
+                                                            options="{'style-inline': true}"
+                                                            placeholder="Example: {{CustomerName}}, {{BuildingAddress}}, {{CompanyVAT}}"/>
+                                                    </form>
+                                                </field>
+                                            </page>
+                                        </notebook>
+                                    </form> -->
+                                </field>
+                            </page>
+                            <page string="Clauses" name="clauses">
+                                <field name="clause_ids" mode="list,form">
+                                    <list>
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="article_id"/>
+                                        <field name="name"/>
+                                        <field name="mandatory"/>
+                                        <field name="active" widget="boolean_toggle"/>
+                                    </list>
+                                    <form>
+                                        <group>
+                                            <field name="article_id"/>
+                                            <field name="name"/>
+                                            <field name="sequence"/>
+                                            <field name="mandatory"/>
+                                            <field name="active"/>
+                                        </group>
+                                        <separator string="Clause Body"/>
+                                        <field name="body"
+                                            widget="html"
+                                            options="{'style-inline': true}"/>
+                                    </form>
+                                </field>
                             </page>
                             <page string="Variables" name="variables">
                                 <field name="variable_ids">
-                                    <list editable="bottom">
+                                    <list >
                                         <field name="sequence"/>
                                         <field name="name"/>
                                         <field name="code"/>

@@ -11,11 +11,21 @@ class RealEstateSite(models.Model):
     building_ids = fields.One2many('building.building', 'site_id', string='Buildings')
     code = fields.Char(string='Code', tracking=True, readonly=True)
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
-    country_id = fields.Many2one('res.country', required=True)
-    state_id = fields.Many2one('res.country.state', required=True)
-    city = fields.Char(string="City")
+    
+    site_region_id  = fields.Many2one("site.region", string="Region Name", required=True,)
+    city_id = fields.Many2one("site.city", string="City Name", required=True, domain="[('region_id', '=', site_region_id)]",)
+
     name = fields.Char(required=True, tracking=True)
     ####################################################################
+    
+    # remove city field content when region field changed
+    @api.onchange("site_region_id")
+    def _onchange_site_region_id(self):
+        self.city_id = False
+        if self.city_id and self.city_id.region_id != self.region_id:
+            self.city_id = False
+    
+    ####################################################################    
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:

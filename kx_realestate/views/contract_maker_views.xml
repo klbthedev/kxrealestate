@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_contract_maker_tree" model="ir.ui.view">
+        <field name="name">contract.maker.tree</field>
+        <field name="model">contract.maker</field>
+        <field name="arch" type="xml">
+            <list string="Contract Preparation" default_group_by="contract_maker_type">
+                <!-- <field name="name"/> -->
+                <field name="origin" string="Contract Reference No." readonly="state != 'draft'"/>
+                <field name="partner_id" string="Customer" readonly="state != 'draft'"/>
+                <field name="building_id" domain="[('block_id', '=', block_id)]" options="{'no_create': True}" readonly="state != 'draft'"/>
+                <field name="floor_id" domain="[('building_id', '=', building_id)]" options="{'no_create': True}" readonly="state != 'draft'"/>
+                <field name="building_unit_id" options="{'no_create': True}" domain="[('is_property', '=', True), ('state','=','free'), ('floor_id', '=', floor_id), ('building_id', '=', building_id), ('block_id', '=', block_id), ('site_id', '=', site_id)]" readonly="state != 'draft'"/>
+                <field name="state" />
+
+            </list>
+        </field>
+    </record>
+
+    <record id="view_contract_maker_form" model="ir.ui.view">
+        <field name="name">contract.maker.form</field>
+        <field name="model">contract.maker</field>
+        <field name="arch" type="xml">
+            <form string="Contract Maker">
+                <header>
+                    <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" invisible="state == 'confirmed'" />
+                    <button name="action_reset_to_draft" string="Reset to draft" type="object" class="oe_highlight" invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Customer Details">
+                            <field name="name"/>
+                            <field name="origin" string="Contract Reference No." readonly="state != 'draft'"/>
+                            <field name="contract_maker_type" string="Contract Type" readonly="state != 'draft'"/>
+                            <field name="contract_template_id" string="Contract Template" readonly="state != 'draft'"/>
+                            <field name="user_id" widget="many2one_avatar_user" readonly="state != 'draft'"/>
+                            <field name="partner_id" widget="many2one_avatar" readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Property Info">
+                            <field name="site_id" domain="[]" options="{'no_create': True}" readonly="state != 'draft'"/>
+                            <field name="block_id" domain="[('site_id', '=', site_id)]" options="{'no_create': True}" readonly="state != 'draft'"/>
+                            <field name="building_id" domain="[('block_id', '=', block_id)]" options="{'no_create': True}" readonly="state != 'draft'"/>
+                            <field name="floor_id" domain="[('building_id', '=', building_id)]" options="{'no_create': True}" readonly="state != 'draft'"/>
+                            <field name="building_unit_id" options="{'no_create': True}" domain="[('is_property', '=', True), ('state','=','free'), ('floor_id', '=', floor_id), ('building_id', '=', building_id), ('block_id', '=', block_id), ('site_id', '=', site_id)]" readonly="state != 'draft'"/>
+                            <field name="selling_price" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+                    <separator/>
+
+
+                    <notebook>
+                        <!-- Installments Tab -->
+                        <page string="Installments">
+                            <field name="installment_line_ids" readonly="state != 'draft'">
+                                <list string="Installments" delete="1" editable="bottom">
+                                    <field name="number"/>
+                                    <field name="trigger_type"/>
+                                    <field name="date" readonly="trigger_type == 'construction'"/>                                    
+                                    <field name="trigger_level" optional="show" readonly="trigger_type == 'date'"/>
+                                    <field name="trigger_building_type_id" column_invisible="True" readonly="trigger_type == 'date'"/>
+                                    <field name="progress_building_stage_id" optional="show" string="Building Stage" invisible="trigger_level != 'building'" readonly="trigger_type == 'date'"/>
+                                    <field name="progress_floor_stage_id" optional="show" string="Floor Stage" invisible="trigger_level != 'floor'" readonly="trigger_type == 'date'"/>
+                                    <field name="selected_floor_id" string="Floor #" readonly="trigger_type == 'date'"/>
+                                    <field name="progress_unit_stage_id" optional="show" string="Unit Stage" invisible="trigger_level != 'unit'" readonly="trigger_type == 'date'"/>
+                                    <field name="discount_percent" optional="show"/>
+                                    <field name="amount" required="1"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <!-- Handover Checklist Tab -->
+                        <page string="Hand Over Checklist">
+                            <field name="handover_ids" readonly="state != 'draft'">
+                                <list string="Hand Over Checklist" delete="1" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="checklist_type"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <!-- Terms & Penalty Rules Tab (Triggers custom form view popup) -->
+                        <page string="Terms and Penalty Rules">
+                            <field name="penality_ids" 
+                                   readonly="state != 'draft'"
+                                   context="{'form_view_ref': 'kx_realestate.ownership_term_penalty_rule_form_view'}">
+                                <list string="Terms and Penalty Rules"  delete="1">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="clause_ref"/>
+                                    <field name="rule_text"/>
+                                    <field name="applies_to"/>
+                                    <field name="action_type"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Contract">
+                            <group>
+                                <field name="contract_template_id"/>
+                                <button
+                                    name="action_print_contract"
+                                    type="object"
+                                    string="Print"/>
+                                <button name="action_rerender_contract"
+                                    type="object"
+                                    string="Re-render"
+                                    class="btn-primary"/>
+                            </group>
+                            <separator string="Preview"/>
+                            <field
+                                name="generated_html"
+                                widget="html"
+                                nolabel="1"
+                                readonly="1"/>
+                        </page>
+                        <page string="Articles">
+                            <field name="article_ids">
+                                <list editable="bottom"  delete="1">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="clause_count" readonly="1"/>
+                                    <field name="active"/>
+                                </list>
+
+                                <form>
+                                    <sheet>
+                                        <group>
+                                            <field name="sequence"/>
+                                            <field name="name"/>
+                                            <field name="description"/>
+                                            <field name="active"/>
+                                        </group>
+
+                                        <notebook>
+                                            <page string="Clauses">
+                                                <field name="clause_ids">
+                                                    <list editable="bottom">
+                                                        <field name="sequence" widget="handle"/>
+                                                        <field name="name"/>
+                                                        <field name="mandatory"/>
+                                                        <field name="active"/>
+                                                    </list>
+
+                                                    <form>
+                                                        <sheet>
+                                                            <group>
+                                                                <field name="sequence"/>
+                                                                <field name="name"/>
+                                                                <field name="mandatory"/>
+                                                                <field name="active"/>
+                                                            </group>
+
+                                                            <group>
+                                                                <field name="body"/>
+                                                            </group>
+                                                        </sheet>
+                                                    </form>
+
+                                                </field>
+                                            </page>
+                                        </notebook>
+
+                                    </sheet>
+                                </form>
+
+                            </field>
+                        </page>
+                        <!-- Optional -->
+                        <page string="Clauses">
+                            <field name="clause_ids">
+                                <list  delete="1">
+                                    <field name="sequence"/>
+                                    <field name="article_id"/>
+                                    <field name="name"/>
+                                    <field name="mandatory"/>
+                                    <field name="active"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <!-- Variables -->
+                        <page string="Variables">
+                            <field name="variable_ids">
+                                <list editable="bottom"  delete="1">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="model_id"/>
+                                    <field name="field_id"/>
+                                    <field name="required"/>
+                                    <field name="active"/>
+                                </list>
+
+                                <form>
+                                    <sheet>
+                                        <group>
+                                            <field name="sequence"/>
+                                            <field name="name"/>
+                                            <field name="code"/>
+                                            <field name="description"/>
+                                        </group>
+
+                                        <group>
+                                            <field name="model_id"/>
+                                            <field name="field_id"/>
+                                            <field name="example_value"/>
+                                        </group>
+
+                                        <group>
+                                            <field name="required"/>
+                                            <field name="active"/>
+                                        </group>
+                                    </sheet>
+                                </form>
+
+                            </field>
+                        </page>
+                        <page string="Amendments" invisible="is_amendment">
+                            <group>
+                                <group>
+                                    <field name="amendment_count" readonly="1"/>
+                                </group>
+                            </group>
+
+                            <field name="amendment_ids" nolabel="1" editable="1">
+                                <list domain="[('contract_maker_type', '=', 'amendment')]">
+                                    <field name="amendment_no"/>
+                                    <field name="name"/>
+                                    <field name="state"/>
+                                    <field name="user_id"/>
+                                    <field name="partner_id"/>
+                                    <field name="create_date"/>
+                                </list>
+                            </field>
+                        </page>
+
+                    
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ownership_term_penalty_rule_form_view" model="ir.ui.view">
+        <field name="name">term.penalty.rule.form</field>
+        <field name="model">term.penalty.rule</field>
+        <field name="arch" type="xml">
+            <form string="Term Penalty Rule">
+                <sheet>
+                    <group>
+                        <group string="Rule Basics">
+                            <field name="sequence" invisible="1"/>
+                            <field name="clause_ref"/>
+                            <field name="rule_text" placeholder="e.g. Late payment penalty details..."/>
+                        </group>
+                        <group string="Targeting">
+                            <field name="applies_to"/>
+                            <field name="action_type"/>
+                        </group>
+                    </group>
+                    <group string="Dynamic Condition Logic">
+                        <group>
+                            <!-- Hide model_id as it defaults to 'ownership.contract' -->
+                            <field name="model_id" invisible="1"/>
+                            <field name="model_field_id" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="condition_operator"/>
+                            <field name="condition_value" placeholder="Value to match"/>
+                        </group>
+                        <group>
+                            <field name="logic_joiner"/>
+                            <field name="condition_domain" groups="base.group_no_one"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Window Action -->
+    <record id="action_contract_maker" model="ir.actions.act_window">
+        <field name="name">Contract Preparation</field>
+        <field name="res_model">contract.maker</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Contract Maker record.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem
+        id="menu_contract_maker"
+        name="Contract Preparation"
+        parent="menu_contracts_main"
+        action="action_contract_maker"
+        sequence="1"/>
+
+</odoo>

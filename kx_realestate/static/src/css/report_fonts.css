@@ -1,0 +1,14 @@
+@font-face {
+    font-family: "NotoSansEthiopic";
+    src: url("/kx_realestate/static/src/fonts/NotoSansEthiopic-Regular.ttf") format("truetype");
+}
+
+* {
+    font-family: "NotoSansEthiopic" !important;
+}
+.page {
+    margin-top: -40px !important;
+}
+.ethiopic-report {
+    padding-top: 0 !important;
+}

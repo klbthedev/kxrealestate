@@ -28,6 +28,8 @@ from . import ownership_contract_lines
 from . import property_image
 from . import res_users
 from . import site
+from . import site_city
+from . import site_region
 # from . import res_partner
 from . import res_config_settings
 from . import salesperson_commission
