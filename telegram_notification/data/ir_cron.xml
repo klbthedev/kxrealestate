@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_tnc_payment_due" model="ir.cron">
+        <field name="name">Telegram: Payment Due Alerts</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_notify_payment_due()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="ir_cron_tnc_stock_low" model="ir.cron">
+        <field name="name">Telegram: Low Stock Alerts</field>
+        <field name="model_id" ref="stock.model_stock_quant"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_notify_low_stock()</field>
+        <field name="interval_number">6</field>
+        <field name="interval_type">hours</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="ir_cron_tnc_attendance" model="ir.cron">
+        <field name="name">Telegram: Attendance Alerts</field>
+        <field name="model_id" ref="hr_attendance.model_hr_attendance"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_notify_attendance_alerts()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active">True</field>
+    </record>
+</odoo>

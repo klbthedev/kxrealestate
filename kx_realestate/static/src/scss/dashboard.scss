@@ -60,10 +60,14 @@
     color: white;
     border: 1px solid #643F49;
     transition: all 0.2s ease;
+    // cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .dashboard-card:hover {
     background: #643F49;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
 }
 
 .dashboard-table thead th {
@@ -78,3 +82,13 @@
 .dashboard-table tbody tr:hover {
     background: #E8D9DD;
 }
+
+// .dashboard-card {
+//     cursor: pointer;
+//     transition: transform 0.15s ease, box-shadow 0.15s ease;
+// }
+
+// .dashboard-card:hover {
+//     transform: translateY(-2px);
+//     box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+// }

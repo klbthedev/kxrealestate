@@ -48,5 +48,5 @@
     <menuitem id="menu_res_partners_owners"
             action="action_partner_form_owner"
             parent="menu_kx_real_estate"
-            sequence="100"/>
+            sequence="10"/>
 </odoo>

@@ -12,14 +12,15 @@
                 <field name="contract_id"/>
                 <field name="installment_id" optional="hide"/>
                 <field name="payment_id" optional="hide"/>
+                <field name="commission_release_policy" optional="show"/>
                 <field name="amount_base"/>
                 <field name="commission_percent"/>
                 <field name="amount" sum="Total Commission"/>
-                <field name="state" 
-                       widget="badge" 
-                       decoration-info="state == 'pending'" 
-                       decoration-success="state in ('earned', 'paid')" 
-                       decoration-danger="state == 'cancelled'"/>
+                
+                <field name="vendor_bill_id"/>
+                <field name="vendor_bill_state" widget="badge" 
+                       decoration-info="vendor_bill_state == 'draft'"
+                       decoration-success="vendor_bill_state == 'posted'"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
             </list>
         </field>
@@ -31,35 +32,97 @@
         <field name="arch" type="xml">
             <form string="Salesperson Commission Line">
                 <header>
-                    <field name="state" widget="statusbar" statusbar_visible="pending,earned,paid,cancelled"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,cancelled"/>
+                    <button name="action_confirm"
+                            type="object"
+                            string="Confirm"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_set_to_draft"
+                            type="object"
+                            string="Reset to Draft"
+                            invisible="state != 'confirmed' or vendor_bill_id"/>
+                    <button name="action_cancel"
+                            type="object"
+                            string="Cancel"
+                            class="btn-secondary"
+                            invisible="state == 'cancelled' or vendor_bill_id"/>
+                    <button name="action_create_vendor_bill"
+                            type="object"
+                            string="Create Vendor Bill"
+                            class="btn-primary"
+                            invisible="state != 'confirmed' or vendor_bill_id"/>
+
                 </header>
                 <sheet>
+                    <!-- Smart Button Container -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_vendor_bill"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-pencil-square-o"
+                                invisible="vendor_bill_count == 0">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="vendor_bill_count"/>
+                                </span>
+                                <span class="o_stat_text">Vendor Bill(s)</span>
+                            </div>
+                        </button>
+                    </div>
+
                     <group>
-                        <group name="salesperson_info" string="Sales Details">
+                        <group name="salesperson_info" string="Sales Details" readonly="state != 'draft'">
                             <!-- <field name="user_id" widget="many2one_avatar_user"/> -->
-                            <field name="sales_person"/>
+                            <field name="sales_person" readonly="vendor_bill_id != False"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="parent_commission_id" invisible="1"/>
                         </group>
-                        <group name="dates_info" string="Schedule">
+                        <group name="dates_info" string="Schedule" readonly="state != 'draft'">
                             <field name="release_date"/>
                         </group>
                     </group>
+                    
                     <group>
-                        <group name="financials" string="Calculations">
-                            <field name="amount_base"/>
+                        <group name="financials" string="Calculations" readonly="state != 'draft'">
+                            <field name="existing_contract_ids" invisible="1"/>
+                            <field name="contract_id" readonly="vendor_bill_id != False or parent_commission_id != False" domain="[('id', 'not in', existing_contract_ids)]"/>
+
+                            <field name="amount_base" readonly="vendor_bill_id != False or parent_commission_id != False"/>
                             <label for="commission_percent"/>
                             <div class="o_row">
-                                <field name="commission_percent"/>
-                                <span>%%</span>
+                                <field name="commission_percent" readonly="vendor_bill_id != False or parent_commission_id != False"/>
+                                <span>%</span>
                             </div>
-                            <field name="amount"/>
+                            <field name="commission_release_policy" readonly="vendor_bill_id != False or parent_commission_id != False"/>
+                            
+                            <field name="amount" readonly="vendor_bill_id != False or parent_commission_id != False"/>
                         </group>
-                        <group name="relations" string="References">
-                            <field name="contract_id"/>
-                            <field name="installment_id"/>
-                            <field name="payment_id"/>
-                        </group>
+                        
                     </group>
+
+                    <!-- Installments Notebook Tab (displays if policy is per installment payment) -->
+                    <notebook invisible="commission_release_policy != 'on_payment' or parent_commission_id != False">
+                        <page string="Installment Commissions" name="installments">
+                            <field name="installment_commission_ids" mode="list" readonly="1">
+                                <list string="Installments" create="0" delete="0" edit="0">
+                                    <field name="installment_id"/>
+                                    <field name="amount_base" string="Installment Base"/>
+                                    <field name="commission_percent"/>
+                                    <field name="amount" string="Commission Amount" sum="Total Installment Commissions"/>
+
+                                    <button name="action_create_vendor_bill" 
+                                            string="Create Vendor Bill" 
+                                            type="object" 
+                                            class="oe_highlight custom_line" 
+                                            colspan="2"
+                                            invisible="vendor_bill_id != False"/>
+                                </list>
+                            </field>
+                            
+                        </page>
+                    </notebook>
+
                     <group name="notes" string="Internal Notes">
                         <field name="note" placeholder="Add any descriptive notes regarding this commission line here..." colspan="2" nolabel="1"/>
                     </group>
@@ -78,10 +141,6 @@
                 <field name="contract_id"/>
                 <field name="payment_id"/>
                 <field name="note"/>
-
-                <filter string="Pending" name="filter_pending" domain="[('state', '=', 'pending')]"/>
-                <filter string="Earned" name="filter_earned" domain="[('state', '=', 'earned')]"/>
-                <filter string="Paid" name="filter_paid" domain="[('state', '=', 'paid')]"/>
                 <separator/>
                 <filter string="Release Date" name="filter_release_date" date="release_date"/>
 
@@ -98,16 +157,17 @@
     </record>
 
     <record id="action_salesperson_commission_line" model="ir.actions.act_window">
-        <field name="name">salesperson.commission.line.action</field>
+        <field name="name">Salesperson Commission</field>
         <field name="res_model">salesperson.commission.line</field>
         <field name="view_mode">list,form,search</field>
         <!-- <search_view_id ref="view_salesperson_commission_line_search"/> -->
     </record>
 
     <menuitem id="menu_salesperson_commission_line" 
-              name="Commission Lines" 
-              parent="menu_settings" 
+              name="Commission" 
+              parent="menu_kx_real_estate" 
+              active='False'
               action="action_salesperson_commission_line" 
-              sequence="10"/>
+              sequence="40"/>
 
 </odoo>

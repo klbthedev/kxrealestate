@@ -3,16 +3,24 @@ access_realestate_building_building,access.realestate.building,model_building_bu
 access_building_attachment_line,access.building.attachment.line,model_building_attachment_line,group_units_structure,1,1,1,1
 access_unit_attachment_line,access.unit.attachment.line,model_unit_attachment_line,group_units_structure,1,1,1,1
 
-access_contract_item_category,contract.item.category,model_ownership_contract_item_category,,1,1,1,1
-access_contract_clause,contract.clause,model_ownership_contract_clause,,1,1,1,1
-access_contract_clause_item,contract.clause.item,model_ownership_contract_clause_item,,1,1,1,1
-access_contract_item,contract.item,model_ownership_contract_item,,1,1,1,1
+access_contract_maker_article_edit,contract.maker.article.edit,model_contract_maker_article,group_contract_edit,1,1,1,0
+access_contract_maker_clause_edit,contract.maker.clause.edit,model_contract_maker_clause,group_contract_edit,1,1,1,0
+access_contract_maker_variable_edit,contract.maker.variable.edit,model_contract_maker_variable,group_contract_edit,1,1,1,0
+
+access_ownership_handover_checklist_edit,ownership.handover.checklist.edit,model_ownership_handover_checklist,group_contract_edit,1,1,1,1
+access_ownership_handover_checklist,access.ownership.handover.checklist,model_ownership_handover_checklist,group_real_estate_admin,1,1,1,1
+
+access_handover_checklist_edit,handover.checklist.edit,model_handover_checklist,group_contract_edit,1,1,1,0
+access_term_penalty_rule_edit,term.penalty.rule.edit,model_term_penalty_rule,group_contract_edit,1,1,1,0
+access_contract_maker_edit,contract.maker.edit,model_contract_maker,group_contract_edit,1,1,1,0
+access_contract_maker_installment_edit,contract.maker.installment.edit,model_contract_maker_installment,group_contract_edit,1,1,1,1
 
 access_contract_article_edit,access.contract.article.edit,model_contract_article,group_contract_edit,1,1,1,0
 access_contract_clause_edit,access.contract.clause.edit,model_contract_clause,group_contract_edit,1,1,1,0
 access_contract_contract_edit,access.contract.contract.edit,model_contract_contract,group_contract_edit,1,1,1,0
 access_contract_template_edit,access.contract.template.edit,model_contract_template,group_contract_edit,1,1,1,0
 access_contract_variable_edit,access.contract.variable.edit,model_contract_variable,group_contract_edit,1,1,1,0
+
 access_contract_article_supervisor,access.contract.article.supervisor,model_contract_article,group_contract_supervisor,1,1,1,1
 access_contract_clause_supervisor,access.contract.clause.supervisor,model_contract_clause,group_contract_supervisor,1,1,1,1
 access_contract_contract_supervisor,access.contract.contract.supervisor,model_contract_contract,group_contract_supervisor,1,1,1,1
@@ -103,8 +111,6 @@ access_realestate_ir_rule,access.realestate.ir.rule,base.model_ir_rule,group_rea
 access_own_attachment_line,access.own.attachment.line,model_own_attachment_line,group_real_estate_admin,1,1,1,1
 access_ownership_buyer_responsibility,access.ownership.buyer.responsibility,model_ownership_buyer_responsibility,group_real_estate_admin,1,1,1,1
 access_ownership_seller_responsibility,access.ownership.seller.responsibility,model_ownership_seller_responsibility,group_real_estate_admin,1,1,1,1
-access_ownership_handover_checklist,access.ownership.handover.checklist,model_ownership_handover_checklist,group_real_estate_admin,1,1,1,1
-access_ownership_term_penalty_rule,access.ownership.term.penalty.rule,model_ownership_term_penalty_rule,group_real_estate_admin,1,1,1,1
 access_own_contract_admin,access.own.contract.admin,model_ownership_contract,group_real_estate_admin,1,1,1,1
 access_own_contract_manager,access.own.contract.manager,model_ownership_contract,group_ownership_rental_contracts,1,1,1,1
 

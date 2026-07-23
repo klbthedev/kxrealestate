@@ -1,23 +1,229 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <odoo>
-
+    <!-- Ownership Contract Print -->
+    <record id="ownership_contract_paperformat" model="report.paperformat">
+        <field name="name">Ownership Contract Paper</field>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">5</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+    </record>
     <record id="action_report_ownership_contract" model="ir.actions.report">
         <field name="name">Ownership Contract</field>
         <field name="model">ownership.contract</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">kx_realestate.ownership_contract_template</field>
         <field name="report_file">kx_realestate.ownership_contract_template</field>
+        <field name="paperformat_id" ref="kx_realestate.ownership_contract_paperformat"/>
         <field name="binding_model_id" ref="model_ownership_contract"/>
         <field name="binding_type">report</field>
     </record>
-
-
     <template id="ownership_contract_template">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="doc">
-                <t t-call="web.external_layout">
-                    <div class="page">
+                <t t-call="web.basic_layout">
+
+                    <style>
+                        @font-face {
+                            font-family: "NotoSansEthiopic";
+                            src: url("/kx_realestate/static/src/fonts/NotoSansEthiopic-Regular.ttf");
+                        }
+
+                        .ethiopic-report,
+                        .ethiopic-report * {
+                            font-family: "NotoSansEthiopic" !important;
+                        }
+
+                        .cover-page {
+                            text-align: center;
+                            height: 100%;
+                        }
+
+                        .cover-page h1,
+                        .cover-page h2,
+                        .cover-page h3 {
+                            margin: 0;
+                        }
+
+                        .spacer {
+                            height: 80px;
+                        }
+
+                        .contract-info {
+                            margin-top: 120px;
+                            width: 100%;
+                            font-size: 18px;
+                        }
+
+                        .contract-info table {
+                            margin: auto;
+                        }
+
+                        .contract-info td {
+                            padding: 12px 20px;
+                            text-align: left;
+                        }
+                    </style>
+
+                    <!-- Cover Page -->
+                    <div class="page ethiopic-report">
+                        <div class="cover-page">
+
+                            <div class="spacer"></div>
+                            <div style="height:180px;"></div>
+
+
+                            <h1>ፓልም ሪል እስቴት ኃ/የተ/የግ/ማህበር</h1>
+
+                            <div style="height:180px;"></div>
+
+                            <h3>የአፓርትመንት ግንባታ እና ሽያጭ ውል</h3>
+
+                            <div style="height:180px;"></div>
+
+                            <div class="contract-info">
+                                <table>
+                                    <tr>
+                                        <td><strong>የውል ቁጥር፡</strong></td>
+                                        <td>
+                                            <span t-field="doc.origin"/>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><strong>ቀን፡ Date:-</strong></td>
+                                        <td>
+                                            <span t-field="doc.create_date"/>
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div style="page-break-before: always;"></div>
+
+                    <!-- Contract Body -->
+                    <div class="page ethiopic-report">
+                        <h1 style="color:black; font-size:24px;">
+                            የቤት ሽያጭ ውል ስምምነት
+                        </h1>
+
+                        <div t-field="doc.generated_html"/>
+                    </div>
+
+                </t>
+            </t>
+        </t>
+    </template>
+
+
+    <!-- Contract Preparation Print -->
+    <record id="contract_preparation_paperformat" model="report.paperformat">
+        <field name="name">Contract Preparation Paper</field>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">5</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+    </record>
+    <record id="action_report_contract_preparation" model="ir.actions.report">
+        <field name="name">Contract Preparation</field>
+        <field name="model">contract.maker</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">kx_realestate.contract_preparation_template</field>
+        <field name="report_file">kx_realestate.contract_preparation_template</field>
+        <field name="paperformat_id" ref="kx_realestate.contract_preparation_paperformat"/>
+        <field name="binding_model_id" ref="model_contract_maker"/>
+        <field name="binding_type">report</field>
+    </record>
+    <template id="contract_preparation_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.basic_layout">
+                    <style>
+                        @font-face {
+                            font-family: "NotoSansEthiopic";
+                            src: url("/kx_realestate/static/src/fonts/NotoSansEthiopic-Regular.ttf");
+                        }
+
+                        .ethiopic-report,
+                        .ethiopic-report * {
+                            font-family: "NotoSansEthiopic" !important;
+                        }
+
+                        .cover-page {
+                            text-align: center;
+                            height: 100%;
+                        }
+
+                        .cover-page h1,
+                        .cover-page h2,
+                        .cover-page h3 {
+                            margin: 0;
+                        }
+
+                        .spacer {
+                            height: 80px;
+                        }
+
+                        .contract-info {
+                            margin-top: 120px;
+                            width: 100%;
+                            font-size: 18px;
+                        }
+
+                        .contract-info table {
+                            margin: auto;
+                        }
+
+                        .contract-info td {
+                            padding: 12px 20px;
+                            text-align: left;
+                        }
+                    </style>
+                    <!-- Cover Page -->
+                    <div class="page ethiopic-report">
+                        <div class="cover-page">
+                            <div class="spacer"></div>
+                            <div style="height:180px;"></div>
+                            <h1>ፓልም ሪል እስቴት ኃ/የተ/የግ/ማህበር</h1>
+                            <div style="height:180px;"></div>
+                            <h3>የአፓርትመንት ግንባታ እና ሽያጭ ውል</h3>
+                            <div style="height:180px;"></div>
+                            <div class="contract-info">
+                                <table>
+                                    <tr>
+                                        <td><strong>የውል ቁጥር፡</strong></td>
+                                        <td>
+                                            <span t-field="doc.origin"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>ቀን፡ Date:-</strong></td>
+                                        <td>
+                                            <span t-field="doc.create_date"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="page-break-before: always;"></div>
+
+                    <!-- Contract Body -->
+                    <div class="page ethiopic-report">
+                        <h1 style="color:black; font-size:24px;">
+                            የቤት ሽያጭ ውል ስምምነት
+                        </h1>
                         <div t-field="doc.generated_html"/>
                     </div>
                 </t>

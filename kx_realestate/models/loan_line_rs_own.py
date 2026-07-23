@@ -27,11 +27,14 @@ class AmountPayment(models.Model):
 class LoanLineRsOwn(models.Model):
     _name = 'loan.line.rs.own'
     _order = 'date, name'
+    _rec_name = 'number'
 
-    amount = fields.Float(string='Payment', digits='Product Price', group_operator="sum")
+    # amount = fields.Float(string='Payment', digits='Product Price', group_operator="sum")
+    contract_maker_id = fields.Many2one("contract.maker", string = "Contract Maker")
+
     original_amount = fields.Float(string='Original Amount', readonly=True)
     discount_percent = fields.Float(string='Discount (%)')
-    amount_residual = fields.Float(compute='_compute_amount_tracking', string='Balance', readonly=True, store=True, group_operator="sum")
+    # amount_residual = fields.Float(compute='_compute_amount_tracking', string='Balance', readonly=True, store=True, group_operator="sum")
     amount_type = fields.Selection([('fixed', 'Fixed'), ('percent', 'Percent')], default='fixed', required=True)
     amount_value = fields.Float(string='Configured Amount/Percent')
     auto_invoice = fields.Boolean(string='Auto Draft Invoice', default=True)
@@ -71,6 +74,37 @@ class LoanLineRsOwn(models.Model):
         # required=True,
     )
     trigger_building_type_id = fields.Many2one('building.type', compute='_compute_trigger_building_type_id')
+    amount = fields.Float(
+        string='Payment',
+        digits='Product Price',
+        group_operator="sum"
+    )
+
+    amount_residual = fields.Float(
+        compute='_compute_amount_tracking',
+        string='Balance',
+        readonly=True,
+        store=True,
+        group_operator="sum"
+    )
+
+    amount_collected = fields.Float(
+        compute='_compute_amount_tracking',
+        string='Amount Collected',
+        readonly=True,
+        store=True,
+        group_operator="sum"
+    )
+    # @api.depends('amount', 'amount_residual')
+    # def _compute_amount_tracking(self):
+    #     for line in self:
+    #         line.amount_collected = line.amount - line.amount_residual
+    @api.depends('amount', 'original_amount')
+    def _compute_amount_tracking(self):
+        for line in self:
+            # Your existing residual calculation logic here
+            line.amount_residual = line.original_amount - line.amount
+            line.amount_collected = line.amount - line.amount_residual
 
     @api.depends('loan_id.building_id.building_type_id', 'loan_id.building_unit_id.building_type_id', 'loan_id.building_type_id')
     def _compute_trigger_building_type_id(self):

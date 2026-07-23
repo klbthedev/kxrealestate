@@ -18,66 +18,100 @@
             <!-- Filtering  #########################################################################-->
 
             <div class="row mx-auto mb-5 pt-2" style="border-top:2px solid #643F49;">
-                <div class="col-md-5">
-                    <!-- <h3 class="mb-4">Part A</h3> -->
-                </div>
-                <div class="col-md-2">
-                    <div class="col">
-                        <Many2XAutocomplete
-                            resModel="'re.site'"
-                            value="state.site"
-                            update.bind="onSiteSelected"
-                            getDomain.bind="getSiteDomain"
-                            context="getContext()"
-                            activeActions="activeActions"
-                            fieldString="'Site'"
-                            isToMany="false"
-                            placeholder="'Select Site'"
-                        />
+                <div class="col-md-4"></div>
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-2">
+                            <div class="col">
+                                <Many2XAutocomplete
+                                    resModel="'site.region'"
+                                    value="state.region"
+                                    update.bind="onRegionSelected"
+                                    getDomain.bind="getRegionDomain"
+                                    context="getContext()"
+                                    activeActions="activeActions"
+                                    fieldString="'Region'"
+                                    isToMany="false"
+                                    placeholder="'Select Region'"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="col">
+                                <Many2XAutocomplete
+                                    resModel="'site.city'"
+                                    value="state.city"
+                                    update.bind="onCitySelected"
+                                    getDomain.bind="getCityDomain"
+                                    context="getContext()"
+                                    activeActions="activeActions"
+                                    fieldString="'City'"
+                                    isToMany="false"
+                                    placeholder="'Select City'"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="col">
+                                <Many2XAutocomplete
+                                    resModel="'re.site'"
+                                    value="state.site"
+                                    update.bind="onSiteSelected"
+                                    getDomain.bind="getSiteDomain"
+                                    context="getContext()"
+                                    activeActions="activeActions"
+                                    fieldString="'Site'"
+                                    isToMany="false"
+                                    placeholder="'Select Site'"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="col">
+                                <Many2XAutocomplete
+                                    resModel="'building.building'"
+                                    value="state.building"
+                                    update.bind="onBuildingSelected"
+                                    getDomain.bind="getBuildingDomain"
+                                    context="getContext()"
+                                    activeActions="activeActions"
+                                    fieldString="'Building'"
+                                    isToMany="false"
+                                    placeholder="'Select Building'"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="col">
+                                <Many2XAutocomplete
+                                    resModel="'re.floor'"
+                                    value="state.floor"
+                                    update.bind="onFloorSelected"
+                                    getDomain.bind="getFloorDomain"
+                                    context="getContext()"
+                                    activeActions="activeActions"
+                                    fieldString="'Floor'"
+                                    isToMany="false"
+                                    placeholder="'Select Floor'"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="row align-items-right">
+                                <button class="btn btn-sm" style="background-color: #643F49;color:white;" t-on-click="applyFilter">Filter</button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="col">
-                        <Many2XAutocomplete
-                            resModel="'building.building'"
-                            value="state.building"
-                            update.bind="onBuildingSelected"
-                            getDomain.bind="getBuildingDomain"
-                            context="getContext()"
-                            activeActions="activeActions"
-                            fieldString="'Building'"
-                            isToMany="false"
-                            placeholder="'Select Building'"
-                        />
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="col">
-                        <Many2XAutocomplete
-                            resModel="'re.floor'"
-                            value="state.floor"
-                            update.bind="onFloorSelected"
-                            getDomain.bind="getFloorDomain"
-                            context="getContext()"
-                            activeActions="activeActions"
-                            fieldString="'Floor'"
-                            isToMany="false"
-                            placeholder="'Select Floor'"
-                        />
-                    </div>
-                </div>
-                <div class="col-md-1">
-                    <div class="row align-items-right">
-                        <button class="btn btn-sm" style="background-color: #643F49;color:white;" t-on-click="applyFilter">Filter</button>
-                    </div>
-                </div>
+                </div>                
             </div>            
             
             <!-- ###################################################################################-->
             
             <div class="row mb-3 mt-2">
                 <div class="col-md-6">
-                    <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0">
+                    <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0; cursor: pointer;" 
+                        t-on-click="() => this.openTotalCollectedAmount()">
                         <div class="card-body pt-2 pb-0 text-center">
                             <div class="row text-white">
                                 <h2 style="text-color: #7A4E59">Total Collected Amount (ETB)</h2>
@@ -91,8 +125,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0">
+                <div class="col-md-6"> 
+                    <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0; cursor: pointer;" 
+                        t-on-click="() => this.openTotalRemainingAmount()">
                         <div class="card-body pt-2 pb-0 text-center">
                             <div class="row text-white">
                                 <h2 style="text-color: #7A4E59">Total Remaining Amount (ETB)</h2>
@@ -112,7 +147,8 @@
             
             <div class="row mb-5 my-3">
                 <div class="col-md-2">
-                    <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0">
+                    <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0; cursor: pointer;" 
+                        t-on-click="() => this.openAvailableProperties()">
                         <div class="card-body pt-1 pb-0 text-center">
                             <div class="row">
                                 <h6 class="mb-0 mt-0 px-0 px-0 small" style="text-color: #7A4E59">Total Available</h6>
@@ -130,7 +166,8 @@
                     </div>
                 </div>
                 <div class="col-md-2">
-                    <div class="card dashboard-card shadow-sm" style="background-color: #E6D8DC">
+                    <div class="card dashboard-card shadow-sm" style="background-color: #E6D8DC; cursor:pointer;" 
+                        t-on-click="() => this.openSoldProperties()">
                         <div class="card-body pt-1 pb-0 text-center">
                             <div class="row">
                                 <h6 class="mb-0 mt-0 px-0 small" style="text-color: #7A4E59">Total Sold</h6>
@@ -148,7 +185,8 @@
                     </div>
                 </div>
                 <div class="col-md-2">
-                    <div class="card dashboard-card shadow-sm" style="background-color: #E6D8DC">
+                    <div class="card dashboard-card shadow-sm" style="background-color: #E6D8DC; cursor:pointer;" 
+                        t-on-click="() => this.openReservedProperties()">
                         <div class="card-body pt-1 pb-0 text-center">
                             <div class="row">
                                 <h6 class="mb-0 mt-0 px-0 small" style="text-color: #7A4E59">Total Researved</h6>
@@ -166,7 +204,8 @@
                     </div>
                 </div>
                 <div class="col-md-2">
-                    <div class="card dashboard-card shadow-sm" style="background-color: #E6D8DC">
+                    <div class="card dashboard-card shadow-sm" style="background-color: #E6D8DC;"
+                        t-on-click="() => this.openHandoverReadyProperties()">
                         <div class="card-body pt-1 pb-0 text-center">
                             <div class="row pe-0">
                                 <h6 class="mb-0 mt-0 px-0 small" style="text-color: #7A4E59">Total Handover Ready</h6>
@@ -184,9 +223,10 @@
                     </div>
                 </div>
                 <div class="col-md-2">
-                    <div class="card dashboard-card shadow-sm" style="background-color: #E6D8DC">
+                    <div class="card dashboard-card shadow-sm" style="background-color: #E6D8DC;"
+                        t-on-click="() => this.openHandoveredPropertyUnits()">
                         <div class="card-body pt-1 pb-0 text-center">
-                            <div class="row">
+                            <div class="row pe-0">
                                 <h6 class="mb-0 mt-0 px-0 small" style="text-color: #7A4E59">Total Handovered</h6>
                             </div>
                             <div class="row">
@@ -202,7 +242,8 @@
                     </div>
                 </div>
                 <div class="col-md-2">
-                    <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0">
+                    <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0; cursor: pointer;" 
+                        t-on-click="() => this.openCanelledContracts()">                        
                         <div class="card-body pt-1 pb-0 text-center">
                             <div class="row">
                                 <h6 class="mb-0 mt-0 px-0 small" style="text-color: #7A4E59">Total Cancelled</h6>
@@ -220,164 +261,6 @@
                     </div>
                 </div>
             </div>
-
-
-            <!-- <div class="row mb-5 mt-5">
-                <div class="col-md-2"></div>
-                <div class="col-md-3">
-                    <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0">
-                        <div class="card-body pt-2 pb-0 text-center">
-                            <div class="row text-white">
-                                <h6 style="text-color: #7A4E59">Total Cancelled Contracts</h6>
-                            </div>
-                            <div class="row text-white">
-                                <h2 style="text-color: #7A4E59"><t t-esc="state.cancelled_contract_count"/></h2>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0">
-                        <div class="card-body pt-2 pb-0 text-center">
-                            <div class="row text-white">
-                                <h6 style="text-color: #7A4E59">Total Collected Amount (ETB)</h6>
-                            </div>
-                            <div class="row text-white">
-                                <h2 style="text-color: #7A4E59"><t t-esc="formatAmount(state.total_paid_amount)"/></h2>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0">
-                        <div class="card-body pt-2 pb-0 text-center">
-                            <div class="row">
-                                <h6 style="text-color: #7A4E59">Total Remaining Amount (ETB)</h6>
-                            </div>
-                            <div class="row">
-                                <h2 style="text-color: #7A4E59"><t t-esc="formatAmount(state.total_remaining_amount)"/></h2>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-1"></div>
-            </div> -->
-            
-            <!-- KPI Cards #########################################################################-->
-            
-            <!-- <div class="o_section_divider">
-                <span>Property Units</span>
-            </div>
-
-            <div class="row mb-5 mt-5">
-                <div class="col-md-2">
-                    <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0">
-                        <div class="card-body pt-2 pb-0 text-center">
-                            <div class="row">
-                                <h6 style="text-color: #7A4E59">Total Available Units</h6>
-                            </div>
-                            <div class="row">
-                                <h2 style="text-color: #7A4E59"><t t-esc="state.available_units_count"/></h2>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="card dashboard-card shadow-sm" style="background-color: #E6D8DC">
-                        <div class="card-body pt-2 pb-0 text-center">
-                            <div class="row">
-                                <h6 style="text-color: #7A4E59">Total Sold Units</h6>
-                            </div>
-                            <div class="row">
-                                <h2 style="text-color: #7A4E59"><t t-esc="state.sold_units_count"/></h2>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="card dashboard-card shadow-sm" style="background-color: #E6D8DC">
-                        <div class="card-body pt-2 pb-0 text-center">
-                            <div class="row">
-                                <h6 style="text-color: #7A4E59">Total Researved Units</h6>
-                            </div>
-                            <div class="row">
-                                <h2 style="text-color: #7A4E59"><t t-esc="state.blocked_units_count"/></h2>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card dashboard-card shadow-sm" style="background-color: #E6D8DC">
-                        <div class="card-body pt-2 pb-0 text-center">
-                            <div class="row pe-0">
-                                <h6 style="text-color: #7A4E59">Total Handover Ready Units</h6>
-                            </div>
-                            <div class="row">
-                                <h2 style="text-color: #7A4E59"><t t-esc="state.handover_ready_units"/></h2>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card dashboard-card shadow-sm" style="background-color: #E6D8DC">
-                        <div class="card-body pt-2 pb-0 text-center">
-                            <div class="row">
-                                <h6 style="text-color: #7A4E59">Total Handovered Units</h6>
-                            </div>
-                            <div class="row">
-                                <h2 style="text-color: #7A4E59"><t t-esc="state.handovered_units"/></h2>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>  -->
-
-            <!-- second card line -->
-
-            <!-- <div class="o_section_divider">
-                <span>Contract Payment Collection</span>
-            </div>
-
-            <div class="row mb-5 mt-5">
-                <div class="col-md-3">
-                    <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0">
-                        <div class="card-body pt-2 pb-0 text-center">
-                            <div class="row text-white">
-                                <h6 style="text-color: #7A4E59">Total Cancelled Contracts</h6>
-                            </div>
-                            <div class="row text-white">
-                                <h2 style="text-color: #7A4E59"><t t-esc="state.cancelled_contract_count"/></h2>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0">
-                        <div class="card-body pt-2 pb-0 text-center">
-                            <div class="row text-white">
-                                <h6 style="text-color: #7A4E59">Total Collected Amount (ETB)</h6>
-                            </div>
-                            <div class="row text-white">
-                                <h2 style="text-color: #7A4E59"><t t-esc="formatAmount(state.total_paid_amount)"/></h2>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card dashboard-card shadow-sm" style="background-color: #F5EEF0">
-                        <div class="card-body pt-2 pb-0 text-center">
-                            <div class="row">
-                                <h6 style="text-color: #7A4E59">Total Remaining Amount (ETB)</h6>
-                            </div>
-                            <div class="row">
-                                <h2 style="text-color: #7A4E59"><t t-esc="formatAmount(state.total_remaining_amount)"/></h2>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->      
-
-
 
             <!-- Installment Summary Table #####################################################-->
             
@@ -498,94 +381,108 @@
             <!-- General Summary Table ###################################################################-->
 
             <div class="row mx-auto mb-5 mt-5 pt-3" style="border-top:2px solid #643F49;">
-                <div class="col-md-1">
-                    <!-- <h3 class="mb-4">Part A</h3> -->
-                </div>
-                <!-- <div class="col-md-2">
-                    <div class="col-auto"><label class="mb-0 text-nowrap">Site</label></div>
-                    <div class="col">
-                        <select name="site_id_filter2" class="form-select form-control form-control-sm py-0" required="1">
-                            <option value="">All Sites</option>
-                        </select>
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-2">
+                            <div class="col-auto"><label class="mb-0 text-nowrap"></label></div>
+                            <div class="col">
+                                <Many2XAutocomplete
+                                    resModel="'site.region'"
+                                    value="state.region2"
+                                    update.bind="onRegionSelected2"
+                                    getDomain.bind="getRegionDomain2"
+                                    context="getContext2()"
+                                    activeActions="activeActions2"
+                                    fieldString="'Region'"
+                                    isToMany="false"
+                                    placeholder="'Region'"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="col-auto"><label class="mb-0 text-nowrap"></label></div>
+                            <div class="col">
+                                <Many2XAutocomplete
+                                    resModel="'site.city'"
+                                    value="state.city2"
+                                    update.bind="onCitySelected2"
+                                    getDomain.bind="getCityDomain2"
+                                    context="getContext2()"
+                                    activeActions="activeActions2"
+                                    fieldString="'City'"
+                                    isToMany="false"
+                                    placeholder="'City'"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="col-auto"><label class="mb-0 text-nowrap"></label></div>
+                            <div class="col">
+                                <Many2XAutocomplete
+                                    resModel="'re.site'"
+                                    value="state.site2"
+                                    update.bind="onSiteSelected2"
+                                    getDomain.bind="getSiteDomain2"
+                                    context="getContext2()"
+                                    activeActions="activeActions2"
+                                    fieldString="'Site'"
+                                    isToMany="false"
+                                    placeholder="'Site'"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="col-auto"><label class="mb-0 text-nowrap"></label></div>
+                            <div class="col">
+                                <Many2XAutocomplete
+                                    resModel="'building.building'"
+                                    value="state.building2"
+                                    update.bind="onBuildingSelected2"
+                                    getDomain.bind="getBuildingDomain2"
+                                    context="getContext2()"
+                                    activeActions="activeActions2"
+                                    fieldString="'Building'"
+                                    isToMany="false"
+                                    placeholder="'Building'"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="col-auto"><label class="mb-0 text-nowrap"></label></div>
+                            <div class="col">
+                                <Many2XAutocomplete
+                                    resModel="'re.floor'"
+                                    value="state.floor2"
+                                    update.bind="onFloorSelected2"
+                                    getDomain.bind="getFloorDomain2"
+                                    context="getContext2()"
+                                    activeActions="activeActions2"
+                                    fieldString="'Floor'"
+                                    isToMany="false"
+                                    placeholder="'Floor'"
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-2">
-                    <div class="col-auto"><label class="mb-0 text-nowrap">Building</label></div>
-                    <div class="col">
-                        <select name="building_id_filter2" class="form-select form-control form-control-sm py-0" required="1">
-                            <option value="">All Buildings</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="col-auto"><label class="mb-0 text-nowrap">Floor</label></div>
-                    <div class="col">
-                        <select name="floor_id_filter2" class="form-select form-control form-control-sm py-0" required="1">
-                            <option value="">All Floors</option>
-                        </select>
-                    </div>
-                </div> -->
-                <div class="col-md-2">
-                    <div class="col-auto"><label class="mb-0 text-nowrap"></label></div>
-                    <div class="col">
-                        <Many2XAutocomplete
-                            resModel="'re.site'"
-                            value="state.site2"
-                            update.bind="onSiteSelected2"
-                            getDomain.bind="getSiteDomain2"
-                            context="getContext2()"
-                            activeActions="activeActions2"
-                            fieldString="'Site'"
-                            isToMany="false"
-                            placeholder="'Select Site'"
-                        />
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="col-auto"><label class="mb-0 text-nowrap"></label></div>
-                    <div class="col">
-                        <Many2XAutocomplete
-                            resModel="'building.building'"
-                            value="state.building2"
-                            update.bind="onBuildingSelected2"
-                            getDomain.bind="getBuildingDomain2"
-                            context="getContext2()"
-                            activeActions="activeActions2"
-                            fieldString="'Building'"
-                            isToMany="false"
-                            placeholder="'Select Building'"
-                        />
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="col-auto"><label class="mb-0 text-nowrap"></label></div>
-                    <div class="col">
-                        <Many2XAutocomplete
-                            resModel="'re.floor'"
-                            value="state.floor2"
-                            update.bind="onFloorSelected2"
-                            getDomain.bind="getFloorDomain2"
-                            context="getContext2()"
-                            activeActions="activeActions2"
-                            fieldString="'Floor'"
-                            isToMany="false"
-                            placeholder="'Select Floor'"
-                        />
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="col-auto"><label class="mb-0 text-nowrap">From Date</label></div>
-                    <div class="col"><input type="date" class="form-control form-control-sm" t-model="state.date_from"/></div>
-                </div>
-                <div class="col-md-2">
-                    <div class="col-auto"><label class="mb-0 text-nowrap">To Date</label></div>
-                    <div class="col"><input type="date" class="form-control form-control-sm" t-model="state.date_to"/></div>
-                </div>
-                <div class="col-md-1">
-                    <div class="col-auto"><label class="mb-0 text-nowrap"></label></div>
-                    <div class="row align-items-right">
-                        <button class="btn btn-sm" style="background-color: #643F49;color:white;" t-on-click="applyFilter2">Filter</button>
-                    </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="col-auto"><label class="mb-0 text-nowrap">From Date</label></div>
+                            <div class="col"><input type="date" class="form-control form-control-sm" t-model="state.date_from"/></div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="col-auto"><label class="mb-0 text-nowrap">To Date</label></div>
+                            <div class="col"><input type="date" class="form-control form-control-sm" t-model="state.date_to"/></div>    
+                        </div>
+                        <div class="col-md-2">
+                            <div class="col-auto"><label class="mb-0 text-nowrap"></label></div>
+                            <div class="row align-items-right">
+                                <button class="btn btn-sm" style="background-color: #643F49;color:white;" t-on-click="applyFilter2">Filter</button>
+                            </div>
+                        </div>
+                    </div>                    
                 </div>
             </div>
             

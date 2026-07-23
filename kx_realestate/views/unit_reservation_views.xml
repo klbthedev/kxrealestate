@@ -73,10 +73,11 @@
                     <separator string="Reservation Data" colspan="4"/>
                     <group>
                         <group>
+                            <field name="contract_maker_id"/>
                             <field name="name"/>
                             <field name="user_id" widget="many2one_avatar_user"/>
-                            <field name="partner_id" widget="many2one_avatar" readonly="state != 'draft'" required="1"/>
-                            <field name="exp_date" readonly="state != 'draft'" required="1"/>
+                            <field name="partner_id" widget="many2one_avatar" readonly="state != 'draft'" required="0"/>
+                            <field name="exp_date" readonly="state != 'draft'" required="0"/>
                         </group>
                     </group>
                     <separator string="Payment Info." colspan="4"/>
@@ -112,14 +113,14 @@
     </record>
 
     <record id="unit_reservation_form_action" model="ir.actions.act_window">
-        <field name="name">Reservations</field>
+        <field name="name">Reservation Contract</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">unit.reservation</field>
         <field name="view_id" ref="unit_reservation_tree_view"/>
     </record>
 
     <menuitem id="menu_reservation_main"
-            name="Reservation"
+            name="Reservation Contract"
             parent="kx_realestate.menu_contracts_main"
             active="True"
             action="unit_reservation_form_action"
