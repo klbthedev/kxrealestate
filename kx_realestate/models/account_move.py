@@ -9,3 +9,8 @@ class AccountMove(models.Model):
     real_estate_ref = fields.Char(string='Real Estate Ref.')
     reservation_id =  fields.Many2one('unit.reservation', string='Reservation')
     ownership_id = fields.Many2one('ownership.contract', ondelete='cascade', readonly=True)
+
+    expected_currency_rate = fields.Char()
+    def refresh_invoice_currency_rate(self):
+        for move in self:
+            pass

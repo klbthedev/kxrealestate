@@ -178,7 +178,7 @@ class DashboardService(models.AbstractModel):
         query_handover += """ 
             GROUP BY contract_id, contract_code, total_residual, name, checklist_type, done
             ORDER BY contract_code
-        )
+        ) AS handover_details
         """
 
         self.env.cr.execute(query_handover, params)
