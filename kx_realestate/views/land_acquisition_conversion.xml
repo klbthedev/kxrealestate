@@ -7,7 +7,6 @@
       <field name="arch" type="xml">
          <xpath expr="//header" position="inside">
             <button name="action_convert_to_site" type="object" string="Convert to Site" class="btn-primary" invisible="converted == True" />
-            <button name="action_convert_to_building" type="object" string="Convert to Building" class="btn-primary" invisible="converted == True" />
          </xpath>
          <xpath expr="//sheet" position="inside">
             <group string="Conversion">

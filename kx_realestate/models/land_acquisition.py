@@ -301,28 +301,6 @@ class LandAcquisition(models.Model):
             "view_mode": "form",
             "res_id": site.id,
         }
-    def action_convert_to_building(self):
-        self.ensure_one()
-        self._check_conversion()
-        building = self.env["building.building"].create(self._prepare_building_vals())
-        self.write(
-            {
-                "converted": True,
-                "converted_model": "building.building",
-                "converted_record_id": building.id,
-                "converted_date": fields.Datetime.now(),
-                "building_id": building.id,
-            }
-        )
-        self.message_post(body=_("Converted into Building: %s") % building.display_name)
-        return {
-            "type": "ir.actions.act_window",
-            "name": _("Building"),
-            "res_model": "building.building",
-            "view_mode": "form",
-            "res_id": building.id,
-        }
-
     def _prepare_site_vals(self):
         self.ensure_one()
 
