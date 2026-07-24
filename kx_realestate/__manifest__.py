@@ -29,6 +29,7 @@
         'data/unit_stage_data.xml',
         'data/ir_sequence_views.xml',
         'data/ir_cron.xml',
+        'data/land_acquisition_stage_data.xml',
         'wizard/installment_pay_views.xml',
         'wizard/customer_payment_check_views.xml',
         # 'wizard/realestate_rental_pay_views.xml',
@@ -72,6 +73,13 @@
         'views/dashboard_action.xml',
         'views/warning_letter_level_views.xml',
         'views/contract_maker_views.xml',
+
+        'views/land_acquisition_views.xml',
+        'views/land_acquisition_stage_views.xml',
+        'views/land_acquisition_menu.xml',
+        'views/land_acquisition_conversion.xml',
+        'views/land_acquisition_document_views.xml',
+        'views/land_acquisition_smart_buttons.xml',
         
         # for report
         'views/wizard_views.xml',
@@ -150,8 +158,3 @@
 
 # telegram bot 
 # penality
-# remove payment term days fro date. - - -
-# check unit total - - - 
-# change name to origin in contract maker pdf and ownership contract - - - 
-# add selling price computed field in contract maker - - - 
-# 

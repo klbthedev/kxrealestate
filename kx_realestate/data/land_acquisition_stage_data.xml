@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="land_acquisition_stage_lead" model="land.acquisition.stage">
+        <field name="name">Lead</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="land_acquisition_stage_assessment" model="land.acquisition.stage">
+        <field name="name">Initial Assessment</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="land_acquisition_stage_visit" model="land.acquisition.stage">
+        <field name="name">Site Visit</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="land_acquisition_stage_due_diligence" model="land.acquisition.stage">
+        <field name="name">Due Diligence</field>
+        <field name="sequence">40</field>
+    </record>
+
+    <record id="land_acquisition_stage_legal" model="land.acquisition.stage">
+        <field name="name">Legal Verification</field>
+        <field name="sequence">50</field>
+    </record>
+
+    <record id="land_acquisition_stage_valuation" model="land.acquisition.stage">
+        <field name="name">Valuation</field>
+        <field name="sequence">60</field>
+    </record>
+
+    <record id="land_acquisition_stage_negotiation" model="land.acquisition.stage">
+        <field name="name">Negotiation</field>
+        <field name="sequence">70</field>
+    </record>
+
+    <record id="land_acquisition_stage_approval" model="land.acquisition.stage">
+        <field name="name">Approval</field>
+        <field name="sequence">80</field>
+    </record>
+
+    <record id="land_acquisition_stage_contract" model="land.acquisition.stage">
+        <field name="name">Contract Signed</field>
+        <field name="sequence">90</field>
+    </record>
+
+    <record id="land_acquisition_stage_payment" model="land.acquisition.stage">
+        <field name="name">Payment</field>
+        <field name="sequence">100</field>
+    </record>
+
+    <record id="land_acquisition_stage_acquired" model="land.acquisition.stage">
+        <field name="name">Acquired</field>
+        <field name="sequence">110</field>
+        <field name="fold">True</field>
+        <field name="probability">100</field>
+    </record>
+
+</odoo>

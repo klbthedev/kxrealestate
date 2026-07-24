@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+   <record id="land_acquisition_form_conversion" model="ir.ui.view">
+      <field name="name">land.acquisition.form.conversion</field>
+      <field name="model">land.acquisition</field>
+      <field name="inherit_id" ref="kx_realestate.land_acquisition_view_form" />
+      <field name="arch" type="xml">
+         <xpath expr="//header" position="inside">
+            <button name="action_convert_to_site" type="object" string="Convert to Site" class="btn-primary" invisible="converted == True" />
+            <button name="action_convert_to_building" type="object" string="Convert to Building" class="btn-primary" invisible="converted == True" />
+         </xpath>
+         <xpath expr="//sheet" position="inside">
+            <group string="Conversion">
+               <field name="converted" />
+               <field name="converted_model" />
+               <field name="converted_date" />
+               <field name="site_id" />
+               <field name="building_id" />
+            </group>
+         </xpath>
+      </field>
+   </record>
+</odoo>

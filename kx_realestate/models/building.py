@@ -108,6 +108,33 @@ class Building(models.Model):
         except Exception:
             _logger.exception('kx_realestate: legacy stage migration failed')
 
+    acquisition_id = fields.Many2one(
+        "land.acquisition",
+        string="Source Land Acquisition",
+        readonly=True,
+        copy=False,
+    )
+    acquisition_document_count = fields.Integer(
+        compute="_compute_acquisition_document_count",
+        string="Acquisition Documents",
+    )
+
+
+    def _compute_acquisition_document_count(self):
+
+        for record in self:
+
+            record.acquisition_document_count = len(
+                record.acquisition_id.document_ids
+            ) if record.acquisition_id else 0
+
+
+
+    def action_view_acquisition_documents(self):
+
+        self.ensure_one()
+
+        return self.acquisition_id.action_view_documents()
     # name = fields.Char(required=True)
     matterport_model_id = fields.Char("Matterport Model ID")
     matterport_embed_url = fields.Char(compute="_compute_embed_url",)
