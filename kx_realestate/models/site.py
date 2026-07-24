@@ -16,6 +16,7 @@ class RealEstateSite(models.Model):
     city_id = fields.Many2one("site.city", string="City Name", required=True, domain="[('region_id', '=', site_region_id)]",)
 
     name = fields.Char(required=True, tracking=True)
+    land_acquisition_name = fields.Char(tracking=True)
     acquisition_id = fields.Many2one(
         "land.acquisition",
         string="Source Land Acquisition",

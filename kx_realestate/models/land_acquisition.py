@@ -337,7 +337,7 @@ class LandAcquisition(models.Model):
         self.ensure_one()
 
         return {
-            "name": self.land_name or self.name,
+            "land_acquisition_name": self.land_name or self.name,
             "company_id": self.company_id.id,
             "address": self.address,
             "country_id": self.country_id.id,

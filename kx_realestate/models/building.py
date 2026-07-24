@@ -108,6 +108,8 @@ class Building(models.Model):
         except Exception:
             _logger.exception('kx_realestate: legacy stage migration failed')
 
+    land_acquisition_name = fields.Char(tracking=True)
+
     acquisition_id = fields.Many2one(
         "land.acquisition",
         string="Source Land Acquisition",
