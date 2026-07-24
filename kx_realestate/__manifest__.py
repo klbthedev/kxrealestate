@@ -158,8 +158,3 @@
 
 # telegram bot 
 # penality
-# remove payment term days fro date. - - -
-# check unit total - - - 
-# change name to origin in contract maker pdf and ownership contract - - - 
-# add selling price computed field in contract maker - - - 
-# 

@@ -26,6 +26,7 @@ class RealEstateSite(models.Model):
         compute="_compute_acquisition_document_count",
         string="Acquisition Documents",
     )
+    address = fields.Char()
 
 
     def _compute_acquisition_document_count(self):

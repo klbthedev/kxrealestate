@@ -165,20 +165,8 @@ class LandAcquisition(models.Model):
         required=True,
     )
     expected_closing_date = fields.Date()
-    state = fields.Selection(
-        [
-            ("open", "Open"),
-            ("acquired", "Acquired"),
-            ("cancelled", "Cancelled"),
-        ],
-        default="open",
-        tracking=True,
-    )
 
     note = fields.Html()
-
-    def _read_group_stage_ids(self, stages, domain, order):
-        return self.env["land.acquisition.stage"].search([], order=order)
 
     document_ids = fields.One2many(
         "land.acquisition.document",
@@ -190,6 +178,10 @@ class LandAcquisition(models.Model):
         string="Documents",
         compute="_compute_document_count",
     )
+
+    @api.model
+    def _read_group_stage_ids(self, stages, domain):
+        return self.env["land.acquisition.stage"].search([])
 
     def _compute_document_count(self):
         for record in self:
@@ -282,23 +274,16 @@ class LandAcquisition(models.Model):
         }
 
     def _check_conversion(self):
-
         self.ensure_one()
-
         if self.converted:
             raise UserError(_("This acquisition has already been converted."))
-
-        if self.state != "acquired":
+        if self.stage_id.name != "Acquired":
             raise UserError(_("Only acquired land can be converted."))
 
     def action_convert_to_site(self):
-
         self.ensure_one()
-
         self._check_conversion()
-
         site = self.env["re.site"].create(self._prepare_site_vals())
-
         self.write(
             {
                 "converted": True,
@@ -308,9 +293,7 @@ class LandAcquisition(models.Model):
                 "site_id": site.id,
             }
         )
-
         self.message_post(body=_("Converted into Site: %s") % site.display_name)
-
         return {
             "type": "ir.actions.act_window",
             "name": _("Site"),
@@ -318,15 +301,10 @@ class LandAcquisition(models.Model):
             "view_mode": "form",
             "res_id": site.id,
         }
-
     def action_convert_to_building(self):
-
         self.ensure_one()
-
         self._check_conversion()
-
         building = self.env["building.building"].create(self._prepare_building_vals())
-
         self.write(
             {
                 "converted": True,
@@ -336,9 +314,7 @@ class LandAcquisition(models.Model):
                 "building_id": building.id,
             }
         )
-
         self.message_post(body=_("Converted into Building: %s") % building.display_name)
-
         return {
             "type": "ir.actions.act_window",
             "name": _("Building"),
