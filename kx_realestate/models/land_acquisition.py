@@ -1,6 +1,26 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 
+class LandAcquisitionLine(models.Model):
+    _name = 'land.acquisition.line'
+
+    file = fields.Binary('File', required=True)
+    name = fields.Char('Name', required=True)
+    land_acquisition_id = fields.Many2one('land.acquisition', '',ondelete='cascade', readonly=True)
+
+    def download_file(self):
+        self.env.cr.execute("select id from ir_attachment where res_model='"+str(self._name)+"' and res_id="+str(self.id))
+        attachment_id= self.env.cr.fetchone()[0] or None
+        if attachment_id:
+            attachment = self.env['ir.attachment'].sudo().browse(attachment_id)
+            if attachment:
+                action = {
+                    'type': 'ir.actions.act_url',
+                    'url': "web/content/?model=ir.attachment&id=" + str(attachment.id) + "&filename_field=name&field=datas&download=true&name=" + str(attachment.store_fname),
+                    'target': 'self'
+                }
+                return action
+
 
 class LandAcquisitionStage(models.Model):
     _name = "land.acquisition.stage"
@@ -43,6 +63,8 @@ class LandAcquisition(models.Model):
 
         return super().create(vals_list)
 
+    land_acquisition_attachment_line_ids = fields.One2many("land.acquisition.line", "land_acquisition_id", string="Documents")
+    
     # Identification
 
     name = fields.Char(

@@ -16,6 +16,13 @@ class RealEstateBuildingStatus(models.Model):
         string='Building',
         ondelete='cascade'
     )
+    floor_id = fields.Many2one(
+        're.floor',
+        string='Floor',
+        ondelete='cascade'
+    )
+    floor_status_id = fields.Many2one('re.floor.status', string="Floor", ondelete="cascade")
+
     block_id = fields.Many2one(
         're.block',
         related='building_id.block_id',

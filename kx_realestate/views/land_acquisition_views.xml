@@ -100,6 +100,15 @@
                         <field name="title_deed_date" />
                         <field name="land_title_ref" />
                      </group>
+                     <group string="Document &amp; Attachments">
+                        <field name="land_acquisition_attachment_line_ids">
+                           <list editable="bottom">
+                              <field name="name"/>
+                              <field name="file"/>
+                              <button name="download_file" type="object" string="Download" class="oe-highlight"/>
+                           </list>
+                        </field>
+                     </group>
                   </page>
                   <page string="Notes">
                      <field name="note" />
