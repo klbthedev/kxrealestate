@@ -15,27 +15,11 @@ def safe(val):
 class DashboardExcelExport(http.Controller):
 
     @http.route('/kx_realestate/dashboard/export_excel', type='http', auth='user', csrf=False)
-    def export_dashboard_excel(self, date_from=None, date_to=None, country=None, state=None, city=None,site=None, building=None, floor=None,):
+    def export_dashboard_excel(self, date_from=None, date_to=None, region=None, city=None,site=None, building=None, floor=None,):
 
         service = request.env["kx.dashboard.service"].sudo()
-        dashboard1 = service.get_dashboard_data(
-            country,
-            state,
-            city,
-            site,
-            building,
-            floor,
-        )
-        dashboard2 = service.get_dashboard_data2(
-            date_from,
-            date_to,
-            country,
-            state,
-            city,
-            site,
-            building,
-            floor,
-        )
+        dashboard1 = service.get_dashboard_data(region,city,site,building,floor,)
+        dashboard2 = service.get_dashboard_data2(date_from,date_to,region,city,site,building,floor,)
 
         data = {}
         data.update(dashboard1)
