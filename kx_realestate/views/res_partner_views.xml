@@ -1,20 +1,17 @@
 <odoo>
-    <!-- <record id="view_partner_is_tenant_is_owner_form" model="ir.ui.view">
+    <record id="view_partner_is_tenant_is_owner_form" model="ir.ui.view">
         <field name="name">res.partner.is_tenant.is_owner.form</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-            <group name="sale" position="before">
-                <group string="Partner Type" name="partner_type">
-                    <field name="is_tenant"/>
+            <xpath expr="//notebook" position="before">
+                <group string="Partner Type"> <!-- name="partner_type"-->
                     <field name="is_owner"/>
+                    <field name="is_vendor"/>
                 </group>
-            </group>
-            <xpath expr="//field[@name='vat']" position="after">
-                <field name="ssn_id"/>
             </xpath>
         </field>
-    </record> -->
+    </record>
 
     <record id="action_partner_form_tenant" model="ir.actions.act_window">
         <field name="name">Tenants</field>

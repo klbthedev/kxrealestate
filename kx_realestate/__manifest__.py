@@ -17,7 +17,7 @@
     'company': 'KoderXpert Technologies LLP',
     'maintainer': 'KoderXpert Technologies LLP',
     'website': 'https://koderxpert.com',
-    'depends':['base','account','analytic'],
+    'depends':['base','contacts','account','analytic',],
     'data':[
         'security/real_estate_security.xml',
         'security/ir.model.access.csv',
