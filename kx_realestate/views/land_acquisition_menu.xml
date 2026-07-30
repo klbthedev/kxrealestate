@@ -5,6 +5,6 @@
       <field name="res_model">land.acquisition</field>
       <field name="view_mode">kanban,list,form</field>
    </record>
-   <menuitem id="menu_land_acquisition" name="Land Acquisition" parent="menu_kx_real_estate" action="action_land_acquisition" sequence="20" />
+   <menuitem id="menu_land_acquisition" name="Land Acquisition" parent="menu_kx_real_estate" action="action_land_acquisition" sequence="1" />
    <menuitem id="menu_land_acquisition_stage" name="Acquisition Stages" parent="menu_stage_header" action="action_land_acquisition_stage" sequence="10" />
 </odoo>

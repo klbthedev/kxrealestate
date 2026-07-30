@@ -1,6 +1,26 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 
+class LandAcquisitionLine(models.Model):
+    _name = 'land.acquisition.line'
+
+    file = fields.Binary('File', required=True)
+    name = fields.Char('Name', required=True)
+    land_acquisition_id = fields.Many2one('land.acquisition', '',ondelete='cascade', readonly=True)
+
+    def download_file(self):
+        self.env.cr.execute("select id from ir_attachment where res_model='"+str(self._name)+"' and res_id="+str(self.id))
+        attachment_id= self.env.cr.fetchone()[0] or None
+        if attachment_id:
+            attachment = self.env['ir.attachment'].sudo().browse(attachment_id)
+            if attachment:
+                action = {
+                    'type': 'ir.actions.act_url',
+                    'url': "web/content/?model=ir.attachment&id=" + str(attachment.id) + "&filename_field=name&field=datas&download=true&name=" + str(attachment.store_fname),
+                    'target': 'self'
+                }
+                return action
+
 
 class LandAcquisitionStage(models.Model):
     _name = "land.acquisition.stage"
@@ -43,6 +63,8 @@ class LandAcquisition(models.Model):
 
         return super().create(vals_list)
 
+    land_acquisition_attachment_line_ids = fields.One2many("land.acquisition.line", "land_acquisition_id", string="Documents")
+    
     # Identification
 
     name = fields.Char(
@@ -301,28 +323,6 @@ class LandAcquisition(models.Model):
             "view_mode": "form",
             "res_id": site.id,
         }
-    def action_convert_to_building(self):
-        self.ensure_one()
-        self._check_conversion()
-        building = self.env["building.building"].create(self._prepare_building_vals())
-        self.write(
-            {
-                "converted": True,
-                "converted_model": "building.building",
-                "converted_record_id": building.id,
-                "converted_date": fields.Datetime.now(),
-                "building_id": building.id,
-            }
-        )
-        self.message_post(body=_("Converted into Building: %s") % building.display_name)
-        return {
-            "type": "ir.actions.act_window",
-            "name": _("Building"),
-            "res_model": "building.building",
-            "view_mode": "form",
-            "res_id": building.id,
-        }
-
     def _prepare_site_vals(self):
         self.ensure_one()
 

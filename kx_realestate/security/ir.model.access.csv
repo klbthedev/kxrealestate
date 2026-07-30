@@ -13,6 +13,7 @@ access_ownership_handover_checklist,access.ownership.handover.checklist,model_ow
 access_land_acquisition,land.acquisition,model_land_acquisition,,1,1,1,1
 access_land_acquisition_stage,land.acquisition.stage,model_land_acquisition_stage,,1,1,1,1
 access_land_acquisition_document,land.acquisition.document,model_land_acquisition_document,,1,1,1,1
+access_land_acquisition_line,land.acquisition.line,model_land_acquisition_line,,1,1,1,1
 
 access_handover_checklist_edit,handover.checklist.edit,model_handover_checklist,group_contract_edit,1,1,1,0
 access_term_penalty_rule_edit,term.penalty.rule.edit,model_term_penalty_rule,group_contract_edit,1,1,1,0

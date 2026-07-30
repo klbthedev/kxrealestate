@@ -274,7 +274,7 @@
     <menuitem id="menu_building_list"
             name="Property structure"
             parent="menu_kx_real_estate"
-            sequence="1"/>
+            sequence="2"/>
 
     <menuitem id="menu_building_list_sub"
             sequence="3"

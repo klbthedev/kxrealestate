@@ -1,3 +1,4 @@
+from . import res_partner
 from . import account_move
 from . import account_payment
 from . import amenity
@@ -32,7 +33,6 @@ from . import res_users
 from . import site
 from . import site_city
 from . import site_region
-# from . import res_partner
 from . import res_config_settings
 from . import salesperson_commission
 from . import unit_attachment_line
