@@ -550,7 +550,7 @@ class ContractMaker(models.Model):
     )
     template_id = fields.Many2one(
         "contract.maker",
-        required=True,
+        required=False,
         ondelete="cascade",
     )
     article_ids = fields.One2many(
