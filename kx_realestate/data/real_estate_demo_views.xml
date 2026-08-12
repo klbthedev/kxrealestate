@@ -128,8 +128,8 @@
             <field name="partner_id" ref="kx_realestate.res_partner_1"/>
             <field name="purchase_date" eval="datetime.now()"/>
             <field name="launch_date" eval="datetime.now() + relativedelta(days=15)"/>
-            <field name="building_type_id" ref="kx_realestate.building_type_1"/>
-            <field name="building_status_id" ref="kx_realestate.building_status_1"/>
+            <!-- <field name="building_type_id" ref="kx_realestate.building_type_1"/>
+            <field name="building_status_id" ref="kx_realestate.building_status_1"/> -->
             <field name="building_unit_area">500</field>
             <field name="gross_area">300</field>
             <field name="construction_date" eval="datetime.now() + relativedelta(days=5)"/>
