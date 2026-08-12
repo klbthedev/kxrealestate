@@ -35,7 +35,7 @@
 
                         .ethiopic-report,
                         .ethiopic-report * {
-                            font-family: "NotoSansEthiopic" !important;
+                            font-family: "NotoSansEthiopic", "Nyala", "Abyssinica SIL", "Kefa", sans-serif !important;
                         }
 
                         .cover-page {
@@ -157,7 +157,7 @@
 
                         .ethiopic-report,
                         .ethiopic-report * {
-                            font-family: "NotoSansEthiopic" !important;
+                            font-family: "NotoSansEthiopic", "Nyala", "Abyssinica SIL", "Kefa", sans-serif !important;
                         }
 
                         .cover-page {

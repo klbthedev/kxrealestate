@@ -11,7 +11,7 @@ class RealEstateUnitStatus(models.Model):
         string='Building',
         ondelete='cascade'
     )
-    floor_status_id = fields.Many2one('re.floor.status', string="Floor", ondelete="cascade")
+    re_floor_status_id = fields.Many2one('re.floor.status', string="Floor", ondelete="cascade")
     floor_id = fields.Many2one(
         're.floor',
         related='unit_id.floor_id',
@@ -53,32 +53,31 @@ class RealEstateUnitStatus(models.Model):
         records = super().create(vals_list)
         for rec in records:
             loan_lines = self.env['loan.line.rs.own'].search([
-                ('selected_floor_id', '=', rec.floor_id.id),
-                ('progress_floor_stage_id', '=', rec.floor_status_id.id),
+                ('loan_id.building_unit_id', '=', rec.unit_id.id),
+                ('progress_unit_stage_id', '=', rec.unit_status_id.id),
             ])
             for line in loan_lines:
                 if line.trigger_type == 'construction':
                     line.write({
-                        'status_complete_date': rec.floor_status_id_date,
-                        'date': rec.floor_status_id_date + timedelta(days=line.payment_term_date or 0)
+                        'status_complete_date': rec.unit_status_id_date,
+                        'date': rec.unit_status_id_date + timedelta(days=line.payment_term_date or 0)
                     })
         return records
     ##############################################################################################
     # update installment records
     def write(self, vals_list):
-        records = super().create(vals_list)
-        for rec in records:
+        records = super().write(vals_list)
+        for rec in self:
             loan_lines = self.env['loan.line.rs.own'].search([
-                ('selected_floor_id', '=', rec.floor_id.id),
-                ('progress_floor_stage_id', '=', rec.floor_status_id.id),
+                ('loan_id.building_unit_id', '=', rec.unit_id.id),
+                ('progress_unit_stage_id', '=', rec.unit_status_id.id),
             ])
-            if loan_lines.trigger_type == 'construction':
-                loan_lines.write({
-                    'status_complete_date': rec.floor_status_id_date,
-                })
-                loan_lines.write({
-                    'date': rec.floor_status_id_date + timedelta(days=loan_lines.payment_term_date or 0)
-                })
+            for line in loan_lines:
+                if line.trigger_type == 'construction':
+                    line.write({
+                        'status_complete_date': rec.unit_status_id_date,
+                        'date': rec.unit_status_id_date + timedelta(days=line.payment_term_date or 0)
+                    })
         return records    
     ##############################################################################################
 
@@ -171,7 +170,6 @@ class BuildingUnit(models.Model):
     building_attachment_line_ids = fields.One2many("unit.attachment.line", "product_attach_id", string="Documents")
     block_id = fields.Many2one('re.block', string='Block', related='building_id.block_id', store=True, readonly=True)
     building_id = fields.Many2one('building.building', string='Building', ondelete='cascade')
-    balcony = fields.Float(string='Balconies m²')
     bathrooms = fields.Integer(string='Bathrooms')
     building_unit_area = fields.Float(string='Building Unit Area m²')
     building_net_area = fields.Float(string='Net Area m²')
@@ -195,7 +193,6 @@ class BuildingUnit(models.Model):
     date_added = fields.Date(string='Date Added to Notarization')
     deposit = fields.Float(string='Deposit')
     electricity_meter = fields.Char(string='Electricity meter', size=16)
-    east = fields.Char(string='Eastern border by')
     floor = fields.Char(string='Floor', size=16)
     floor_id = fields.Many2one('re.floor', string='Floor',)
     garden = fields.Integer(string='Garden m²')
@@ -228,7 +225,6 @@ class BuildingUnit(models.Model):
     license_location = fields.Char(string='License Notarization')
     name = fields.Char(string='Name', required=True)
     note = fields.Html(string='Notes')
-    north = fields.Char(string='Northen border by')
     old_building = fields.Boolean(string='Old Building')
     selling_price = fields.Float(string='Selling Price')
     parking_place_rentable = fields.Boolean(string='Parking rentable')
@@ -259,7 +255,6 @@ class BuildingUnit(models.Model):
     surface = fields.Integer(string='Surface')
     sort = fields.Integer(string='Sort')
     sequence = fields.Integer(string='Sequence')
-    south = fields.Char(string='Southern border by')
     stage_id = fields.Many2one(
         're.unit.stage',
         string="Unit Stage",
@@ -293,7 +288,6 @@ class BuildingUnit(models.Model):
     video_url = fields.Char(string='Vidoe URL')
     website_published = fields.Boolean(string='Website Published', default=True)
     water_meter = fields.Char(string='Water meter', size=16)
-    west = fields.Char(string='Western border by')
     # furniture = fields.Boolean(string='Furniture')
 
     _sql_constraints = [

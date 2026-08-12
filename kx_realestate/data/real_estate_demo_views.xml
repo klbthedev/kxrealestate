@@ -229,10 +229,6 @@
             <field name="electricity_meter">Yes</field>
             <field name="water_meter">Yes</field>
             <field name="installment_template_id" ref="kx_realestate.installment_template_1" />
-            <field name="north">Yes</field>
-            <field name="south">No</field>
-            <field name="east">Yes</field>
-            <field name="west">Yes</field>
         </record>
 
         <record id="product_template_2" model="product.template">
@@ -303,10 +299,6 @@
             <field name="electricity_meter">Yes</field>
             <field name="water_meter">Yes</field>
             <field name="installment_template_id" ref="kx_realestate.installment_template_1" />
-            <field name="north">Yes</field>
-            <field name="south">No</field>
-            <field name="east">Yes</field>
-            <field name="west">Yes</field>
         </record>
 
         <record model="re.floor" id="re_floor_1">

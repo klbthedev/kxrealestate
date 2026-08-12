@@ -8,7 +8,7 @@
             <form string="Real Estate">
                 <header>
                     <field name="active" widget="boolean_toggle"/>
-                    <field name="building_type_id" invisible="1"/>
+                    <!-- <field name="building_type_id" invisible="1"/> -->
                     <!-- <field name="stage_id" widget="statusbar" clickable="1" options="{'clickable': 1}"/> -->
                 </header>
                 <sheet>
@@ -44,8 +44,8 @@
                         <page string="Basic Information">
                             <group>
                                 <group>
-                                    <field name="building_type_id" string="Property Usage Type"/>
-                                    <field name="building_status_id"/>
+                                    <!-- <field name="building_type_id" string="Property Usage Type"/> -->
+                                    <!-- <field name="building_status_id"/> -->
                                     <field name="building_unit_area"/>
                                     <field name="gross_area"/>
                                     <field name="construction_date"/>
@@ -59,10 +59,6 @@
                                     <field name="no_of_floors" invisible="1"/>
                                     <field name="props_per_floors" invisible="1"/>
                                     <field name="surface" invisible="1"/>
-                                    <field name="north"/>
-                                    <field name="south"/>
-                                    <field name="east"/>
-                                    <field name="west"/>
                                 </group>
                                 <group string="Address">
                                     <field name="country_id"/>
@@ -297,6 +293,7 @@
     <menuitem
             id="menu_settings"
             name="Settings"
+            active="False"
             parent="menu_kx_real_estate"
             sequence="2000"/>
 

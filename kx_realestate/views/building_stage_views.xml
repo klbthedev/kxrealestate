@@ -7,7 +7,7 @@
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="code"/>
-                <field name="building_type_id" optional="show"/>
+                <!-- <field name="building_type_id" optional="show"/> -->
                 <field name="active"/>
             </list>
         </field>
@@ -23,7 +23,7 @@
                         <group>
                             <field name="name"/>
                             <field name="code"/>
-                            <field name="building_type_id"/>
+                            <!-- <field name="building_type_id"/> -->
                         </group>
                         <group>
                             <field name="sequence"/>

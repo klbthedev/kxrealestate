@@ -9,7 +9,7 @@
                     <button name="make_reservation"
                         invisible="state in('reserved','on_lease','sold','blocked')"
                         string="Reservation" type="object" class="btn-primary"/>
-                    <field name="building_type_id" invisible="1"/>
+                    <!-- <field name="building_type_id" invisible="1"/> -->
                     <!-- <field name="stage_id" widget="statusbar" clickable="1" options="{'clickable': 1}"/> -->
                     <field name="state"
                             widget="statusbar"
@@ -53,7 +53,7 @@
                                     <!-- <field name="building_type_id"/> -->
                                     <!-- <field name="deposit"/> -->
                                     <!-- <field name="insurance_fee" invisible="1"/> -->
-                                    <field name="building_status_id"/>
+                                    <!-- <field name="building_status_id"/> -->
                                     <!-- <field name="building_unit_area"/> -->
                                     <field name="building_net_area"/>
                                     <field name="gross_area"/>
@@ -66,7 +66,6 @@
                                 <group>
                                     <!-- <field name="amenity_ids" string="Amenities" widget="many2many_tags"/> -->
                                     <field name="surface" invisible="1"/>
-                                    <field name="balcony"/>
                                     <field name="solar_electric" invisible="1"/>
                                     <field name="heating_source" invisible="1"/>
                                     <field name="building_description_id" invisible="1"/>
@@ -74,10 +73,6 @@
                                     <field name="water_meter" invisible="1"/>
                                     <field name="installment_template_id" invisible="1"/>
                                     <!-- <field name="stock_state" widget="badge"/> -->
-                                    <field name="north"/>
-                                    <field name="south"/>
-                                    <field name="east"/>
-                                    <field name="west"/>
                                 </group>
                             </group>
                         </page>
@@ -179,8 +174,8 @@
                 <field name="building_id"/>
                 <field name="floor_id" optional="show"/>
                 <field name="building_description_id"/>
-                <field name="building_type_id" />
-                <field name="building_status_id" />
+                <!-- <field name="building_type_id" />
+                <field name="building_status_id" /> -->
                 <field name="rooms" />
                 <field name="state"/>
                 <!-- <field name="stock_state" optional="show"/> -->

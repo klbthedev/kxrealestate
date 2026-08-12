@@ -3,12 +3,17 @@ access_realestate_building_building,access.realestate.building,model_building_bu
 access_building_attachment_line,access.building.attachment.line,model_building_attachment_line,group_units_structure,1,1,1,1
 access_unit_attachment_line,access.unit.attachment.line,model_unit_attachment_line,group_units_structure,1,1,1,1
 
-access_contract_maker_article_edit,contract.maker.article.edit,model_contract_maker_article,group_contract_edit,1,1,1,0
-access_contract_maker_clause_edit,contract.maker.clause.edit,model_contract_maker_clause,group_contract_edit,1,1,1,0
-access_contract_maker_variable_edit,contract.maker.variable.edit,model_contract_maker_variable,group_contract_edit,1,1,1,0
+access_contract_maker_article_edit,contract.maker.article.edit,model_contract_maker_article,group_contract_edit,1,1,1,1
+access_contract_maker_clause_edit,contract.maker.clause.edit,model_contract_maker_clause,group_contract_edit,1,1,1,1
+access_contract_maker_variable_edit,contract.maker.variable.edit,model_contract_maker_variable,group_contract_edit,1,1,1,1
 
 access_ownership_handover_checklist_edit,ownership.handover.checklist.edit,model_ownership_handover_checklist,group_contract_edit,1,1,1,1
 access_ownership_handover_checklist,access.ownership.handover.checklist,model_ownership_handover_checklist,group_real_estate_admin,1,1,1,1
+
+
+access_realestate_site_region,access.realestate.site.region,model_site_region,,1,1,1,1
+access_realestate_site_city,access.realestate.site.city,model_site_city,,1,1,1,1
+
 
 access_land_acquisition,land.acquisition,model_land_acquisition,,1,1,1,1
 access_land_acquisition_stage,land.acquisition.stage,model_land_acquisition_stage,,1,1,1,1

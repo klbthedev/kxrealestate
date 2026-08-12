@@ -46,18 +46,18 @@ class ContractClause(models.Model):
         'contract.article',
         required=True,
         ondelete='cascade',
-        domain="[('template_id', '=', template_id)]",
+        # domain="[('template_id', '=', template_id)]",
     )
     template_id = fields.Many2one(
         related='article_id.template_id', string='Template', store=True, readonly=True)
     company_id = fields.Many2one(
         related='article_id.company_id', store=True, string='Company', readonly=True)
-    template_id = fields.Many2one(
-        'contract.template',
-        string='Template',
-        required=True,
-        index=True,
-    )
+    # contract_template_id = fields.Many2one(
+    #     'contract.template',
+    #     string='Template',
+    #     required=True,
+    #     index=True,
+    # )
 
 
 class ContractContract(models.Model):
@@ -478,8 +478,15 @@ class ContractFieldResolver(models.AbstractModel):
         for part in field.split("."):
             if not value:
                 return ""
-            value = value[part]
-        if value is False or value is None:
+            if hasattr(value, "_fields"):
+                if part not in value._fields:
+                    # Return empty or placeholder instead of crashing
+                    return ""
+            try:
+                value = value[part]
+            except Exception:
+                return ""
+        if value in (False, None):
             return ""
         if hasattr(value, "display_name"):
             return value.display_name
@@ -659,10 +666,7 @@ class ContractMaker(models.Model):
             },
         }
 
-    # -------------------------------------------------------------------------
     # Helpers
-    # -------------------------------------------------------------------------
-
     def get_root_contract(self):
         self.ensure_one()
 
@@ -704,7 +708,20 @@ class ContractMaker(models.Model):
         resolver = self.env["contract.field.resolver"]
         values = {}
         for variable in self.variable_ids.filtered("active"):
-            values[variable.code] = resolver.resolve_field(self, variable.field_id.name,)
+            target_record = self
+            if variable.model_id and variable.model_id.model != self._name:
+                for field_name, field_def in self._fields.items():
+                    if field_def.type in ('many2one', 'one2many') and field_def.comodel_name == variable.model_id.model:
+                        rel_val = getattr(self, field_name)
+                        if rel_val:
+                            target_record = rel_val[0] if field_def.type == 'one2many' else rel_val
+                        else:
+                            target_record = self.env[variable.model_id.model]
+                        break
+                else:
+                    target_record = self.env[variable.model_id.model]
+            
+            values[variable.code] = resolver.resolve_field(target_record, variable.field_id.name)
         return values
     def _render_contract_html(self):
         self.ensure_one()
@@ -727,7 +744,7 @@ class ContractMaker(models.Model):
     def onchange_units(self):
         if self.building_unit_id:
             unit = self.building_unit_id
-            self.floor_id = unit.floor
+            self.floor_id = unit.floor_id.id
             self.selling_price = unit.selling_price
             self.building_id = unit.building_id.id
         else:

@@ -36,6 +36,7 @@
             parent="menu_settings"
             sequence="10" />
     <menuitem id="menu_building_desc_form_action"
+            active="False"
             action="building_desc_form_action"
             parent="menu_property_header"
             sequence="30" />
