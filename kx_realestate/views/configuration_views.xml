@@ -97,6 +97,7 @@
             name="Settings"
             parent="menu_settings"
             groups="base.group_system"
+            active="False"
             action="action_real_estate_config"
             sequence="1000"/>
 </odoo>

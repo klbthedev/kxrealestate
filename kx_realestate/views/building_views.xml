@@ -293,7 +293,7 @@
     <menuitem
             id="menu_settings"
             name="Settings"
-            active="False"
+            active="True"
             parent="menu_kx_real_estate"
             sequence="2000"/>
 
