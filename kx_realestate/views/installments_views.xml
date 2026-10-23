@@ -5,8 +5,9 @@
         <field name="model">loan.line.rs.own</field>
         <field name="arch" type="xml">
             <list string="owner Installments" create="false" edit="false" >
-                <field name="name" />
-                <field name="contract_partner_id" />
+                <!-- <field name="name" /> -->
+                <field name="contract_partner_id" string="Customer (Partner)"/>
+                <field name="finance_means" />
                 <field name="date" />
                 <field name="contract_building_id" />
                 <field name="contract_building_unit_id" />
@@ -30,8 +31,9 @@
         <field name="model">loan.line.rs.own</field>
         <field name="arch" type="xml">
             <search string="Search Invoice">
-                <field name="name"/>
-                <field name="contract_partner_id" operator="child_of"/>
+                <!-- <field name="name"/> -->
+                <field name="contract_partner_id" operator="child_of" string="Customer (Partner)"/>
+                <field name="finance_means" />
                 <field name="date" string="Period"/>
                 <field name="contract_building_id"/>
                 <field name="contract_building_unit_id"/>
@@ -83,11 +85,11 @@
         <field name="view_mode">list</field>
     </record>
 
-
     <menuitem id="owner_installments_menu"
-            name="Installments"
-            active ="False"
-            parent="real_estate_report_sell"
-            groups="group_real_estate_reports"
-            action="action_owner_installments" />
+        name="Installments"            
+        action="action_owner_installments"
+        parent="menu_contracts_main"
+        sequence="22" 
+    />
+
 </odoo>
