@@ -254,6 +254,7 @@ class UnitReservation(models.Model):
                 'default_building_status_id': self.building_status_id.id,
                 'default_building_unit_area': self.building_unit_area,
                 'default_reservation_id': self.id,
+                'default_selling_price': self.selling_price,
             },
             'target': 'current'
         }
@@ -286,6 +287,7 @@ class UnitReservation(models.Model):
                 'default_building_status_id': self.building_status_id.id,
                 'default_building_unit_area': self.building_unit_area,
                 'default_reservation_id': self.id,
+                'default_selling_price': self.selling_price,
             },
             'target': 'current'
         }

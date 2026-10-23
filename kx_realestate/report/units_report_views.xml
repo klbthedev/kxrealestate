@@ -35,8 +35,8 @@
                 <field name="floor_id"/>
                 <field name="partner_id"/>
                 <field name="building_description_id"/>
-                <field name="building_type_id"/>
-                <field name="building_status_id"/>
+                <!-- <field name="building_type_id"/>
+                <field name="building_status_id"/> -->
                 <field name="stock_state"/>
                 <field name="rooms"/>
                 <group expand="0" string="Group By">
@@ -47,7 +47,7 @@
                     <filter name="group_owner" string="Owner" domain="[]" context="{'group_by':'partner_id'}"/>
                     <filter name="group_specification" string="Specification" domain="[]" context="{'group_by':'building_description_id'}"/>
                     <filter name="group_rooms" string="Rooms" domain="[]" context="{'group_by':'rooms'}"/>
-                    <filter name="group_type" string="Type" domain="[]" context="{'group_by':'building_type_id'}"/>
+                    <!-- <filter name="group_type" string="Type" domain="[]" context="{'group_by':'building_type_id'}"/> -->
                     <filter name="group_status" string="Status" domain="[]" context="{'group_by':'building_status_id'}"/>
                     <filter name="group_stock_state" string="Stock State" domain="[]" context="{'group_by':'stock_state'}"/>
                 </group>

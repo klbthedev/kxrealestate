@@ -37,6 +37,7 @@
             sequence="10" />
     <menuitem id="menu_building_status_form_action"
             action="building_status_form_action"
+            active="False"
             parent="menu_property_header"
             sequence="30" />
 </odoo>

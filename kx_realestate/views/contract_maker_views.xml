@@ -58,11 +58,11 @@
                                     <field name="number"/>
                                     <field name="trigger_type"/>
                                     <field name="date" readonly="trigger_type == 'construction'"/>                                    
-                                    <field name="trigger_level" optional="show" readonly="trigger_type == 'date'"/>
+                                    <field name="trigger_level" optional="show" readonly="trigger_type == 'date'" required="trigger_type == 'construction'"/>
                                     <field name="trigger_building_type_id" column_invisible="True" readonly="trigger_type == 'date'"/>
                                     <field name="progress_building_stage_id" optional="show" string="Building Stage" invisible="trigger_level != 'building'" readonly="trigger_type == 'date'"/>
                                     <field name="progress_floor_stage_id" optional="show" string="Floor Stage" invisible="trigger_level != 'floor'" readonly="trigger_type == 'date'"/>
-                                    <field name="selected_floor_id" string="Floor #" readonly="trigger_type == 'date'"/>
+                                    <field name="selected_floor_id" string="Floor #" invisible="trigger_level != 'floor'" readonly="trigger_type == 'date'" required="trigger_level == 'floor'"/>
                                     <field name="progress_unit_stage_id" optional="show" string="Unit Stage" invisible="trigger_level != 'unit'" readonly="trigger_type == 'date'"/>
                                     <field name="discount_percent" optional="show"/>
                                     <field name="amount" required="1"/>

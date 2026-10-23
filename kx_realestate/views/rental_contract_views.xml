@@ -102,11 +102,11 @@
                             <field name="floor" readonly="state != 'draft'"/>
                             <field name="address" readonly="state != 'draft'"/>
                         </group>
-                        <group>
+                        <!-- <group>
                             <field name="building_type_id" readonly="state != 'draft'"/>
                             <field name="building_status_id" readonly="state != 'draft'"/>
                             <field name="building_unit_area" readonly="state != 'draft'"/>
-                        </group>
+                        </group> -->
                     </group>
                     <notebook colspan="2">
                         <page string="Installments">
