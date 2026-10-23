@@ -939,7 +939,7 @@ class HandoverChecklist(models.Model):
         string='Fully Paid',
         store=True
     )
-    checklist_date = fields.Date(string='Date', required=True)
+    checklist_date = fields.Date(string='Date', required=False)
 
 class TermPenaltyRule(models.Model):
     _name = 'term.penalty.rule'

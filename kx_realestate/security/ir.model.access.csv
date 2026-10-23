@@ -49,7 +49,7 @@ access_realestate_building_stage_structure,access.realestate.building.stage.stru
 access_realestate_unit_stage_structure,access.realestate.unit.stage.structure,model_re_unit_stage,group_units_structure,1,1,1,1
 access_realestate_amenity_structure,access.realestate.amenity.structure,model_re_amenity,group_units_structure,1,1,1,1
 access_realestate_commission_structure,access.realestate.commission.structure,model_salesperson_commission_line,group_units_structure,1,0,0,0
-access_realestate_unit_reservation_b,access.realestate.unit.reservation.b,model_unit_reservation,group_units_structure,1,0,0,0
+access_realestate_unit_reservation,access.realestate.unit.reservation,model_unit_reservation,group_units_structure,1,0,0,0
 access_realestate_building_status,access.realestate.building.status,model_building_status,group_units_structure,1,0,0,0
 access_realestate_building_description,access.realestate.building.description,model_building_description,group_units_structure,1,0,0,0
 access_realestate_installment_template,access.realestate.installment.template,model_installment_template,group_units_structure,1,0,0,0
@@ -58,6 +58,7 @@ access_realestate_floor.plans,access.floor.plans,model_floor_plans,group_units_s
 access_realestate_building.images,building.images,model_building_images,group_units_structure,1,1,1,1
 
 access_realestate_unit_reservation,access.realestate.unit.reservation,model_unit_reservation,group_reservation,1,1,1,1
+access_realestate_unit_reservation,access.realestate.unit.reservation,model_unit_reservation,,1,1,1,1
 access_realestate_building_reservation,access.realestate.building.reservation,model_building_building,group_reservation,1,0,0,0
 access_realestate_floor_reservation,access.realestate.floor.reservation,model_re_floor,group_reservation,1,0,0,0
 access_realestate_building_unit_reservation,access.realestate.product.template.reservation,model_product_template,group_reservation,1,0,0,0
